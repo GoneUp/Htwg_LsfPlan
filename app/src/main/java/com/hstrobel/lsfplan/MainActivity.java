@@ -1,18 +1,36 @@
 package com.hstrobel.lsfplan;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.VEvent;
+
+import java.io.FileInputStream;
+
+public class MainActivity extends ActionBarActivity {
+
+    SharedPreferences mSettings;
+    TextView infoText;
+    Calendar myCal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        infoText = (TextView) findViewById(R.id.txtInfo);
+
+        System.out.println("fasdfasdfasdf");
     }
 
     @Override
@@ -32,12 +50,37 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_setCalender){
+            Intent intent = new Intent(this, UserSettings.class);
+            startActivity(intent);
+        } else if (id == R.id.action_setCalender) {
             Intent intent = new Intent(this, WebSelector.class);
             startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //check for calender
+        //not present --> info text
+        //present --> show info
+        if (!mSettings.getBoolean("gotICS", false)) {
+            infoText.setText(R.string.main_noCalender);
+            return;
+        }
+
+        try {
+            FileInputStream fin = new FileInputStream(mSettings.getString("ICS_FILE", ""));
+            CalendarBuilder builder = new CalendarBuilder();
+            myCal = builder.build(fin);
+            VEvent next = CalenderUtils.GetNextEvent(myCal);
+            infoText.setText(next.toString());
+
+        } catch (Exception ex) {
+        }
+
     }
 }

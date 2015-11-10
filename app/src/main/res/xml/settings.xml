@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent" android:layout_width="match_parent">
+
+    <PreferenceCategory android:title="@string/pref_cat_general" >
+        <CheckBoxPreference
+            android:key="enableNotifications"
+            android:title="@string/pref_title_enableNotifications"
+            android:summary="@string/pref_description_enableNotifications"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_cat_copy" >
+        <EditTextPreference
+            android:key="info"
+            android:title="@string/pref_title_info"
+            android:summary="@string/pref_description_info"
+            android:editable="false"
+            android:enabled="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>
