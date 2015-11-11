@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
@@ -22,6 +23,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -37,7 +39,6 @@ public class WebSelector extends ActionBarActivity {
     private WebView webView;
     SharedPreferences mSettings;
     SharedPreferences.Editor editor;
-    public String icsFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,8 @@ public class WebSelector extends ActionBarActivity {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                 //ics download lands here
-                DownloadICS(url);
+                Globals.loader = new ICSLoader();
+                Globals.loader.execute(url);
             }
         });
 
@@ -74,22 +76,23 @@ public class WebSelector extends ActionBarActivity {
 
     }
 
-    public void DownloadICS(String url) {
+    public void DownloadedICS() {
         try {
-            new ICSLoader().execute(url);
-            icsFile = ICSLoader.file;
-
-            if (!icsFile.startsWith("BEGIN:VCALENDAR")) {
+            if (! Globals.loader.file.startsWith("BEGIN:VCALENDAR")) {
                 //not a ics file
                 Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileNotValid, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 return;
             }
 
-            Toast.makeText(getApplicationContext(), R.string.webView_fileLoaded, Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
+
+            Globals.icsFile =  Globals.loader.file;
+            Globals.icsFileStream =  Globals.loader.fileStream;
+            Globals.Update(this);
 
             //save it
             editor.putBoolean("gotICS", true);
-            editor.putString("ICS_FILE", icsFile);
+            editor.putString("ICS_FILE",  Globals.icsFile);
             editor.commit();
 
             //navigate back to main
@@ -124,15 +127,17 @@ public class WebSelector extends ActionBarActivity {
         super.onBackPressed();
     }
 
-    public static class ICSLoader extends AsyncTask<String, String, String> {
-        static String file = "";
+    public class ICSLoader extends AsyncTask<String, String, String> {
+        String file = "";
+        InputStream fileStream = null;
+
         public ICSLoader() {}
         @Override
         protected String doInBackground(String... params) {
             // Making HTTP request
             try {
-                Connection urlConnection = Jsoup.connect(params[0]);
-                file =  urlConnection.get().text();
+                fileStream = new URL(params[0]).openStream();
+                file = IOUtils.toString(fileStream, "UTF-8");
 
             } catch (Exception ex) {
                 System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
@@ -144,6 +149,7 @@ public class WebSelector extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            DownloadedICS();
         }
     }
 }

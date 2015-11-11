@@ -24,9 +24,20 @@ tools:context="com.hstrobel.lsfplan.WebSelector">
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/webView_HowTo"
         android:id="@+id/infoText"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/imageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/webView"
-        android:layout_alignEnd="@+id/webView" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/export_icon"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

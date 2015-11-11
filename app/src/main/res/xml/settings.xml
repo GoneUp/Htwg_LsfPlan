@@ -9,14 +9,13 @@
             android:title="@string/pref_title_enableNotifications"
             android:summary="@string/pref_description_enableNotifications"
             android:defaultValue="true" />
+        <Preference android:title="@string/pref_reset" android:key="reset"></Preference>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_copy" >
-        <EditTextPreference
+        <Preference
             android:key="info"
             android:title="@string/pref_title_info"
-            android:summary="@string/pref_description_info"
-            android:editable="false"
-            android:enabled="false"/>
+            android:summary="@string/pref_description_info" />
     </PreferenceCategory>
 </PreferenceScreen>

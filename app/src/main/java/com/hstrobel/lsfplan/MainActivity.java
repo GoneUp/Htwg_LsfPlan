@@ -13,13 +13,18 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 public class MainActivity extends ActionBarActivity {
 
     SharedPreferences mSettings;
     TextView infoText;
-    Calendar myCal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +72,20 @@ public class MainActivity extends ActionBarActivity {
         //check for calender
         //not present --> info text
         //present --> show info
-        if (!mSettings.getBoolean("gotICS", false)) {
-            infoText.setText(R.string.main_noCalender);
-            return;
-        }
 
         try {
-            FileInputStream fin = new FileInputStream(mSettings.getString("ICS_FILE", ""));
-            CalendarBuilder builder = new CalendarBuilder();
-            myCal = builder.build(fin);
-            VEvent next = CalenderUtils.GetNextEvent(myCal);
-            infoText.setText(next.toString());
+            Globals.InitCalender(this);
+
+            if (Globals.myCal == null) {
+                infoText.setText(R.string.main_noCalender);
+            } else {
+                VEvent next = CalenderUtils.GetNextEvent(Globals.myCal);
+                infoText.setText(next.toString() + "\n" + CalenderUtils.formatEvent(next));
+            }
 
         } catch (Exception ex) {
+            System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
+            System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
 
     }
