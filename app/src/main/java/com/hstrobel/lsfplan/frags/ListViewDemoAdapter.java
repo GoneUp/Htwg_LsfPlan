@@ -16,6 +16,7 @@ public class ListViewDemoAdapter extends ArrayAdapter<ListViewItem> {
 
     public ListViewDemoAdapter(Context context, List<ListViewItem> items) {
         super(context, R.layout.listview_item, items);
+        setNotifyOnChange(true);
     }
 
     @Override

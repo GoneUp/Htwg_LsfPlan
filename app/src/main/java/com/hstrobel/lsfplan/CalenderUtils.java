@@ -1,10 +1,7 @@
 package com.hstrobel.lsfplan;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
@@ -13,59 +10,84 @@ import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
 
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
-    public static Collection GetTodaysEvents(Calendar myCal) {
+    public static List GetEventsNext24h(Calendar myCal) {
         java.util.Calendar today = java.util.Calendar.getInstance();
-        //today.set(java.util.Calendar.HOUR_OF_DAY, 0);
-        today.clear(java.util.Calendar.MINUTE);
-        today.clear(java.util.Calendar.SECOND);
+        return GetEvents(myCal, today);
+    }
 
-        // create a period starting now with a duration of one (1) day..
-        Period period = new Period(new DateTime(today.getTime()), new Dur(1, 0, 0, 0));
+    public static List GetEventsForDay(Calendar myCal, java.util.Calendar date) {
+        date.clear(java.util.Calendar.HOUR);
+        date.clear(java.util.Calendar.HOUR_OF_DAY);
+        date.clear(java.util.Calendar.MINUTE);
+        date.clear(java.util.Calendar.SECOND);
+        System.out.print(date.toString());
+        return GetEvents(myCal, date);
+    }
+
+    private static List GetEvents(Calendar myCal, java.util.Calendar date) {
+        Period period = new Period(new DateTime(date.getTime()), new Dur(1, 0, 0, 0));
         Filter filter = new Filter(new PeriodRule(period));
 
-        Collection eventsToday = filter.filter(myCal.getComponents(Component.VEVENT));
+        Collection eventsTodayC = filter.filter(myCal.getComponents(Component.VEVENT));
+        List eventsToday = new ArrayList(eventsTodayC);
         return eventsToday;
     }
 
-    public static Collection<VEvent> GetNextEvent(Calendar myCal) {
-        java.util.Calendar calEnd = java.util.Calendar.getInstance();
-        calEnd.set(java.util.Calendar.YEAR, 3000);
-        DateTime starttR = null;
-        Collection<VEvent> toReturn = new ArrayList<VEvent>();
+    private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
+        public int compare(VEvent c1, VEvent c2) {
+            return (TimeWithoutDate(c1).compareTo(TimeWithoutDate(c2)));
+        }
+    };
 
-        Collection events = GetTodaysEvents(myCal);
+    private static   java.util.Calendar TimeWithoutDate(VEvent c1){
+        java.util.Calendar d = java.util.Calendar.getInstance();
+        d.setTimeInMillis(c1.getStartDate().getDate().getTime());
+        d.set(0,0,0);
+        return d;
+    }
+
+    public static List<VEvent> SortEvents(List<VEvent> events) {
+        Collections.sort(events, comparator);
+        return events;// use the comparator as much as u want
+    }
+
+
+    public static List<VEvent> GetNextEvent(Calendar myCal) {
+        DateTime starttR = null;
+        List<VEvent> toReturn = new ArrayList<VEvent>();
+
+        List events = GetEventsNext24h(myCal);
         for (Object comp : events) {
             if (!(comp instanceof VEvent)) continue;
 
             VEvent event = (VEvent) comp;
+            DateTime startE = GetNextRecuringStartDate(event);
+            if (startE.before(new java.util.Date())) continue;  //past check
+
             if (toReturn.isEmpty()) {
                 //first element
+                starttR = startE;
                 toReturn.add(event);
-                starttR = GetNextRecuringStartDate(event);
             } else {
                 //compare to get the start datw wich is a) in future b) the closest
-                DateTime startE = GetNextRecuringStartDate(event);
-
-                //past check
-                if (startE.before(new java.util.Date())) continue;
 
                 if (startE.compareTo(starttR) == 0) {
                     //equal
@@ -92,7 +114,7 @@ public class CalenderUtils {
 
         Period closest = null;
         for (Period p : (Iterable<Period>) r) {
-            System.out.println(" - " + p.toString());
+            //System.out.println(" - " + p.toString());
             if (closest == null) {
                 closest = p;
             } else {
@@ -105,7 +127,7 @@ public class CalenderUtils {
         return closest.getStart();
     }
 
-    public static String getTopic(VEvent event){
+    public static String getTopic(VEvent event) {
         return event.getSummary().getValue().split("-")[1].trim();
     }
 
@@ -121,7 +143,7 @@ public class CalenderUtils {
         return String.format(c.getString(R.string.notification_short), time, room);
     }
 
-    public static int getId(VEvent event){
+    public static int getId(VEvent event) {
         //SUMMARY:14220920 - Rechnerarchitekturen
         String num = event.getSummary().getValue().split("-")[0].trim();
         return Integer.parseInt(num);
@@ -131,7 +153,7 @@ public class CalenderUtils {
         String mode = Globals.mSettings.getString("soundMode", "");
         int soundMode = NotificationCompat.DEFAULT_LIGHTS;
 
-        if (mode.equals("Silent")){
+        if (mode.equals("Silent")) {
             soundMode = NotificationCompat.DEFAULT_LIGHTS;
         } else if (mode.equals("Vibrate")) {
             soundMode = NotificationCompat.DEFAULT_VIBRATE;
@@ -139,7 +161,7 @@ public class CalenderUtils {
             soundMode = NotificationCompat.DEFAULT_SOUND;
         }
 
-        NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(context)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp) // notification icon
                 .setContentTitle(context.getString(R.string.notification_title)) // title for notification
                 .setContentText(formatEventShort(event, context)) // message for notification

@@ -55,4 +55,6 @@
     <string name="notification_short"  formatted="false" >Time: %tR - Room: %s</string>
     <string name="webView_fileLoading">Download started\nPlease wait.</string>
     <string name="icon_content_description">Desc</string>
+    <string name="main_lecture_day">Lectures for %s</string>
+    <string name="main_lecture_change">Select to change</string>
 </resources>

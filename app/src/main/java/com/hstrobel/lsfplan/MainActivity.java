@@ -17,6 +17,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.Collection;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -66,7 +67,7 @@ public class MainActivity extends ActionBarActivity {
             startActivity(intent);
         } else if (id == R.id.action_testNotfication) {
             if (Globals.myCal != null) {
-                Collection<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
+                List<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
                 for (VEvent ev : evs) {
                     CalenderUtils.showNotfication(ev, this);
                 }
@@ -112,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
                 infoText.setText(builder.toString());
                 */
             }
+
 
         } catch (Exception ex) {
             System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
