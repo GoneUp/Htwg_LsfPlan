@@ -25,8 +25,6 @@ import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 
 import java.io.BufferedInputStream;
@@ -57,6 +55,7 @@ public class WebSelector extends ActionBarActivity {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                 //ics download lands here
+                Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
                 Globals.loader = new ICSLoader();
                 Globals.loader.execute(url);
             }

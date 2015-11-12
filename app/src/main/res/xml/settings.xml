@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent" android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <PreferenceCategory android:title="@string/pref_cat_general" >
+    <PreferenceCategory android:title="@string/pref_cat_general">
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="enableNotifications"
-            android:title="@string/pref_title_enableNotifications"
             android:summary="@string/pref_description_enableNotifications"
-            android:defaultValue="true" />
-        <Preference android:title="@string/pref_reset" android:key="reset"></Preference>
+            android:title="@string/pref_title_enableNotifications" />
+        <EditTextPreference
+            android:key="notfiyTime"
+            android:title="@string/pref_title_timeSetter"
+            android:summary="@string/pref_description_timeSetter"
+            android:numeric="integer"
+            android:defaultValue="30"
+            />
+        <ListPreference
+            android:key="soundMode"
+            android:title="@string/pref_soundMode"
+            android:dialogTitle="@string/pref_soundMode"
+            android:entries="@array/pref_soundMode_entries"
+            android:entryValues="@array/pref_soundMode_values"
+            android:defaultValue="@string/pref_soundMode_default" />
+        <Preference
+            android:key="reset"
+            android:title="@string/pref_reset"></Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_cat_copy" >
+    <PreferenceCategory android:title="@string/pref_cat_copy">
         <Preference
             android:key="info"
-            android:title="@string/pref_title_info"
-            android:summary="@string/pref_description_info" />
+            android:summary="@string/pref_description_info"
+            android:title="@string/pref_title_info" />
     </PreferenceCategory>
 </PreferenceScreen>

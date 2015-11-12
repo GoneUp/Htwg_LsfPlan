@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Collection;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -60,6 +61,13 @@ public class MainActivity extends ActionBarActivity {
         } else if (id == R.id.action_setCalender) {
             Intent intent = new Intent(this, WebSelector.class);
             startActivity(intent);
+        } else if (id == R.id.action_testNotfication) {
+            if (Globals.myCal != null) {
+                Collection<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
+                for (VEvent ev : evs) {
+                    CalenderUtils.showNotfication(ev, this);
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -79,8 +87,12 @@ public class MainActivity extends ActionBarActivity {
             if (Globals.myCal == null) {
                 infoText.setText(R.string.main_noCalender);
             } else {
-                VEvent next = CalenderUtils.GetNextEvent(Globals.myCal);
-                infoText.setText(next.toString() + "\n" + CalenderUtils.formatEvent(next));
+                Collection<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
+                StringBuilder builder = new StringBuilder();
+                for (VEvent ev : evs) {
+                    builder.append(ev.toString() + "\n" + CalenderUtils.formatEventLong(ev, this));
+                }
+                infoText.setText(builder.toString());
             }
 
         } catch (Exception ex) {
@@ -90,3 +102,4 @@ public class MainActivity extends ActionBarActivity {
 
     }
 }
+
