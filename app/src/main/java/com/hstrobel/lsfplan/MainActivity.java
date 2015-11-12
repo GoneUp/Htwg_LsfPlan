@@ -2,24 +2,20 @@ package com.hstrobel.lsfplan;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
+import com.hstrobel.lsfplan.frags.MainDefaultFragment;
+import com.hstrobel.lsfplan.frags.MainListFragment;
+
 import net.fortuna.ical4j.model.component.VEvent;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Collection;
 
 public class MainActivity extends ActionBarActivity {
@@ -32,11 +28,18 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.mainDefaultFragment, new MainDefaultFragment(), "def")
+                    .commit();
+        }
+
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         infoText = (TextView) findViewById(R.id.txtInfo);
 
-        System.out.println("fasdfasdfasdf");
+        System.out.println("start");
     }
 
     @Override
@@ -84,15 +87,30 @@ public class MainActivity extends ActionBarActivity {
         try {
             Globals.InitCalender(this);
 
+
             if (Globals.myCal == null) {
+                if (getFragmentManager().findFragmentByTag("list") != null) {
+                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainListviewFragment, new MainDefaultFragment(), "def");
+                    transaction.commit();
+                    infoText = (TextView) findViewById(R.id.txtInfo);
+                }
+
                 infoText.setText(R.string.main_noCalender);
             } else {
+                if (getFragmentManager().findFragmentByTag("def") != null) {
+                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainDefaultFragment, new MainListFragment(), "list");
+                    transaction.commit();
+                }
+/*
                 Collection<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
                 StringBuilder builder = new StringBuilder();
                 for (VEvent ev : evs) {
                     builder.append(ev.toString() + "\n" + CalenderUtils.formatEventLong(ev, this));
                 }
                 infoText.setText(builder.toString());
+                */
             }
 
         } catch (Exception ex) {

@@ -3,11 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <fragment android:name="com.hstrobel.lsfplan.MainFragment"
-        android:id="@+id/mainFragment"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_main" />
+    android:layout_height="match_parent"
+    android:id="@+id/mainParentView">
+    <fragment
+        android:name="com.hstrobel.lsfplan.frags.MainDefaultFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_main"
+        android:id="@+id/mainDefaultFragment"/>
+    <fragment
+        android:name="com.hstrobel.lsfplan.frags.MainListFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/listview_main"
+        android:id="@+id/mainListviewFragment"/>
 </LinearLayout>

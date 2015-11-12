@@ -1,11 +1,14 @@
 package com.hstrobel.lsfplan;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -37,25 +40,33 @@ public class WebSelector extends ActionBarActivity {
     private WebView webView;
     SharedPreferences mSettings;
     SharedPreferences.Editor editor;
+    Handler  mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_selector);
 
+        mHandler = new Handler();
+
         if (getActionBar() != null) getActionBar().setDisplayHomeAsUpEnabled(true);
 
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Toast.makeText(getApplicationContext(), "Oh no! " + description, Toast.LENGTH_SHORT).show();
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                System.out.println(url);
+                if (Uri.parse(url).getHost().endsWith("https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish")) {
+                    //trying to acces a file
+                    DisplayTost(getString(R.string.webView_fileLoading));
+                }
+                return false;
             }
         });
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                //ics download lands here
-                Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
+                DisplayTost(getString(R.string.webView_fileLoading));
                 Globals.loader = new ICSLoader();
                 Globals.loader.execute(url);
             }
@@ -150,5 +161,14 @@ public class WebSelector extends ActionBarActivity {
             super.onPostExecute(result);
             DownloadedICS();
         }
+    }
+
+    protected void DisplayTost(final String text) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

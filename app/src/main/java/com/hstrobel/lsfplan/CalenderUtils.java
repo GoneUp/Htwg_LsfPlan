@@ -20,9 +20,12 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by Henry on 10.11.2015.
@@ -45,7 +48,7 @@ public class CalenderUtils {
     public static Collection<VEvent> GetNextEvent(Calendar myCal) {
         java.util.Calendar calEnd = java.util.Calendar.getInstance();
         calEnd.set(java.util.Calendar.YEAR, 3000);
-        Date starttR = null;
+        DateTime starttR = null;
         Collection<VEvent> toReturn = new ArrayList<VEvent>();
 
         Collection events = GetTodaysEvents(myCal);
@@ -59,7 +62,7 @@ public class CalenderUtils {
                 starttR = GetNextRecuringStartDate(event);
             } else {
                 //compare to get the start datw wich is a) in future b) the closest
-                Date startE = GetNextRecuringStartDate(event);
+                DateTime startE = GetNextRecuringStartDate(event);
 
                 //past check
                 if (startE.before(new java.util.Date())) continue;
@@ -84,7 +87,7 @@ public class CalenderUtils {
     public static DateTime GetNextRecuringStartDate(VEvent event) {
         DateTime start = new DateTime();
 
-        Period period = new Period(new DateTime(start.getTime()), new Dur(14, 0, 0, 0));
+        Period period = new Period(new DateTime(start.getTime()), new Dur(7, 0, 0, 0)); //1w
         PeriodList r = event.calculateRecurrenceSet(period);
 
         Period closest = null;
@@ -102,15 +105,18 @@ public class CalenderUtils {
         return closest.getStart();
     }
 
+    public static String getTopic(VEvent event){
+        return event.getSummary().getValue().split("-")[1].trim();
+    }
+
     public static String formatEventLong(VEvent event, Context c) {
-        String topic = event.getSummary().getValue().split("-")[1].trim();
-        java.util.Date time = GetNextRecuringStartDate(event);
-        String room = event.getLocation().getValue();
-        return String.format(c.getString(R.string.notification_long), topic, time, room);
+        String topic = getTopic(event);
+        String room_time = formatEventShort(event, c);
+        return String.format(c.getString(R.string.notification_long), topic) + room_time;
     }
 
     public static String formatEventShort(VEvent event, Context c) {
-        java.util.Date time = GetNextRecuringStartDate(event);
+        DateTime time = GetNextRecuringStartDate(event);
         String room = event.getLocation().getValue();
         return String.format(c.getString(R.string.notification_short), time, room);
     }
