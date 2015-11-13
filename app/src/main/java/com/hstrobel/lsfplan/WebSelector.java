@@ -1,38 +1,26 @@
 package com.hstrobel.lsfplan;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.Toast;
+
+import com.hstrobel.lsfplan.classes.Globals;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.w3c.dom.Document;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class WebSelector extends ActionBarActivity {

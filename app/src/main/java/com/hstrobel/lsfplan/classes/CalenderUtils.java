@@ -1,10 +1,13 @@
-package com.hstrobel.lsfplan;
+package com.hstrobel.lsfplan.classes;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+
+import com.hstrobel.lsfplan.MainActivity;
+import com.hstrobel.lsfplan.R;
 
 import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
@@ -15,26 +18,21 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.Description;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Random;
 
 /**
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
-    public static List GetEventsNext24h(Calendar myCal) {
+    public static List GetEventsNextWeek(Calendar myCal) {
         java.util.Calendar today = java.util.Calendar.getInstance();
-        return GetEvents(myCal, today);
+        return GetEvents(myCal, today, new Dur(7, 0, 0, 0));
     }
 
     public static List GetEventsForDay(Calendar myCal, java.util.Calendar date) {
@@ -43,11 +41,11 @@ public class CalenderUtils {
         date.clear(java.util.Calendar.MINUTE);
         date.clear(java.util.Calendar.SECOND);
         System.out.print(date.toString());
-        return GetEvents(myCal, date);
+        return GetEvents(myCal, date, new Dur(1, 0, 0, 0));
     }
 
-    private static List GetEvents(Calendar myCal, java.util.Calendar date) {
-        Period period = new Period(new DateTime(date.getTime()), new Dur(1, 0, 0, 0));
+    private static List GetEvents(Calendar myCal, java.util.Calendar date, Dur duration) {
+        Period period = new Period(new DateTime(date.getTime()), duration);
         Filter filter = new Filter(new PeriodRule(period));
 
         Collection eventsTodayC = filter.filter(myCal.getComponents(Component.VEVENT));
@@ -85,7 +83,7 @@ public class CalenderUtils {
         DateTime starttR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
 
-        List events = GetEventsNext24h(myCal);
+        List events = GetEventsNextWeek(myCal);
         for (Object comp : events) {
             if (!(comp instanceof VEvent)) continue;
 
@@ -191,7 +189,7 @@ public class CalenderUtils {
                 .setContentText(formatEventShort(event, context)) // message for notification
                 .setAutoCancel(true) // clear notification after click
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventLong(event, context)))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setDefaults(soundMode);
 
 

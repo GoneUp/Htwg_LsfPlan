@@ -4,12 +4,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Window;
+
+import com.hstrobel.lsfplan.classes.Globals;
 
 public class UserSettings extends ActionBarActivity {
 
@@ -51,6 +50,13 @@ public class UserSettings extends ActionBarActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            switch (key) {
+                case "notfiyTime":
+                case "enableNotifications":
+                    Globals.InitNotifications(getActivity());
+                    break;
+            }
+
             Preference myPref = findPreference("notfiyTime");
             int time = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
             myPref.setSummary(String.format(getString(R.string.pref_description_timeSetter), time));

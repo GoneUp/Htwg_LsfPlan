@@ -1,7 +1,9 @@
 package com.hstrobel.lsfplan;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.hstrobel.lsfplan.classes.BootReceiver;
+import com.hstrobel.lsfplan.classes.CalenderUtils;
+import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.frags.MainDefaultFragment;
 import com.hstrobel.lsfplan.frags.MainListFragment;
 
@@ -16,7 +21,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
@@ -86,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
         //present --> show info
 
         try {
-            Globals.InitCalender(this);
+            Globals.InitCalender(this, true);
 
 
             if (Globals.myCal == null) {
@@ -104,14 +108,6 @@ public class MainActivity extends ActionBarActivity {
                     transaction.replace(R.id.mainDefaultFragment, new MainListFragment(), "list");
                     transaction.commit();
                 }
-/*
-                Collection<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
-                StringBuilder builder = new StringBuilder();
-                for (VEvent ev : evs) {
-                    builder.append(ev.toString() + "\n" + CalenderUtils.formatEventLong(ev, this));
-                }
-                infoText.setText(builder.toString());
-                */
             }
 
 

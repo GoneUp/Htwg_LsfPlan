@@ -6,7 +6,7 @@
 
     <PreferenceCategory android:title="@string/pref_cat_general">
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="enableNotifications"
             android:summary="@string/pref_description_enableNotifications"
             android:title="@string/pref_title_enableNotifications" />
@@ -15,7 +15,7 @@
             android:title="@string/pref_title_timeSetter"
             android:summary="@string/pref_description_timeSetter"
             android:numeric="integer"
-            android:defaultValue="30"
+            android:defaultValue="15"
             />
         <ListPreference
             android:key="soundMode"
