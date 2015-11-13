@@ -15,6 +15,7 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Description;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -22,7 +23,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * Created by Henry on 10.11.2015.
@@ -57,10 +61,17 @@ public class CalenderUtils {
         }
     };
 
-    private static   java.util.Calendar TimeWithoutDate(VEvent c1){
+    private static java.util.Calendar TimeWithoutDate(VEvent c1) {
         java.util.Calendar d = java.util.Calendar.getInstance();
         d.setTimeInMillis(c1.getStartDate().getDate().getTime());
-        d.set(0,0,0);
+        d.set(0, 0, 0);
+        return d;
+    }
+
+    private static DateTime DateWithOutTime(VEvent c1) {
+        DateTime d = new DateTime(c1.getStartDate().getDate().getTime());
+        d.setHours(0);
+        d.setMinutes(0);
         return d;
     }
 
@@ -107,9 +118,12 @@ public class CalenderUtils {
     }
 
     public static DateTime GetNextRecuringStartDate(VEvent event) {
-        DateTime start = new DateTime();
+        //start from now, function is for notifications only
+        return GetNextRecuringStartDate(event, new DateTime());
+    }
 
-        Period period = new Period(new DateTime(start.getTime()), new Dur(7, 0, 0, 0)); //1w
+    public static DateTime GetNextRecuringStartDate(VEvent event, DateTime start) {
+        Period period = new Period(start, new Dur(7, 0, 0, 0)); //1w
         PeriodList r = event.calculateRecurrenceSet(period);
 
         Period closest = null;
@@ -124,11 +138,16 @@ public class CalenderUtils {
             }
         }
 
+        if (closest == null) throw new NoSuchElementException(event.getSummary().getValue());
         return closest.getStart();
     }
 
     public static String getTopic(VEvent event) {
-        return event.getSummary().getValue().split("-")[1].trim();
+        String[] tops = event.getSummary().getValue().split("-");
+        if (tops.length > 1) {
+            return tops[1].trim();
+        }
+        return event.getSummary().getValue().trim();
     }
 
     public static String formatEventLong(VEvent event, Context c) {
@@ -138,15 +157,20 @@ public class CalenderUtils {
     }
 
     public static String formatEventShort(VEvent event, Context c) {
-        DateTime time = GetNextRecuringStartDate(event);
+        DateTime time = GetNextRecuringStartDate(event, DateWithOutTime(event));
         String room = event.getLocation().getValue();
         return String.format(c.getString(R.string.notification_short), time, room);
     }
 
     public static int getId(VEvent event) {
         //SUMMARY:14220920 - Rechnerarchitekturen
-        String num = event.getSummary().getValue().split("-")[0].trim();
-        return Integer.parseInt(num);
+        //edge case: not persist over shutdown, add saving?
+        int num = java.util.Calendar.getInstance().get(java.util.Calendar.MILLISECOND) * 10;
+        if (event.getDescription().getValue().equals("")){
+            event.getDescription().setValue(Integer.toString(num));
+            return num;
+        }
+        return Integer.parseInt(event.getDescription().getValue());
     }
 
     public static void showNotfication(VEvent event, Context context) {
@@ -172,7 +196,7 @@ public class CalenderUtils {
 
 
         Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pi);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

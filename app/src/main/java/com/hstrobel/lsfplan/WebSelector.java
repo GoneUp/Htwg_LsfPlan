@@ -103,6 +103,7 @@ public class WebSelector extends ActionBarActivity {
             //save it
             editor.putBoolean("gotICS", true);
             editor.putString("ICS_FILE",  Globals.icsFile);
+            editor.putString("URL", webView.getUrl());
             editor.commit();
 
             //navigate back to main

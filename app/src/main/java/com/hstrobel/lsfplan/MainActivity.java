@@ -121,5 +121,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("ondestory");
+        //Globals.Save();
+    }
 }
 

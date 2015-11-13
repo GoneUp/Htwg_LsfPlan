@@ -17,6 +17,8 @@ import com.hstrobel.lsfplan.R;
 
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,22 +84,29 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     public void onResume() {
         super.onResume();
         //setup
-        if (Globals.myCal != null) {
-            evs = CalenderUtils.GetEventsForDay(Globals.myCal, (Calendar)cal.clone());
-            CalenderUtils.SortEvents(evs);
+        try {
+            if (Globals.myCal != null) {
+                evs = CalenderUtils.GetEventsForDay(Globals.myCal, (Calendar)cal.clone());
+                CalenderUtils.SortEvents(evs);
 
-            SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy");
-            listadapter.clear();
-            listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_info_black_24dp),
-                    String.format(getString(R.string.main_lecture_day), d.format(cal.getTime())), 
-                    getString(R.string.main_lecture_change)));
-
-            for (VEvent ev : evs) {
+                SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy");
+                listadapter.clear();
                 listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_info_black_24dp),
-                        CalenderUtils.getTopic(ev),
-                        CalenderUtils.formatEventShort(ev, getActivity())));
+                        String.format(getString(R.string.main_lecture_day), d.format(cal.getTime())),
+                        getString(R.string.main_lecture_change)));
+
+                for (VEvent ev : evs) {
+                    listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_info_black_24dp),
+                            CalenderUtils.getTopic(ev),
+                            CalenderUtils.formatEventShort(ev, getActivity())));
+                }
             }
+        } catch (Exception ex){
+            Toast.makeText(getActivity(), "Loading failed! Resetting the app may help.", Toast.LENGTH_SHORT).show();
+            System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
+            System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
+
     }
 
     @Override
