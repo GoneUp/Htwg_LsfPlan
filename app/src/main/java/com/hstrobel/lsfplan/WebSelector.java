@@ -9,10 +9,13 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hstrobel.lsfplan.classes.Globals;
@@ -26,9 +29,9 @@ import java.net.URL;
 public class WebSelector extends ActionBarActivity {
 
     private WebView webView;
-    SharedPreferences mSettings;
-    SharedPreferences.Editor editor;
-    Handler  mHandler;
+    private SharedPreferences.Editor editor;
+    private Handler  mHandler;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class WebSelector extends ActionBarActivity {
         mHandler = new Handler();
 
         if (getActionBar() != null) getActionBar().setDisplayHomeAsUpEnabled(true);
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
 
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient() {
@@ -57,10 +62,13 @@ public class WebSelector extends ActionBarActivity {
                 DisplayTost(getString(R.string.webView_fileLoading));
                 Globals.loader = new ICSLoader();
                 Globals.loader.execute(url);
+                spinner.setVisibility(View.VISIBLE);
             }
         });
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
 
-        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         editor = mSettings.edit();
         String savedURL = mSettings.getString("URL", "missing");
 
@@ -99,8 +107,8 @@ public class WebSelector extends ActionBarActivity {
 
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(), "DL FAIL " , Toast.LENGTH_SHORT).show();
-            System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
     }
 

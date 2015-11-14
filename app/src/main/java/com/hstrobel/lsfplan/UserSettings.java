@@ -1,6 +1,9 @@
 package com.hstrobel.lsfplan;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -22,7 +25,8 @@ public class UserSettings extends ActionBarActivity {
                 .commit();
     }
 
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    @SuppressLint("ValidFragment")
+    public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -63,6 +67,15 @@ public class UserSettings extends ActionBarActivity {
 
             ListPreference sPref = (ListPreference) findPreference("soundMode");
             sPref.setSummary(sPref.getEntry());
+
+            myPref = findPreference("info");
+            PackageInfo pInfo = null;
+            try {
+                pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                myPref.setSummary(getString(R.string.pref_description_info) + pInfo.versionName);
+            } catch (Exception e) {
+            }
+
         }
 
         @Override

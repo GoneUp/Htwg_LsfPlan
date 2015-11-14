@@ -1,17 +1,16 @@
 package com.hstrobel.lsfplan;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.hstrobel.lsfplan.classes.BootReceiver;
 import com.hstrobel.lsfplan.classes.CalenderUtils;
 import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.frags.MainDefaultFragment;
@@ -23,7 +22,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     SharedPreferences mSettings;
     TextView infoText;
@@ -44,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         infoText = (TextView) findViewById(R.id.txtInfo);
 
-        System.out.println("start");
+        Log.d("LSF", "onCreate");
     }
 
     @Override
@@ -112,8 +111,8 @@ public class MainActivity extends ActionBarActivity {
 
 
         } catch (Exception ex) {
-            System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
 
     }
@@ -121,7 +120,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.out.println("ondestory");
+        Log.d("LSF", "onDestroy");
         //Globals.Save();
     }
 }

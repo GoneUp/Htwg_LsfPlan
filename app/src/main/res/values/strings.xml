@@ -1,34 +1,33 @@
 <resources>
     <!-- App -->
-    <string name="app_name">LsfPlan</string>
+    <string name="app_name" translatable="false">LsfPlan</string>
 
-    <string name="title_activity_main">Htwg Lsf Plan</string>
-    <string name="title_activity_web_selector">Download</string>
+    <string name="title_activity_main" translatable="false">Htwg Lsf Plan</string>
+    <string name="title_activity_web_selector" translatable="false">Download</string>
     <string name="title_activity_settings_activity_new">Settings</string>
 
     <!-- Main -->
-    <string name="action_setCalender">Download Calender</string>
+    <string name="action_setCalender" translatable="false">Download Plan</string>
     <string name="action_settings">Settings</string>
-    <string name="main_noCalender">Calender is missing.\n Please download a Lecture Plan via Menu -> Download Calender</string>
+    <string name="main_noCalender">Calender is missing.\nPlease download a Lecture Plan via Menu -> Download Calender</string>
 
 
     <!-- Web -->
-    <string name="webView_btnSelect">Use this ICS File!</string>
     <string name="webView_fileNotValid">File not valid!</string>
     <string name="webView_fileLoaded">Loaded File!</string>
     <string name="webView_HowTo">1. Navigate to the wanted lecture plan\n
         2. Click the calender export icon at the bottom of the page\n
-        3. The download will start after ~5 secs</string>
+        3. The download will start after ~10 secs</string>
 
 
     <!-- Settings -->
     <string name="pref_cat_general">General</string>
-    <string name="pref_cat_copy">Credits</string>
+    <string name="pref_cat_copy" translatable="false">Credits</string>
     <string name="pref_title_enableNotifications">Enable Notifications</string>
     <string name="pref_description_enableNotifications">Show next lecture (room/time) as a notification</string>
 
-    <string name="pref_title_info">Erstellt von Henry Strobel</string>
-    <string name="pref_description_info">For teh lulz</string>
+    <string name="pref_title_info" translatable="false">Erstellt von Henry Strobel</string>
+    <string name="pref_description_info" translatable="false">Version: </string>
 
     <string name="pref_soundMode">Notification Type</string>
     <string name="pref_soundMode_default">Silent</string>
@@ -36,11 +35,14 @@
     <string name="pref_title_timeSetter">When do you want to be notfied?</string>
     <string name="pref_description_timeSetter">%d Minutes before</string>
 
-    <string name="pref_reset">Reset app</string>
+    <string name="pref_reset" translatable="false">Reset app</string>
+    <string name="pref_soundMode_Silent">Silent</string>
+    <string name="pref_soundMode_Vib">Vibrate</string>
+    <string name="pref_soundMode_Sound">Sound</string>
     <string-array name="pref_soundMode_entries">
-        <item>Silent</item>
-        <item>Vibrate</item>
-        <item>Sound</item>
+        <item>@string/pref_soundMode_Silent</item>
+        <item>@string/pref_soundMode_Vib</item>
+        <item>@string/pref_soundMode_Sound</item>
     </string-array>
     <string-array name="pref_soundMode_values">
         <item>Silent</item>
@@ -52,9 +54,9 @@
     <!-- Misc -->
     <string name="notification_title">Next lecture</string>
     <string name="notification_long"  formatted="false" >Topic: %s - </string>
-    <string name="notification_short"  formatted="false" >Time: %tR - Room: %s</string>
+    <string name="notification_short"  formatted="false" > Time: %tR - Room: %s</string>
     <string name="webView_fileLoading">Download started\nPlease wait.</string>
-    <string name="icon_content_description">Desc</string>
+    <string name="icon_content_description" translatable="false">Desc</string>
     <string name="main_lecture_day">Lectures for %s</string>
     <string name="main_lecture_change">Select to change</string>
 </resources>

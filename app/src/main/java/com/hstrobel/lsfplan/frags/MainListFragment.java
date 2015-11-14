@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -26,7 +27,6 @@ import java.util.List;
 
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
     private List<ListViewItem> mItems;        // ListView items list
-    private List<VEvent> evs;
     private Calendar cal;
     private ListViewDemoAdapter listadapter;
 
@@ -83,25 +83,25 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         //setup
         try {
             if (Globals.myCal != null) {
-                evs = CalenderUtils.GetEventsForDay(Globals.myCal, (Calendar)cal.clone());
+                List<VEvent> evs = CalenderUtils.GetEventsForDay(Globals.myCal, (Calendar) cal.clone());
                 CalenderUtils.SortEvents(evs);
 
                 SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy");
                 listadapter.clear();
-                listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_info_black_24dp),
+                listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action),
                         String.format(getString(R.string.main_lecture_day), d.format(cal.getTime())),
                         getString(R.string.main_lecture_change)));
 
                 for (VEvent ev : evs) {
-                    listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_info_black_24dp),
+                    listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action),
                             CalenderUtils.getTopic(ev),
                             CalenderUtils.formatEventShort(ev, getActivity())));
                 }
             }
         } catch (Exception ex){
             Toast.makeText(getActivity(), "Loading failed! Resetting the app may help.", Toast.LENGTH_SHORT).show();
-            System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
 
     }

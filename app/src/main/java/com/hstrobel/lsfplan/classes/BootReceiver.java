@@ -17,8 +17,8 @@ public class BootReceiver extends BroadcastReceiver {
             try {
                 Globals.InitCalender(context, true);
             } catch (Exception ex) {
-                System.out.println("FAIL Bootup:\n " + ExceptionUtils.getCause(ex));
-                System.out.println("FAIL Bootup ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+                Log.e("LSF", "FAIL Bootup:\n " + ExceptionUtils.getCause(ex));
+                Log.e("LSF", "FAIL Bootup ST:\n " + ExceptionUtils.getFullStackTrace(ex));
             }
 
         }

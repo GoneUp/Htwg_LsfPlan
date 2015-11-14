@@ -26,8 +26,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             CalenderUtils.showNotfication(event, context);
             ScheduleNextEventNot(context);
         } catch (Exception ex) {
-            System.out.println("FAIL onReceive:\n " + ExceptionUtils.getCause(ex));
-            System.out.println("FAIL onReceive ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e("LSF", "FAIL onReceive:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL onReceive ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
     }
 
@@ -63,6 +63,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.i("LSF", "Alarm Scheduled for event " + events.get(0).getDescription().getValue());
         Log.i("LSF", "time sched  " + start.toString());
+
     }
 
     public static void CancelNextEventNot(Context c) {
