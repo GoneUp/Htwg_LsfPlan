@@ -22,5 +22,7 @@
     <string name="pref_soundMode_Silent">Keine</string>
     <string name="pref_soundMode_Sound">Sound</string>
     <string name="pref_soundMode_Vib">Vibration</string>
+    <string name="pref_description_ads">Unterstütze den Entwickler </string>
+    <string name="pref_title_ads">Aktiviere Werbung</string>
 
 </resources>

@@ -9,8 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.hstrobel.lsfplan.classes.CalenderUtils;
 import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.frags.MainDefaultFragment;
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
                 for (VEvent ev : evs) {
                     CalenderUtils.showNotfication(ev, this);
                 }
+            } else {
+                Toast.makeText(getApplicationContext(), "No plan, no notifications ;)", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -105,10 +111,23 @@ public class MainActivity extends AppCompatActivity {
                 if (getFragmentManager().findFragmentByTag("def") != null) {
                     android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.mainDefaultFragment, new MainListFragment(), "list");
-                    transaction.commit();
+                    //transaction.commit();
                 }
             }
 
+
+            //Ads meh
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            if (mSettings.getBoolean("enableAds", false)) {
+                mAdView.setVisibility(View.VISIBLE);
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
+                        .build();
+                mAdView.loadAd(adRequest);
+            } else {
+                mAdView.setVisibility(View.GONE);
+            }
 
         } catch (Exception ex) {
             Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));

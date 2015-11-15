@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.hstrobel.lsfplan.MainActivity;
@@ -184,13 +185,19 @@ public class CalenderUtils {
         }
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp) // notification icon
                 .setContentTitle(context.getString(R.string.notification_title)) // title for notification
                 .setContentText(formatEventShort(event, context)) // message for notification
                 .setAutoCancel(true) // clear notification after click
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventLong(event, context)))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setDefaults(soundMode);
+
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+            mBuilder.setSmallIcon(R.drawable.ic_notify_white);
+        } else {
+            mBuilder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
+        }
+
 
 
         Intent intent = new Intent(context, MainActivity.class);

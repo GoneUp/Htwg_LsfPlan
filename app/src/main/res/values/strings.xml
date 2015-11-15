@@ -5,6 +5,7 @@
     <string name="title_activity_main" translatable="false">Htwg Lsf Plan</string>
     <string name="title_activity_web_selector" translatable="false">Download</string>
     <string name="title_activity_settings_activity_new">Settings</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3135430559590190/4069382066</string>
 
     <!-- Main -->
     <string name="action_setCalender" translatable="false">Download Plan</string>
@@ -29,13 +30,14 @@
     <string name="pref_title_info" translatable="false">Erstellt von Henry Strobel</string>
     <string name="pref_description_info" translatable="false">Version: </string>
 
-    <string name="pref_soundMode">Notification Type</string>
-    <string name="pref_soundMode_default">Silent</string>
-
     <string name="pref_title_timeSetter">When do you want to be notfied?</string>
     <string name="pref_description_timeSetter">%d Minutes before</string>
 
     <string name="pref_reset" translatable="false">Reset app</string>
+
+    <string name="pref_soundMode">Notification Type</string>
+    <string name="pref_soundMode_default">Silent</string>
+
     <string name="pref_soundMode_Silent">Silent</string>
     <string name="pref_soundMode_Vib">Vibrate</string>
     <string name="pref_soundMode_Sound">Sound</string>
@@ -59,4 +61,6 @@
     <string name="icon_content_description" translatable="false">Desc</string>
     <string name="main_lecture_day">Lectures for %s</string>
     <string name="main_lecture_change">Select to change</string>
+    <string name="pref_description_ads">Support the developer</string>
+    <string name="pref_title_ads">Enable Ads</string>
 </resources>

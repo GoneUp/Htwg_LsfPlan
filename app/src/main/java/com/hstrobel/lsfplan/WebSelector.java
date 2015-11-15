@@ -73,7 +73,7 @@ public class WebSelector extends ActionBarActivity {
         String savedURL = mSettings.getString("URL", "missing");
 
         if (savedURL == "missing") {
-            savedURL = "https://lsf.htwg-konstanz.de/qisserver/rds?state=wplan&act=stg&pool=stg&show=plan&P.vx=kurz&r_zuordabstgv.semvonint=2&r_zuordabstgv.sembisint=2&missing=allTerms&k_parallel.parallelid=&k_abstgv.abstgvnr=4511&r_zuordabstgv.phaseid=";
+            savedURL = "https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList";
             editor.putString("URL", savedURL);
             editor.commit();
         }
@@ -90,16 +90,16 @@ public class WebSelector extends ActionBarActivity {
                 return;
             }
 
-            Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
-
             Globals.icsFile =  Globals.loader.file;
             Globals.icsFileStream =  Globals.loader.fileStream;
             Globals.Update(this);
 
+            Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
+
             //save it
             editor.putBoolean("gotICS", true);
             editor.putString("ICS_FILE",  Globals.icsFile);
-            editor.putString("URL", webView.getUrl());
+           // editor.putString("URL", webView.getUrl());
             editor.commit();
 
             //navigate back to main
@@ -109,6 +109,7 @@ public class WebSelector extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "DL FAIL " , Toast.LENGTH_SHORT).show();
             Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
             Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            spinner.setVisibility(View.GONE);
         }
     }
 

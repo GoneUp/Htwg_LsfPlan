@@ -24,6 +24,11 @@
             android:entries="@array/pref_soundMode_entries"
             android:entryValues="@array/pref_soundMode_values"
             android:defaultValue="@string/pref_soundMode_default" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enableAds"
+            android:summary="@string/pref_description_ads"
+            android:title="@string/pref_title_ads" />
         <Preference
             android:key="reset"
             android:title="@string/pref_reset"></Preference>

@@ -66,6 +66,12 @@ public class UserSettings extends ActionBarActivity {
             myPref.setSummary(String.format(getString(R.string.pref_description_timeSetter), time));
 
             ListPreference sPref = (ListPreference) findPreference("soundMode");
+            if (sPref.getValue() == null){
+                SharedPreferences.Editor editor = Globals.mSettings.edit();
+                editor.putString("soundMode", getString(R.string.pref_soundMode_default));
+                editor.commit();
+                sPref.setValue(getString(R.string.pref_soundMode_default));
+            }
             sPref.setSummary(sPref.getEntry());
 
             myPref = findPreference("info");

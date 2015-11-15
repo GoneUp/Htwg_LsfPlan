@@ -22,8 +22,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         try {
             //Process could be killed in the meantime, setup our calender, but NOT init the notifications to prevent duplicates loops etc
             if (!Globals.initalized) Globals.InitCalender(context, false);
-            VEvent event = (VEvent) intent.getSerializableExtra("event");
-            CalenderUtils.showNotfication(event, context);
+            VEvent[] events = (VEvent[]) intent.getSerializableExtra("event");
+            for (VEvent e : events) {
+                CalenderUtils.showNotfication(e, context);
+            }
             ScheduleNextEventNot(context);
         } catch (Exception ex) {
             Log.e("LSF", "FAIL onReceive:\n " + ExceptionUtils.getCause(ex));
@@ -40,14 +42,16 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        List<VEvent> events = CalenderUtils.GetNextEvent(Globals.myCal);
+        VEvent[] events = CalenderUtils.GetNextEvent(Globals.myCal).toArray(new VEvent[0]);
 
-        if (events.size() > 1) {
-            Log.i("LSF", "events size bigger 1, size is " + events.size());
+        if (events.length == 0) {
+            Log.i("LSF", "events size 0");
             return;
+        } else if (events.length > 1) {
+            Log.i("LSF", "events size bigger 1, size is " + events.length);
         }
 
-        Date start = CalenderUtils.GetNextRecuringStartDate(events.get(0));
+        Date start = CalenderUtils.GetNextRecuringStartDate(events[0]); //all should have the same start time
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
         start.setTime(start.getTime() - minutesBefore * 60 * 1000);
 
@@ -55,13 +59,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         //start.setTime(new DateTime().getTime() + 30 * 1000);
 
         Intent intentAlarm = new Intent(c, AlarmReceiver.class);
-        intentAlarm.putExtra("event", events.get(0));
+        intentAlarm.putExtra("event", events);
 
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, start.getTime(), PendingIntent.getBroadcast(c, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
-
-        Log.i("LSF", "Alarm Scheduled for event " + events.get(0).getDescription().getValue());
+        for (VEvent e : events) {
+            Log.i("LSF", "Alarm Scheduled for event " + e.getSummary().getValue());
+        }
         Log.i("LSF", "time sched  " + start.toString());
 
     }
