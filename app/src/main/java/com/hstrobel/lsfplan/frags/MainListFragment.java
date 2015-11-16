@@ -83,8 +83,8 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         //setup
         try {
             if (Globals.myCal != null) {
-                List<VEvent> evs = CalenderUtils.GetEventsForDay(Globals.myCal, (Calendar) cal.clone());
-                CalenderUtils.SortEvents(evs);
+                List<VEvent> evs = CalenderUtils.getEventsForDay(Globals.myCal, (Calendar) cal.clone());
+                CalenderUtils.sortEvents(evs);
 
                 SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy");
                 listadapter.clear();

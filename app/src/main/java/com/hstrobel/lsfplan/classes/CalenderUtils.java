@@ -31,21 +31,21 @@ import java.util.NoSuchElementException;
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
-    public static List GetEventsNextWeek(Calendar myCal) {
+    public static List getEventsNextWeek(Calendar myCal) {
         java.util.Calendar today = java.util.Calendar.getInstance();
-        return GetEvents(myCal, today, new Dur(7, 0, 0, 0));
+        return getEvents(myCal, today, new Dur(7, 0, 0, 0));
     }
 
-    public static List GetEventsForDay(Calendar myCal, java.util.Calendar date) {
+    public static List getEventsForDay(Calendar myCal, java.util.Calendar date) {
         date.clear(java.util.Calendar.HOUR);
         date.clear(java.util.Calendar.HOUR_OF_DAY);
         date.clear(java.util.Calendar.MINUTE);
         date.clear(java.util.Calendar.SECOND);
         System.out.print(date.toString());
-        return GetEvents(myCal, date, new Dur(1, 0, 0, 0));
+        return getEvents(myCal, date, new Dur(1, 0, 0, 0));
     }
 
-    private static List GetEvents(Calendar myCal, java.util.Calendar date, Dur duration) {
+    private static List getEvents(Calendar myCal, java.util.Calendar date, Dur duration) {
         Period period = new Period(new DateTime(date.getTime()), duration);
         Filter filter = new Filter(new PeriodRule(period));
 
@@ -56,41 +56,43 @@ public class CalenderUtils {
 
     private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
         public int compare(VEvent c1, VEvent c2) {
-            return (TimeWithoutDate(c1).compareTo(TimeWithoutDate(c2)));
+            return (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
         }
     };
 
-    private static java.util.Calendar TimeWithoutDate(VEvent c1) {
+    private static java.util.Calendar timeWithoutDate(VEvent c1) {
         java.util.Calendar d = java.util.Calendar.getInstance();
         d.setTimeInMillis(c1.getStartDate().getDate().getTime());
         d.set(0, 0, 0);
         return d;
     }
 
-    private static DateTime DateWithOutTime(VEvent c1) {
+    private static DateTime dateWithOutTime(VEvent c1) {
         DateTime d = new DateTime(c1.getStartDate().getDate().getTime());
         d.setHours(0);
         d.setMinutes(0);
         return d;
     }
 
-    public static List<VEvent> SortEvents(List<VEvent> events) {
+    public static List<VEvent> sortEvents(List<VEvent> events) {
         Collections.sort(events, comparator);
         return events;// use the comparator as much as u want
     }
 
 
-    public static List<VEvent> GetNextEvent(Calendar myCal) {
+    public static List<VEvent> getNextEvent(Calendar myCal) {
         DateTime starttR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
+        int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
+        java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() + ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
 
-        List events = GetEventsNextWeek(myCal);
+        List events = getEventsNextWeek(myCal);
         for (Object comp : events) {
             if (!(comp instanceof VEvent)) continue;
 
             VEvent event = (VEvent) comp;
-            DateTime startE = GetNextRecuringStartDate(event);
-            if (startE.before(new java.util.Date())) continue;  //past check
+            DateTime startE = getNextRecuringStartDate(event);
+            if (startE.before(fewestTime)) continue;
 
             if (toReturn.isEmpty()) {
                 //first element
@@ -116,12 +118,12 @@ public class CalenderUtils {
         return toReturn;
     }
 
-    public static DateTime GetNextRecuringStartDate(VEvent event) {
+    public static DateTime getNextRecuringStartDate(VEvent event) {
         //start from now, function is for notifications only
-        return GetNextRecuringStartDate(event, new DateTime());
+        return getNextRecuringStartDate(event, new DateTime());
     }
 
-    public static DateTime GetNextRecuringStartDate(VEvent event, DateTime start) {
+    public static DateTime getNextRecuringStartDate(VEvent event, DateTime start) {
         Period period = new Period(start, new Dur(7, 0, 0, 0)); //1w
         PeriodList r = event.calculateRecurrenceSet(period);
 
@@ -156,7 +158,7 @@ public class CalenderUtils {
     }
 
     public static String formatEventShort(VEvent event, Context c) {
-        DateTime time = GetNextRecuringStartDate(event, DateWithOutTime(event));
+        DateTime time = getNextRecuringStartDate(event, dateWithOutTime(event));
         String room = event.getLocation().getValue();
         return String.format(c.getString(R.string.notification_short), time, room);
     }

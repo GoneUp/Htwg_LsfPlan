@@ -2,7 +2,7 @@
     <!-- App -->
     <string name="app_name" translatable="false">LsfPlan</string>
 
-    <string name="title_activity_main" translatable="false">Htwg Lsf Plan</string>
+    <string name="title_activity_main">Lesson Plan</string>
     <string name="title_activity_web_selector" translatable="false">Download</string>
     <string name="title_activity_settings_activity_new">Settings</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3135430559590190/4069382066</string>

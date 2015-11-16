@@ -18,6 +18,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.hstrobel.lsfplan.classes.CalenderValidator;
 import com.hstrobel.lsfplan.classes.Globals;
 
 import org.apache.commons.io.IOUtils;
@@ -84,16 +85,15 @@ public class WebSelector extends ActionBarActivity {
 
     public void DownloadedICS() {
         try {
-            if (! Globals.loader.file.startsWith("BEGIN:VCALENDAR")) {
+            if (!Globals.loader.file.startsWith("BEGIN:VCALENDAR")) {
                 //not a ics file
                 Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileNotValid, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Globals.icsFileStream = null;
+                spinner.setVisibility(View.GONE);
                 return;
             }
 
-            Globals.icsFile =  Globals.loader.file;
-            Globals.icsFileStream =  Globals.loader.fileStream;
             Globals.Update(this);
-
             Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
 
             //save it
@@ -136,8 +136,8 @@ public class WebSelector extends ActionBarActivity {
     }
 
     public class ICSLoader extends AsyncTask<String, String, String> {
-        String file = "";
-        InputStream fileStream = null;
+        public String file = "";
+        public InputStream fileStream = null;
 
         public ICSLoader() {}
         @Override
@@ -146,6 +146,9 @@ public class WebSelector extends ActionBarActivity {
             try {
                 fileStream = new URL(params[0]).openStream();
                 file = IOUtils.toString(fileStream, "UTF-8");
+
+                boolean ignoring = CalenderValidator.CorrectEvents();
+                if (ignoring) DisplayTost("The file contained invalid lectures. The app ignored these.");
 
             } catch (Exception ex) {
                 System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
@@ -165,7 +168,7 @@ public class WebSelector extends ActionBarActivity {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
     }

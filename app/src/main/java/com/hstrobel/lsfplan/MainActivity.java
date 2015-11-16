@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (id == R.id.action_testNotfication) {
             if (Globals.myCal != null) {
-                List<VEvent> evs = CalenderUtils.GetNextEvent(Globals.myCal);
+                List<VEvent> evs = CalenderUtils.getNextEvent(Globals.myCal);
                 for (VEvent ev : evs) {
                     CalenderUtils.showNotfication(ev, this);
                 }

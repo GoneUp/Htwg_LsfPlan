@@ -8,12 +8,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-
-import java.util.List;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
@@ -42,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        VEvent[] events = CalenderUtils.GetNextEvent(Globals.myCal).toArray(new VEvent[0]);
+        VEvent[] events = CalenderUtils.getNextEvent(Globals.myCal).toArray(new VEvent[0]);
 
         if (events.length == 0) {
             Log.i("LSF", "events size 0");
@@ -51,7 +48,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.i("LSF", "events size bigger 1, size is " + events.length);
         }
 
-        Date start = CalenderUtils.GetNextRecuringStartDate(events[0]); //all should have the same start time
+        Date start = CalenderUtils.getNextRecuringStartDate(events[0]); //all should have the same start time
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
         start.setTime(start.getTime() - minutesBefore * 60 * 1000);
 
