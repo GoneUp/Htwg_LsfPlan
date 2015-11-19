@@ -2,6 +2,7 @@ package com.hstrobel.lsfplan.frags;
 
 import android.app.DatePickerDialog;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.support.v4.content.ContextCompat;
@@ -64,6 +65,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     public void onListItemClick(ListView l, View v, int position, long id) {
         // retrieve theListView item
         ListViewItem item = mItems.get(position);
+        Log.d("LSF", String.valueOf(v.getId()));
 
         if (position == 0) {
             //Change day object
@@ -87,15 +89,18 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 CalenderUtils.sortEvents(evs);
 
                 SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy");
+                Drawable icon_book = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action);
+                Drawable icon_left= ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_left);
+                Drawable icon_right= ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_right);
                 listadapter.clear();
-                listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action),
+                listadapter.add(new ListViewItem(icon_left, icon_right,
                         String.format(getString(R.string.main_lecture_day), d.format(cal.getTime())),
-                        getString(R.string.main_lecture_change)));
+                        getString(R.string.main_lecture_change), this));
 
                 for (VEvent ev : evs) {
-                    listadapter.add(new ListViewItem(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action),
+                    listadapter.add(new ListViewItem(icon_book, null,
                             CalenderUtils.getTopic(ev),
-                            CalenderUtils.formatEventShort(ev, getActivity())));
+                            CalenderUtils.formatEventShort(ev, getActivity()), this));
                 }
             }
         } catch (Exception ex){
@@ -113,4 +118,15 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         onResume(); //update
     }
+
+    public void onDateInc() {
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        onResume(); //update
+    }
+
+    public void onDateDec() {
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        onResume(); //update
+    }
+
 }

@@ -25,7 +25,8 @@
     	<!-- the container view for the title and description -->
 		<RelativeLayout android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/IconLeft"
+		    android:layout_toRightOf="@+id/IconLeft"
+			android:layout_toLeftOf="@+id/IconRight"
 		    android:layout_centerVertical="true" >
 		    
 		    <!-- the title view -->
@@ -40,7 +41,16 @@
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:textAppearance="@android:style/TextAppearance.Small" />
-		</RelativeLayout>   
+		</RelativeLayout>
+
+		<!-- the icon view -->
+		<ImageView android:id="@+id/IconRight"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="5dp"
+			android:contentDescription="@string/icon_content_description"
+			android:scaleType="fitXY"
+			android:layout_alignParentRight="true" />
         
     </RelativeLayout>
     
