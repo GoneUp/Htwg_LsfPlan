@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +28,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import java.io.InputStream;
 import java.net.URL;
 
-public class WebSelector extends ActionBarActivity {
+public class WebSelector extends AppCompatActivity {
 
     private WebView webView;
     private SharedPreferences.Editor editor;

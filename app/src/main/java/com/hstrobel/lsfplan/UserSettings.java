@@ -10,10 +10,11 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.hstrobel.lsfplan.classes.Globals;
 
-public class UserSettings extends ActionBarActivity {
+public class UserSettings extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -24,22 +24,33 @@ tools:context="com.hstrobel.lsfplan.WebSelector">
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/webView_HowTo"
         android:id="@+id/infoText"
-        android:layout_above="@+id/imageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/imageView" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_alignParentBottom="true"
         android:src="@drawable/export_icon"
+        android:layout_above="@+id/infoText2"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/webView_HowToStep3"
+        android:id="@+id/infoText2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+         />
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"

@@ -19,11 +19,13 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Duration;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -158,9 +160,12 @@ public class CalenderUtils {
     }
 
     public static String formatEventShort(VEvent event, Context c) {
-        DateTime time = getNextRecuringStartDate(event, dateWithOutTime(event));
+        Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
+        Date time_start = getNextRecuringStartDate(event, dateWithOutTime(event));
+        Date time_end = d.getTime(time_start);
+
         String room = event.getLocation().getValue();
-        return String.format(c.getString(R.string.notification_short), time, room);
+        return String.format(c.getString(R.string.notification_short), time_start, time_end, room);
     }
 
     public static int getId(VEvent event) {

@@ -4,8 +4,8 @@
     <string name="main_lecture_change">Drücken zum ändern</string>
     <string name="main_lecture_day" formatted="false">Vorlesungen für %s</string>
     <string name="main_noCalender">Kein Plan vorhanden..\nBitte lade einen Vorlesungsplan via Menu -> Download Plan.</string>
-    <string name="notification_long" formatted="false">Thema: %s -</string>
-    <string name="notification_short" formatted="false"> Zeit: %tR - Raum: %s</string>
+    <string name="notification_long" formatted="false">Thema: %s - </string>
+    <string name="notification_short" formatted="false">Zeit: %tR bis %tR - Raum: %s</string>
     <string name="notification_title">Nächste Vorlesung</string>
     <string name="pref_cat_general">Allgemein</string>
     <string name="pref_description_enableNotifications">Zeige Benachrichtigung bevor die Vorlesung beginnt</string>
@@ -15,7 +15,7 @@
     <string name="pref_title_enableNotifications">Benachrichtigungen aktivieren</string>
     <string name="pref_title_timeSetter">Wann willst eine Benachrichtigung erhalten?</string>
     <string name="title_activity_settings_activity_new">Einstellungen</string>
-    <string name="webView_HowTo">1. Navigiere zum gewünschten Plan\n2. Drücke den Kalender Export Button am Seitenende\n3.  Der Download startet etwa nach ~10 secs</string>
+    <string name="webView_HowTo">1. Navigiere zum gewünschten Plan\n2. Drücke den Kalender Export Button am Seitenende</string>
     <string name="webView_fileLoaded">Datei geladen!</string>
     <string name="webView_fileLoading">Download gestartet\nBitte warten.</string>
     <string name="webView_fileNotValid">Datei nicht valide!</string>
@@ -25,5 +25,6 @@
     <string name="pref_description_ads">Unterstütze den Entwickler </string>
     <string name="pref_title_ads">Aktiviere Werbung</string>
     <string name="title_activity_main">Vorlesungsplan</string>
+    <string name="webView_HowToStep3">3. Der Download startet etwa nach ~10 secs</string>
 
 </resources>

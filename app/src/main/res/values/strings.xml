@@ -16,10 +16,8 @@
     <!-- Web -->
     <string name="webView_fileNotValid">File not valid!</string>
     <string name="webView_fileLoaded">Loaded File!</string>
-    <string name="webView_HowTo">1. Navigate to the wanted lecture plan\n
-        2. Click the calender export icon at the bottom of the page\n
-        3. The download will start after ~10 secs</string>
-
+    <string name="webView_HowTo">1. Navigate to the wanted lecture plan\n2. Click the calender export icon at the bottom of the page</string>
+    <string name="webView_HowToStep3">3. The download will start after ~10 secs</string>
 
     <!-- Settings -->
     <string name="pref_cat_general">General</string>
@@ -56,7 +54,7 @@
     <!-- Misc -->
     <string name="notification_title">Next lecture</string>
     <string name="notification_long"  formatted="false" >Topic: %s - </string>
-    <string name="notification_short"  formatted="false" > Time: %tR - Room: %s</string>
+    <string name="notification_short"  formatted="false" > Time: %tR to %tR - Room: %s</string>
     <string name="webView_fileLoading">Download started\nPlease wait.</string>
     <string name="icon_content_description" translatable="false">Desc</string>
     <string name="main_lecture_day">Lectures for %s</string>
