@@ -6,6 +6,22 @@
 
     <PreferenceCategory android:title="@string/pref_cat_general">
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enableRefresh"
+            android:summary="@string/pref_description_refresh"
+            android:title="@string/pref_title_refresh" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enableAds"
+            android:summary="@string/pref_description_ads"
+            android:title="@string/pref_title_ads" />
+        <Preference
+            android:key="reset"
+            android:title="@string/pref_reset"></Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_cat_notify">
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="enableNotifications"
             android:summary="@string/pref_description_enableNotifications"
@@ -24,17 +40,9 @@
             android:entries="@array/pref_soundMode_entries"
             android:entryValues="@array/pref_soundMode_values"
             android:defaultValue="@string/pref_soundMode_default" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="enableAds"
-            android:summary="@string/pref_description_ads"
-            android:title="@string/pref_title_ads" />
-        <Preference
-            android:key="reset"
-            android:title="@string/pref_reset"></Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_cat_copy">
+    <PreferenceCategory android:title="@string/pref_cat_credits">
         <Preference
             android:key="info"
             android:summary="@string/pref_description_info"

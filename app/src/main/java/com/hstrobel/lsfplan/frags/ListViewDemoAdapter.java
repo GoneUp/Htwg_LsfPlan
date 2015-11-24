@@ -64,7 +64,6 @@ public class ListViewDemoAdapter extends ArrayAdapter<ListViewItem> {
             viewHolder.ivIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("LSF", "LEFT");
                     MainListFragment frag = (MainListFragment) v.getTag();
                     frag.onDateDec();
 
@@ -74,7 +73,6 @@ public class ListViewDemoAdapter extends ArrayAdapter<ListViewItem> {
             viewHolder.ivIcon2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("LSF", "RIGHT");
                     MainListFragment frag = (MainListFragment) v.getTag();
                     frag.onDateInc();
                 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
@@ -27,6 +28,9 @@ import java.net.ConnectException;
  * Created by Henry on 09.11.2015.
  */
 public class Globals {
+    public static boolean DEBUG = true;
+
+
     public static WebSelector.ICSLoader loader = null;
     public static SharedPreferences mSettings;
     public static boolean initalized = false;
@@ -99,7 +103,7 @@ public class Globals {
 
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putString("ICS_FILE", Globals.icsFile);
-            editor.commit();
+            editor.apply();
         }
 
     }

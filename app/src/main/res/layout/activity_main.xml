@@ -9,6 +9,7 @@
     android:id="@+id/mainParentView">
     <fragment
         android:name="com.hstrobel.lsfplan.frags.MainDefaultFragment"
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/adView"
@@ -16,6 +17,7 @@
         android:id="@+id/mainDefaultFragment"/>
     <fragment
         android:name="com.hstrobel.lsfplan.frags.MainListFragment"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/adView"

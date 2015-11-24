@@ -35,7 +35,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Log.d("LSF", "MainListFragment:onCreate");
         // initialize the items list
         mItems = new ArrayList<ListViewItem>();
         Resources resources = getResources();
@@ -57,6 +57,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // remove the dividers from the ListView of the ListFragment
+        Log.d("LSF", "MainListFragment:onCreateView");
         getListView().setDivider(null);
     }
 

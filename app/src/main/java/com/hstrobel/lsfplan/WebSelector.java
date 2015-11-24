@@ -27,6 +27,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class WebSelector extends AppCompatActivity {
 
@@ -50,10 +52,11 @@ public class WebSelector extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                System.out.println(url);
-                if (Uri.parse(url).getHost().endsWith("https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish")) {
+                Log.d("LSF", url);
+                if (url.startsWith("https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish")) {
                     //trying to acces a file
                     DisplayTost(getString(R.string.webView_fileLoading));
+                    spinner.setVisibility(View.VISIBLE);
                 }
                 return false;
             }
@@ -61,10 +64,10 @@ public class WebSelector extends AppCompatActivity {
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                DisplayTost(getString(R.string.webView_fileLoading));
+                //DisplayTost(getString(R.string.webView_fileLoading));
+                Log.d("LSF", "setDownloadListener");
                 Globals.loader = new ICSLoader();
                 Globals.loader.execute(url);
-                spinner.setVisibility(View.VISIBLE);
             }
         });
         webView.getSettings().setBuiltInZoomControls(true);
@@ -99,7 +102,8 @@ public class WebSelector extends AppCompatActivity {
 
             //save it
             editor.putBoolean("gotICS", true);
-            editor.putString("ICS_FILE",  Globals.icsFile);
+            editor.putString("ICS_FILE", Globals.icsFile);
+            editor.putLong("ICS_DATE", Calendar.getInstance().getTimeInMillis());
            // editor.putString("URL", webView.getUrl());
             editor.commit();
 

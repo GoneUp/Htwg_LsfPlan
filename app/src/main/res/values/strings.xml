@@ -12,16 +12,27 @@
     <string name="action_settings">Settings</string>
     <string name="main_noCalender">Calender is missing.\nPlease download a Lecture Plan via Menu -> Download Calender</string>
 
+    <string name="main_lecture_day">Lectures for %s</string>
+    <string name="main_lecture_change">Select to change</string>
+
+    <string name="main_refresh_title">Refresh data</string>
+    <string name="main_refresh_body" formatted="false">The stored data is older than two weeks.\nYou should consider to redownload it to have always a actual lecture plan.\n\nTip: If you don\'t want to see this, disable it at the settings.</string>
+    <string name="main_button_reload" translatable="false">Download</string>
+    <string name="main_button_no" translatable="false">Nope</string>
+
 
     <!-- Web -->
     <string name="webView_fileNotValid">File not valid!</string>
     <string name="webView_fileLoaded">Loaded File!</string>
     <string name="webView_HowTo">1. Navigate to the wanted lecture plan\n2. Click the calender export icon at the bottom of the page</string>
     <string name="webView_HowToStep3">3. The download will start after ~10 secs</string>
+    <string name="webView_fileLoading">Download started\nPlease wait.</string>
 
     <!-- Settings -->
     <string name="pref_cat_general">General</string>
-    <string name="pref_cat_copy" translatable="false">Credits</string>
+    <string name="pref_cat_notify">Notifications</string>
+    <string name="pref_cat_credits" translatable="false">Credits</string>
+
     <string name="pref_title_enableNotifications">Enable Notifications</string>
     <string name="pref_description_enableNotifications">Show next lecture (room/time) as a notification</string>
 
@@ -31,10 +42,16 @@
     <string name="pref_title_timeSetter">When do you want to be notfied?</string>
     <string name="pref_description_timeSetter">%d Minutes before</string>
 
+    <string name="pref_title_refresh">Outdated data warning</string>
+    <string name="pref_description_refresh">You will get a warning message if the stored data is older than two weeks.</string>
+
+    <string name="pref_description_ads">Support the developer</string>
+    <string name="pref_title_ads">Enable Ads</string>
+
     <string name="pref_reset" translatable="false">Reset app</string>
 
-    <string name="pref_soundMode">Notification Type</string>
-    <string name="pref_soundMode_default">Silent</string>
+    <string name="pref_soundMode">Notification Tone</string>
+    <string name="pref_soundMode_default" translatable="false">Silent</string>
 
     <string name="pref_soundMode_Silent">Silent</string>
     <string name="pref_soundMode_Vib">Vibrate</string>
@@ -55,10 +72,7 @@
     <string name="notification_title">Next lecture</string>
     <string name="notification_long"  formatted="false" >Topic: %s - </string>
     <string name="notification_short"  formatted="false" > Time: %tR to %tR - Room: %s</string>
-    <string name="webView_fileLoading">Download started\nPlease wait.</string>
     <string name="icon_content_description" translatable="false">Desc</string>
-    <string name="main_lecture_day">Lectures for %s</string>
-    <string name="main_lecture_change">Select to change</string>
-    <string name="pref_description_ads">Support the developer</string>
-    <string name="pref_title_ads">Enable Ads</string>
+
+
 </resources>

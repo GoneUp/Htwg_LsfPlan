@@ -1,11 +1,20 @@
 package com.hstrobel.lsfplan;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Debug;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialog;
+import android.util.DebugUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,28 +32,42 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences mSettings;
     TextView infoText;
+    Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
                     .add(R.id.mainDefaultFragment, new MainDefaultFragment(), "def")
                     .commit();
         }
+        */
+
+        infoText = (TextView) findViewById(R.id.txtInfo);
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-        infoText = (TextView) findViewById(R.id.txtInfo);
+        int starts = mSettings.getInt("starts", 0);
+        starts++;
+        mSettings.edit().putInt("starts", starts).apply(); // maybe for a rating dialog later
+
+
+        if (shouldDisplayReloadDialog()) {
+            DisplayDialog();
+        }
 
         Log.d("LSF", "onCreate");
     }
@@ -53,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
+        mMenu = menu;
         return true;
     }
 
@@ -133,6 +156,46 @@ public class MainActivity extends AppCompatActivity {
             Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
 
+    }
+
+    private boolean shouldDisplayReloadDialog() {
+        boolean enabled = mSettings.getBoolean("enableRefresh", true);
+        if (!enabled) return false;
+
+        long time_load = mSettings.getLong("ICS_DATE", Calendar.getInstance().getTimeInMillis());
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(time_load);
+        cal.add(Calendar.WEEK_OF_YEAR, 2); //2 weeks reload timephase
+
+        if (cal.before(new GregorianCalendar())) {
+            Log.d("LSF", "displayReloadDialog: true # " + cal);
+            return true;
+        }
+        return false;
+    }
+
+    private void DisplayDialog() {
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setTitle(R.string.main_refresh_title)
+                .setMessage(R.string.main_refresh_body);
+
+        builder.setPositiveButton(getString(R.string.main_button_reload), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                onOptionsItemSelected(mMenu.findItem(R.id.action_setCalender));
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.main_button_no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

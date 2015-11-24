@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.hstrobel.lsfplan.classes.Globals;
 
@@ -40,10 +42,10 @@ public class UserSettings extends AppCompatActivity {
             Preference myPref = findPreference("reset");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    //open browser or intent here
                     SharedPreferences.Editor editor = Globals.mSettings.edit();
                     editor.clear();
                     editor.commit();
+                    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, true);
                     Globals.initalized = false;
                     NavUtils.navigateUpFromSameTask(getActivity());
                     return true;
@@ -67,13 +69,7 @@ public class UserSettings extends AppCompatActivity {
             myPref.setSummary(String.format(getString(R.string.pref_description_timeSetter), time));
 
             ListPreference sPref = (ListPreference) findPreference("soundMode");
-            if (sPref.getValue() == null){
-                SharedPreferences.Editor editor = Globals.mSettings.edit();
-                editor.putString("soundMode", getString(R.string.pref_soundMode_default));
-                editor.commit();
-                sPref.setValue(getString(R.string.pref_soundMode_default));
-            }
-            sPref.setSummary(sPref.getEntry());
+            if (sPref.getEntry() != null) sPref.setSummary(sPref.getEntry());
 
             myPref = findPreference("info");
             PackageInfo pInfo = null;
