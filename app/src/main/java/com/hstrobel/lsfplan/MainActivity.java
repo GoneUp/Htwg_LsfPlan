@@ -162,12 +162,16 @@ public class MainActivity extends AppCompatActivity {
         boolean enabled = mSettings.getBoolean("enableRefresh", true);
         if (!enabled) return false;
 
+        GregorianCalendar now = new GregorianCalendar(); //one warning weekly
+        int week_shown = mSettings.getInt("ICS_WEEK_SHOWN", -1);
+        if (week_shown == now.get(Calendar.WEEK_OF_YEAR)) return false;
+
         long time_load = mSettings.getLong("ICS_DATE", Calendar.getInstance().getTimeInMillis());
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTimeInMillis(time_load);
         cal.add(Calendar.WEEK_OF_YEAR, 2); //2 weeks reload timephase
 
-        if (cal.before(new GregorianCalendar())) {
+        if (cal.before(now)) {
             Log.d("LSF", "displayReloadDialog: true # " + cal);
             return true;
         }
@@ -196,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
         // 3. Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        mSettings.edit().putInt("ICS_WEEK_SHOWN", new GregorianCalendar().get(Calendar.WEEK_OF_YEAR)).apply();
     }
 
     @Override

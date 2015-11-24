@@ -51,7 +51,7 @@
     <string name="pref_reset" translatable="false">Reset app</string>
 
     <string name="pref_soundMode">Notification Tone</string>
-    <string name="pref_soundMode_default" translatable="false">Silent</string>
+    <string name="pref_soundMode_default" translatable="false">Vibrate</string>
 
     <string name="pref_soundMode_Silent">Silent</string>
     <string name="pref_soundMode_Vib">Vibrate</string>
