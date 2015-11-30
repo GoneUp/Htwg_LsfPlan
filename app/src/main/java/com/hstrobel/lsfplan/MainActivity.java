@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         long time_load = mSettings.getLong("ICS_DATE", Calendar.getInstance().getTimeInMillis());
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTimeInMillis(time_load);
-        cal.add(Calendar.WEEK_OF_YEAR, 2); //2 weeks reload timephase
+        cal.add(Calendar.WEEK_OF_YEAR, 4); //2 weeks reload timephase
 
         if (cal.before(now)) {
             Log.d("LSF", "displayReloadDialog: true # " + cal);

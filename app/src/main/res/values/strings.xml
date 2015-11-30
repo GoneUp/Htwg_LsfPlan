@@ -16,7 +16,7 @@
     <string name="main_lecture_change">Select to change</string>
 
     <string name="main_refresh_title">Refresh data</string>
-    <string name="main_refresh_body" formatted="false">The stored data is older than two weeks.\nYou should consider to redownload it to have always a actual lecture plan.\n\nTip: If you don\'t want to see this, disable it at the settings.</string>
+    <string name="main_refresh_body" formatted="false">The stored data is older than four weeks.\nYou should consider to redownload it to have always a actual lecture plan.\n\nTip: If you don\'t want to see this, disable it at the settings.</string>
     <string name="main_button_reload" translatable="false">Download</string>
     <string name="main_button_no" translatable="false">Nope</string>
 

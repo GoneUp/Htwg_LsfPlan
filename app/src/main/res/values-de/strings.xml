@@ -27,7 +27,7 @@
     <string name="webView_HowToStep3">3. Der Download startet etwa nach ~10 secs</string>
     <string name="pref_title_refresh">Warnungen aktiviern</string>
     <string name="main_refresh_title">Aktualisierung</string>
-    <string name="main_refresh_body">Der gespeicherte Plan ist älter als zwei Wochen.\nEs wird empfohlen gelegentlich die Daten zu aktualisieren um keine Vorlesungen zu verpassen.\n\nTipp: Diese Warnung kann in den Einstellungen deaktiviert werden</string>
+    <string name="main_refresh_body">Der gespeicherte Plan ist älter als vier Wochen.\nEs wird empfohlen gelegentlich die Daten zu aktualisieren um keine Vorlesungen zu verpassen.\n\nTipp: Diese Warnung kann in den Einstellungen deaktiviert werden</string>
     <string name="pref_description_refresh">Du bekommst eine Warnmeldung wenn der Plan älter als zwei Wochen ist</string>
     <string name="pref_cat_notify">Benachrichtigungen</string>
 
