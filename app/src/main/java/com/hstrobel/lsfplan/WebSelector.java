@@ -53,7 +53,7 @@ public class WebSelector extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d("LSF", url);
-                if (url.startsWith("https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish")) {
+                if (url.startsWith("https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&status=transform")) {
                     //trying to acces a file
                     DisplayTost(getString(R.string.webView_fileLoading));
                     spinner.setVisibility(View.VISIBLE);

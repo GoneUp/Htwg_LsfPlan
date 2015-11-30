@@ -47,5 +47,8 @@
             android:key="info"
             android:summary="@string/pref_description_info"
             android:title="@string/pref_title_info" />
+        <Preference
+            android:key="github"
+            android:title="@string/pref_github_info"/>
     </PreferenceCategory>
 </PreferenceScreen>

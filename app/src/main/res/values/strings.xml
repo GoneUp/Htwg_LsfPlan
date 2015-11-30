@@ -73,6 +73,7 @@
     <string name="notification_long"  formatted="false" >Topic: %s - </string>
     <string name="notification_short"  formatted="false" > Time: %tR to %tR - Room: %s</string>
     <string name="icon_content_description" translatable="false">Desc</string>
+    <string name="pref_github_info" translatable="false">Code on Github</string>
 
 
 </resources>

@@ -1,9 +1,11 @@
 package com.hstrobel.lsfplan;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -52,7 +54,14 @@ public class UserSettings extends AppCompatActivity {
                 }
             });
 
-
+            myPref = findPreference("github");
+            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GoneUp/Htwg_LsfPlan"));
+                    startActivity(i);
+                    return true;
+                }
+            });
         }
 
         @Override

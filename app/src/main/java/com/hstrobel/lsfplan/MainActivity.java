@@ -119,25 +119,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             Globals.InitCalender(this, true);
 
-
-            if (Globals.myCal == null) {
-                if (getFragmentManager().findFragmentByTag("list") != null) {
-                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainListviewFragment, new MainDefaultFragment(), "def");
-                    transaction.commit();
-                    infoText = (TextView) findViewById(R.id.txtInfo);
-                }
-
-                infoText.setText(R.string.main_noCalender);
-            } else {
-                if (getFragmentManager().findFragmentByTag("def") != null) {
-                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainDefaultFragment, new MainListFragment(), "list");
-                    //transaction.commit();
-                }
-            }
-
-
             //Ads meh
             AdView mAdView = (AdView) findViewById(R.id.adView);
             if (mSettings.getBoolean("enableAds", false)) {
@@ -150,6 +131,26 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mAdView.setVisibility(View.GONE);
             }
+
+            if (Globals.myCal == null) {
+                if (getFragmentManager().findFragmentByTag("list") != null) {
+                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainListviewFragment, new MainDefaultFragment(), "def");
+                    transaction.commit();
+                    infoText = (TextView) findViewById(R.id.txtInfo);
+                }
+
+                infoText.setText(R.string.main_noCalender);
+                mAdView.setVisibility(View.GONE); //disable ads on empty mode, too aggresive
+            } else {
+                if (getFragmentManager().findFragmentByTag("def") != null) {
+                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainDefaultFragment, new MainListFragment(), "list");
+                    //transaction.commit();
+                }
+            }
+
+
 
         } catch (Exception ex) {
             Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));
