@@ -1,20 +1,13 @@
 package com.hstrobel.lsfplan;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Debug;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialog;
-import android.util.DebugUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences mSettings;
     TextView infoText;
     Menu mMenu;
+    AdView mAdView;
+
+    MainDefaultFragment mDefFragment;
+    MainListFragment mListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
         */
 
         infoText = (TextView) findViewById(R.id.txtInfo);
+        mAdView = (AdView) findViewById(R.id.adView);
+        mDefFragment = (MainDefaultFragment) getFragmentManager().findFragmentById(R.id.mainDefaultFragment);
+        mListFragment = (MainListFragment)  getFragmentManager().findFragmentById(R.id.mainListFragment);
+        if (mDefFragment.getView() != null) mDefFragment.getView().setVisibility(View.GONE);
+        if (mListFragment.getView() != null )mListFragment.getView().setVisibility(View.GONE);
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -120,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             Globals.InitCalender(this, true);
 
             //Ads meh
-            AdView mAdView = (AdView) findViewById(R.id.adView);
             if (mSettings.getBoolean("enableAds", false)) {
                 mAdView.setVisibility(View.VISIBLE);
                 AdRequest adRequest = new AdRequest.Builder()
@@ -132,28 +133,22 @@ public class MainActivity extends AppCompatActivity {
                 mAdView.setVisibility(View.GONE);
             }
 
+
             if (Globals.myCal == null) {
-                if (getFragmentManager().findFragmentByTag("list") != null) {
-                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainListviewFragment, new MainDefaultFragment(), "def");
-                    transaction.commit();
-                    infoText = (TextView) findViewById(R.id.txtInfo);
-                }
+                if (mDefFragment.getView() != null) mDefFragment.getView().setVisibility(View.VISIBLE);
+                if (mListFragment.getView() != null )mListFragment.getView().setVisibility(View.GONE);
 
                 infoText.setText(R.string.main_noCalender);
                 mAdView.setVisibility(View.GONE); //disable ads on empty mode, too aggresive
             } else {
-                if (getFragmentManager().findFragmentByTag("def") != null) {
-                    android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainDefaultFragment, new MainListFragment(), "list");
-                    //transaction.commit();
-                }
+                if (mDefFragment.getView() != null) mDefFragment.getView().setVisibility(View.GONE);
+                if (mListFragment.getView() != null )mListFragment.getView().setVisibility(View.VISIBLE);
             }
 
 
 
         } catch (Exception ex) {
-            Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getMessage(ex));
             Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
 
@@ -209,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d("LSF", "onDestroy");
-        //Globals.Save();
+        //Globals.Save(); //no changes yet
     }
 }
 

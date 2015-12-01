@@ -43,7 +43,7 @@
     <string name="pref_description_timeSetter">%d Minutes before</string>
 
     <string name="pref_title_refresh">Outdated data warning</string>
-    <string name="pref_description_refresh">You will get a warning message if the stored data is older than two weeks.</string>
+    <string name="pref_description_refresh">You will get a warning message if the stored data is older than four weeks.</string>
 
     <string name="pref_description_ads">Support the developer</string>
     <string name="pref_title_ads">Enable Ads</string>
