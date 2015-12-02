@@ -1,7 +1,6 @@
 package com.hstrobel.lsfplan.frags;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.classes.EventItem;
 
 import java.util.List;
 
-public class ListViewDemoAdapter extends ArrayAdapter<ListViewItem> {
+public class EventListAdapter extends ArrayAdapter<EventItem> {
 
-    public ListViewDemoAdapter(Context context, List<ListViewItem> items) {
+    public EventListAdapter(Context context, List<EventItem> items) {
         super(context, R.layout.listview_item, items);
         setNotifyOnChange(true);
     }
@@ -49,7 +49,7 @@ public class ListViewDemoAdapter extends ArrayAdapter<ListViewItem> {
         }
 
         // update the item view
-        ListViewItem item = getItem(position);
+        EventItem item = getItem(position);
         viewHolder.ivIcon.setImageDrawable(item.icon);
         viewHolder.ivIcon.setTag(item.fragment);
         if (viewHolder.ivIcon2 != null) {

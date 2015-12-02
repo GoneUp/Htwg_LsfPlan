@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hstrobel.lsfplan.classes.CalenderUtils;
+import com.hstrobel.lsfplan.classes.EventItem;
 import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.R;
 
@@ -27,9 +28,9 @@ import java.util.List;
 
 
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
-    private List<ListViewItem> mItems;        // ListView items list
+    private List<EventItem> mItems;        // ListView items list
     private Calendar cal;
-    private ListViewDemoAdapter listadapter;
+    private EventListAdapter listadapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,12 +38,12 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
         Log.d("LSF", "MainListFragment:onCreate");
         // initialize the items list
-        mItems = new ArrayList<ListViewItem>();
+        mItems = new ArrayList<EventItem>();
         Resources resources = getResources();
         cal = Calendar.getInstance();
 
         // initialize and set the list adapter
-        listadapter = new ListViewDemoAdapter(getActivity(), mItems);
+        listadapter = new EventListAdapter(getActivity(), mItems);
         setListAdapter(listadapter);
     }
 
@@ -65,7 +66,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // retrieve theListView item
-        ListViewItem item = mItems.get(position);
+        EventItem item = mItems.get(position);
         Log.d("LSF", String.valueOf(v.getId()));
 
         if (position == 0) {
@@ -94,12 +95,12 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 Drawable icon_left= ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_left);
                 Drawable icon_right= ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_right);
                 listadapter.clear();
-                listadapter.add(new ListViewItem(icon_left, icon_right,
+                listadapter.add(new EventItem(icon_left, icon_right,
                         String.format(getString(R.string.main_lecture_day), d.format(cal.getTime())),
                         getString(R.string.main_lecture_change), this));
 
                 for (VEvent ev : evs) {
-                    listadapter.add(new ListViewItem(icon_book, null,
+                    listadapter.add(new EventItem(icon_book, null,
                             CalenderUtils.getTopic(ev),
                             CalenderUtils.formatEventShort(ev, getActivity()), this));
                 }

@@ -44,6 +44,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.3.0'
     compile 'org.mnode.ical4j:ical4j:1.0.6'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.jsoup:jsoup:1.7.3'
 }
 
 
