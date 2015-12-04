@@ -60,12 +60,22 @@ public class MainActivity extends AppCompatActivity {
         if (mDefFragment.getView() != null) mDefFragment.getView().setVisibility(View.GONE);
         if (mListFragment.getView() != null )mListFragment.getView().setVisibility(View.GONE);
 
+        //Settings
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         int starts = mSettings.getInt("starts", 0);
-        starts++;
-        mSettings.edit().putInt("starts", starts).apply(); // maybe for a rating dialog later
+        String savedURL = mSettings.getString("URL", "missing");
 
+        starts++;
+
+        SharedPreferences.Editor editor =  mSettings.edit();
+        editor.putInt("starts", starts); // maybe for a rating dialog later
+
+        if (savedURL == "missing") {
+            savedURL = "https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList";
+            editor.putString("URL", savedURL);
+        }
+        editor.apply();
 
         if (shouldDisplayReloadDialog()) {
             DisplayDialog();
@@ -95,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (id == R.id.action_setCalender) {
             Intent intent = new Intent(this, WebSelector.class);
+            startActivity(intent);
+        } else if (id == R.id.action_setCalenderNew) {
+            Intent intent = new Intent(this, HtmlWebSelector.class);
             startActivity(intent);
         } else if (id == R.id.action_testNotfication) {
             if (Globals.myCal != null) {
