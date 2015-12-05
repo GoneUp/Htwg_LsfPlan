@@ -1,15 +1,10 @@
 package com.hstrobel.lsfplan;
 
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,33 +14,27 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.hstrobel.lsfplan.classes.CalenderValidator;
 import com.hstrobel.lsfplan.classes.Globals;
+import com.hstrobel.lsfplan.classes.ICSLoader;
+import com.hstrobel.lsfplan.frags.AbstractWebSelector;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+public class WebSelector extends AbstractWebSelector {
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-public class WebSelector extends AppCompatActivity {
-
+    private WebSelector local;
     private WebView webView;
     private SharedPreferences.Editor editor;
-    private Handler  mHandler;
-    private ProgressBar spinner;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_selector);
 
+        local = this;
         mHandler = new Handler();
 
         if (getActionBar() != null) getActionBar().setDisplayHomeAsUpEnabled(true);
-        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner = (ProgressBar) findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
         webView = (WebView) findViewById(R.id.webView);
@@ -66,7 +55,7 @@ public class WebSelector extends AppCompatActivity {
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                 //DisplayTost(getString(R.string.webView_fileLoading));
                 Log.d("LSF", "setDownloadListener");
-                Globals.loader = new ICSLoader();
+                Globals.loader = new ICSLoader(local, mHandler);
                 Globals.loader.execute(url);
             }
         });
@@ -76,46 +65,8 @@ public class WebSelector extends AppCompatActivity {
         SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         editor = mSettings.edit();
         String savedURL = mSettings.getString("URL", "missing");
-
-        if (savedURL == "missing") {
-            savedURL = "https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList";
-            editor.putString("URL", savedURL);
-            editor.commit();
-        }
-
         webView.loadUrl(savedURL);
 
-    }
-
-    public void DownloadedICS() {
-        try {
-            if (!Globals.loader.file.startsWith("BEGIN:VCALENDAR")) {
-                //not a ics file
-                Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileNotValid, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                Globals.icsFileStream = null;
-                spinner.setVisibility(View.GONE);
-                return;
-            }
-
-            Globals.Update(this);
-            Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();
-
-            //save it
-            editor.putBoolean("gotICS", true);
-            editor.putString("ICS_FILE", Globals.icsFile);
-            editor.putLong("ICS_DATE", Calendar.getInstance().getTimeInMillis());
-           // editor.putString("URL", webView.getUrl());
-            editor.commit();
-
-            //navigate back to main
-            NavUtils.navigateUpFromSameTask(this);
-
-        } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(), "DL FAIL " , Toast.LENGTH_SHORT).show();
-            Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
-            spinner.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -138,35 +89,6 @@ public class WebSelector extends AppCompatActivity {
 
         // Otherwise defer to system default behavior.
         super.onBackPressed();
-    }
-
-    public class ICSLoader extends AsyncTask<String, String, String> {
-        public String file = "";
-        public InputStream fileStream = null;
-
-        public ICSLoader() {}
-        @Override
-        protected String doInBackground(String... params) {
-            // Making HTTP request
-            try {
-                fileStream = new URL(params[0]).openStream();
-                file = IOUtils.toString(fileStream, "UTF-8");
-
-                boolean ignoring = CalenderValidator.CorrectEvents();
-                if (ignoring) DisplayTost("The file contained invalid lectures. The app ignored these.");
-
-            } catch (Exception ex) {
-                System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
-                System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
-            }
-            return file;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            DownloadedICS();
-        }
     }
 
     protected void DisplayTost(final String text) {

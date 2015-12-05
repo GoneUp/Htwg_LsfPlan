@@ -1,38 +1,35 @@
 package com.hstrobel.lsfplan;
 
+import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
+import android.widget.TextView;
 
-import java.util.HashMap;
+import com.hstrobel.lsfplan.classes.PlanGroup;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Henry on 02.12.2015.
  */
 public class PlanListAdapter implements ExpandableListAdapter {
-    private class PlanItem {
-        public String URL;
-        public String name;
-    }
-    private class PlanGroup {
-        public String name;
-        public List<PlanItem> items = new LinkedList<>();
-    }
-
     private List<PlanGroup> list;
+    private Context mContext;
 
-
-    public PlanListAdapter(){
+    public PlanListAdapter(Context mContext) {
         list = new LinkedList<>();
+        this.mContext = mContext;
     }
 
     @Override
-    public void registerDataSetObserver(DataSetObserver observer) {}
+    public void registerDataSetObserver(DataSetObserver observer) {
+
+    }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {}
@@ -79,20 +76,32 @@ public class PlanListAdapter implements ExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from();
-        convertView = inflater.inflate(R.layout.listview_item, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        convertView = inflater.inflate(R.layout.planview_item, parent, false);
 
-        return null;
+        TextView text = (TextView) convertView.findViewById(R.id.planText);
+        text.setTypeface(null, Typeface.BOLD);
+        PlanGroup group = list.get(groupPosition);
+        text.setText(group.name);
+
+        return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        convertView = inflater.inflate(R.layout.planview_item, parent, false);
+
+        TextView text = (TextView) convertView.findViewById(R.id.planText);
+        PlanGroup group = list.get(groupPosition);
+        text.setText(" -- " + group.items.get(childPosition).name);
+
+        return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     @Override
@@ -102,7 +111,7 @@ public class PlanListAdapter implements ExpandableListAdapter {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return list.isEmpty();
     }
 
     @Override
@@ -124,4 +133,29 @@ public class PlanListAdapter implements ExpandableListAdapter {
     public long getCombinedGroupId(long groupId) {
         return 0;
     }
+
+    public void clear() {
+        list.clear();
+    }
+
+    public void addPlanGroup(String name) {
+        PlanGroup group = new PlanGroup(name);
+        list.add(group);
+    }
+
+    public void addPlanItem(String groupName, String name, String url) {
+        PlanGroup group = null;
+        for (PlanGroup g : list) {
+            if (g.name == groupName) {
+                group = g;
+                break;
+            }
+        }
+        if (group == null) return;
+
+        PlanGroup.PlanItem item = new PlanGroup.PlanItem(name, url);
+        group.items.add(item);
+    }
+
+
 }

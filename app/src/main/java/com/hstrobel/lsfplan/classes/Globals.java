@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
-
-import com.hstrobel.lsfplan.WebSelector;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -22,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.ConnectException;
 
 /**
  * Created by Henry on 09.11.2015.
@@ -31,7 +27,7 @@ public class Globals {
     public static boolean DEBUG = true;
 
 
-    public static WebSelector.ICSLoader loader = null;
+    public static ICSLoader loader = null;
     public static SharedPreferences mSettings;
     public static boolean initalized = false;
     public static boolean updated = false;

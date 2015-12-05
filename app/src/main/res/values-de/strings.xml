@@ -30,5 +30,6 @@
     <string name="main_refresh_body">Der gespeicherte Plan ist älter als vier Wochen.\nEs wird empfohlen gelegentlich die Daten zu aktualisieren um keine Vorlesungen zu verpassen.\n\nTipp: Diese Warnung kann in den Einstellungen deaktiviert werden</string>
     <string name="pref_description_refresh">Du bekommst eine Warnmeldung wenn der Plan älter als vier Wochen ist</string>
     <string name="pref_cat_notify">Benachrichtigungen</string>
+    <string name="action_refesh">Refresh</string>
 
 </resources>

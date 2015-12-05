@@ -7,7 +7,7 @@
         <!-- Set AppCompat’s color theming attrs -->
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/darkblue</item>
-
+        <item name="android:colorPressedHighlight">@color/orange</item>
         <!-- The rest of your attributes -->
     </style>
 

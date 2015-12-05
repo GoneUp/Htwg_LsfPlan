@@ -2,10 +2,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.hstrobel.lsfplan.MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_setCalender" android:title="@string/action_setCalender"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_testNotfication" android:title="Test Notify"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_setCalender"
+        android:orderInCategory="100"
+        android:title="@string/action_setCalender"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_setCalenderNew"
+        android:orderInCategory="100"
+        android:title="DL NEW"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_testNotfication"
+        android:orderInCategory="100"
+        android:title="Test Notify"
+        app:showAsAction="never" />
 </menu>
