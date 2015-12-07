@@ -104,11 +104,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, UserSettings.class);
             startActivity(intent);
         } else if (id == R.id.action_setCalender) {
-            Intent intent = new Intent(this, WebSelector.class);
-            startActivity(intent);
-        } else if (id == R.id.action_setCalenderNew) {
-            Intent intent = new Intent(this, HtmlWebSelector.class);
-            startActivity(intent);
+            if (mSettings.getBoolean("enableOldDL", false)){
+                Intent intent = new Intent(this, WebSelector.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, HtmlWebSelector.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.action_testNotfication) {
             if (Globals.myCal != null) {
                 List<VEvent> evs = CalenderUtils.getNextEvent(Globals.myCal);

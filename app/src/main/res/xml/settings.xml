@@ -15,9 +15,14 @@
             android:key="enableAds"
             android:summary="@string/pref_description_ads"
             android:title="@string/pref_title_ads" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enableOldDL"
+            android:summary="@string/pref_description_dl"
+            android:title="@string/pref_title_dl" />
         <Preference
             android:key="reset"
-            android:title="@string/pref_reset"></Preference>
+            android:title="@string/pref_reset"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_notify">

@@ -119,6 +119,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            Globals.cachedPlans = null;
             loadOverview();
         }
 
@@ -167,20 +168,27 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
     private void loadOverview() {
         Log.d("LSF", "loadOverview");
-        spinner.setVisibility(View.VISIBLE);
-        mList.setEnabled(false);
 
-        String savedURL = Globals.mSettings.getString("URL", "missing");
-        overviewLoader = new PlanOverviewLoader();
-        overviewLoader.execute(savedURL);
+        if (Globals.cachedPlans != null) {
+            // got a saved version
+            overviewCallback(Globals.cachedPlans);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+            mList.setEnabled(false);
+
+            String savedURL = Globals.mSettings.getString("URL", "missing");
+            overviewLoader = new PlanOverviewLoader();
+            overviewLoader.execute(savedURL);
+        }
     }
 
     private void overviewCallback(List<PlanGroup> results) {
         if (results == null) {
-            Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG);
+            Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
             return;
         }
         Log.d("LSF", "overviewCallback");
+        Globals.cachedPlans = results;
 
         mAdapter.clear();
         mAdapter.addPlanGroup(getString(R.string.html_login_head));
@@ -286,21 +294,19 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
                     //course name
                     Element courseURL = columns.get(0).child(0); //row 0 --> a class --> inner text
-                    Log.d("LSF", courseURL.text());
+                    if (Globals.DEBUG) Log.d("LSF", courseURL.text());
                     group = new PlanGroup(courseURL.text());
 
                     //course semesters
                     for (Element ele : columns.get(1).children()) {
                         if (ele.tagName() != "a") continue;
-                        Log.d("LSF", ele.text());
-                        Log.d("LSF", ele.attr("href"));
+                        if (Globals.DEBUG) Log.d("LSF", String.format("%s : %s", ele.text(), ele.attr("href")));
                         item = new PlanGroup.PlanItem(ele.text(), ele.attr("href"));
                         group.items.add(item);
                     }
                     //course everthing
                     Element allURL = columns.get(2).child(0); //row 0 --> a class --> inner text
-                    Log.d("LSF", allURL.text());
-                    Log.d("LSF", allURL.attr("href"));
+                    if (Globals.DEBUG) Log.d("LSF", String.format("%s : %s", allURL.text(), allURL.attr("href")));
                     item = new PlanGroup.PlanItem(allURL.text(), allURL.attr("href"));
                     group.items.add(item);
 

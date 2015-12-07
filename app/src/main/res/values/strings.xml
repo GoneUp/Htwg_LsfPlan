@@ -85,6 +85,8 @@
     <string name="html_login_save" translatable="false">Save login details</string>
     <string name="html_login_cancel" translatable="false">Cancel</string>
     <string name="html_login_login" translatable="false">Login</string>
+    <string name="pref_title_dl">Use old Downloader</string>
+    <string name="pref_description_dl">In case download plan is not working, check this</string>
 
 
 </resources>

@@ -19,12 +19,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 
 /**
  * Created by Henry on 09.11.2015.
  */
 public class Globals {
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
 
     public static ICSLoader loader = null;
@@ -35,6 +36,7 @@ public class Globals {
     public static String icsFile = null;
     public static InputStream icsFileStream = null;
     public static Calendar myCal = null;
+    public static List<PlanGroup> cachedPlans = null;
 
     public static void InitCalender(Context c, boolean initNotification) throws IOException, ParserException {
         if (!initialized) {
