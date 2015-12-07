@@ -77,9 +77,9 @@ public class PlanListAdapter implements ExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView = inflater.inflate(R.layout.planview_item, parent, false);
+        convertView = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
 
-        TextView text = (TextView) convertView.findViewById(R.id.planText);
+        TextView text = (TextView) convertView.findViewById(android.R.id.text1);
         text.setTypeface(null, Typeface.BOLD);
         PlanGroup group = list.get(groupPosition);
         text.setText(group.name);

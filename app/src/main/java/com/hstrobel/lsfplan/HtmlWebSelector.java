@@ -1,25 +1,33 @@
 package com.hstrobel.lsfplan;
 
-import android.graphics.Color;
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.classes.ICSLoader;
+import com.hstrobel.lsfplan.classes.LoginProcess;
 import com.hstrobel.lsfplan.classes.PlanGroup;
 import com.hstrobel.lsfplan.frags.AbstractWebSelector;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,10 +41,13 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
     PlanExportLoader exportLoader = null;
     PlanOverviewLoader overviewLoader = null;
+    LoginProcess loginProcess = null;
+    private HtmlWebSelector local;
     private ExpandableListView mList;
     private PlanListAdapter mAdapter;
     private ProgressBar spinner;
     private PlanGroup.PlanItem lastItem = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +65,12 @@ public class HtmlWebSelector extends AbstractWebSelector {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        local = this;
         mList = (ExpandableListView) findViewById(R.id.listView);
         mAdapter = new PlanListAdapter(this);
         mList.setAdapter(mAdapter);
+
+        spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
 
         loadOverview();
 
@@ -64,8 +78,11 @@ public class HtmlWebSelector extends AbstractWebSelector {
             private View lastHighlight = null;
 
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                TypedValue typedValue = new TypedValue();
+                getTheme().resolveAttribute(R.attr.background, typedValue, true);
+
                 v.setBackgroundResource(R.color.orange);
-                if (lastHighlight != null) lastHighlight.setBackgroundColor(Color.WHITE);
+                if (lastHighlight != null) lastHighlight.setBackgroundColor(typedValue.data);
                 lastHighlight = v;
 
                 int index = parent.getFlatListPosition(ExpandableListView
@@ -81,6 +98,9 @@ public class HtmlWebSelector extends AbstractWebSelector {
     protected void onStop() {
         super.onStop();
 
+        if (exportLoader != null) exportLoader.cancel(true);
+        if (overviewLoader != null) overviewLoader.cancel(true);
+        if (loginProcess != null) loginProcess.cancel(true);
     }
 
     @Override
@@ -105,21 +125,39 @@ public class HtmlWebSelector extends AbstractWebSelector {
         return super.onOptionsItemSelected(item);
     }
 
+
     private void loadExportUrl() {
         Log.d("LSF", "loadExportUrl");
         if (lastItem == null) return;
+        String planURL = "";
 
-        spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
-        spinner.setVisibility(View.VISIBLE);
-        mList.setEnabled(false);
-        String planURL = lastItem.URL;
+        if (lastItem.URL.equals("#LOGIN#")) {
+            showLoginForm();
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+            mList.setEnabled(false);
+            planURL = lastItem.URL;
+
+            exportLoader = new PlanExportLoader();
+            exportLoader.execute(planURL);
+        }
+    }
+
+    public void loginCallback(String loginCookie) {
+        if (loginCookie == null) {
+            Toast.makeText(this, "Login failed. Check your username/password.", Toast.LENGTH_LONG).show();
+            spinner.setVisibility(View.GONE);
+            mList.setEnabled(true);
+            return;
+        }
+
         exportLoader = new PlanExportLoader();
-        exportLoader.execute(planURL);
+        exportLoader.execute(getString(R.string.misc_personalPlanURL), loginCookie);
     }
 
     private void exportCallback(String url) {
         if (url == null) {
-            Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG);
+            Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
             return;
         }
         Log.d("LSF", "exportCallback");
@@ -129,7 +167,6 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
     private void loadOverview() {
         Log.d("LSF", "loadOverview");
-        spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
         spinner.setVisibility(View.VISIBLE);
         mList.setEnabled(false);
 
@@ -160,13 +197,72 @@ public class HtmlWebSelector extends AbstractWebSelector {
         spinner.setVisibility(View.GONE);
     }
 
-    /*       <tr >
-                <td class="mod_n_odd">
-					<a class="regular" href="https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&amp;publishContainer=stgContainer&amp;publishid=4511">Angewandte Informatik (Bachelor) </a>
-				</td>
-				<td class="mod_n_odd">
-					<a class="normal" href="https://lsf.htwg-konstanz.de/qisserver/rds?state=wplan&amp;act=stg&amp;pool=stg&amp;show=plan&amp;P.vx=kurz&amp;r_zuordabstgv.semvonint=1&amp;r_zuordabstgv.sembisint=1&amp;missing=allTerms&amp;k_parallel.parallelid=&amp;k_abstgv.abstgvnr=4511&amp;r_zuordabstgv.phaseid=">1. Semester</a>
-	*/
+
+    private void showLoginForm() {
+        // Create Object of Dialog class
+        final Dialog login = new Dialog(this);
+        // Set GUI of login screen
+        login.setContentView(R.layout.login_dialog);
+        login.setTitle("Enter HTWG Login Data");
+
+        // Init button of login GUI
+        final CheckBox box = (CheckBox) login.findViewById(R.id.checkSave);
+        final Button btnLogin = (Button) login.findViewById(R.id.btnLogin);
+        final Button btnCancel = (Button) login.findViewById(R.id.btnCancel);
+        final EditText txtUsername = (EditText) login.findViewById(R.id.txtUsername);
+        final EditText txtPassword = (EditText) login.findViewById(R.id.txtPassword);
+
+        boolean autoSave = Globals.mSettings.getBoolean("loginAutoSave", true);
+        box.setChecked(autoSave);
+        if (autoSave) {
+            String user = Globals.mSettings.getString("loginUser", "");
+            String pw = Globals.mSettings.getString("loginPassword", "");
+            if (!user.equals("")) {
+                user = new String(Base64.decode(user, Base64.DEFAULT));
+                pw = new String(Base64.decode(pw, Base64.DEFAULT));
+            }
+
+            txtUsername.setText(user);
+            txtPassword.setText(pw);
+        }
+
+
+        // Attached listener for login GUI button
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String user = txtUsername.getText().toString().trim();
+                String pw = txtPassword.getText().toString().trim();
+
+                if ((user.length() > 0) && (pw.length() > 0)) {
+                    login.dismiss();
+                    //login
+                    spinner.setVisibility(View.VISIBLE);
+                    mList.setEnabled(false);
+
+                    loginProcess = new LoginProcess(local, new Handler());
+                    loginProcess.execute(user, pw);
+                }
+
+                SharedPreferences.Editor editor = Globals.mSettings.edit();
+                editor.putBoolean("loginAutoSave", box.isChecked());
+                if (box.isChecked()) {
+                    editor.putString("loginUser", Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
+                    editor.putString("loginPassword", Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
+                }
+                editor.apply();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login.dismiss();
+            }
+        });
+
+        // Make dialog box visible.
+        login.show();
+    }
 
     public class PlanOverviewLoader extends AsyncTask<String, String, List<PlanGroup>> {
         public PlanOverviewLoader() {
@@ -236,7 +332,11 @@ public class HtmlWebSelector extends AbstractWebSelector {
             // Making HTTP request
             String url = null;
             try {
-                Document doc = Jsoup.parse(new URL(params[0]), 5000);
+                Connection con = Jsoup.connect(params[0]);
+                if (params.length > 1) con.cookie("JSESSIONID", params[1]);
+                con.userAgent("LSF APP");
+                Document doc = con.get();
+
 
                 Elements images = doc.select("img");
                 for (Element imgs : images) {

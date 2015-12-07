@@ -29,7 +29,7 @@ public class Globals {
 
     public static ICSLoader loader = null;
     public static SharedPreferences mSettings;
-    public static boolean initalized = false;
+    public static boolean initialized = false;
     public static boolean updated = false;
     public static boolean changed = false;
     public static String icsFile = null;
@@ -37,7 +37,7 @@ public class Globals {
     public static Calendar myCal = null;
 
     public static void InitCalender(Context c, boolean initNotification) throws IOException, ParserException {
-        if (!initalized) {
+        if (!initialized) {
             //Try to load from file
             mSettings = PreferenceManager.getDefaultSharedPreferences(c);
             myCal = null;
@@ -46,7 +46,7 @@ public class Globals {
                 icsFile = mSettings.getString("ICS_FILE", "");
                 updated = true;
             }
-            initalized = true;
+            initialized = true;
         }
 
         if (updated) {

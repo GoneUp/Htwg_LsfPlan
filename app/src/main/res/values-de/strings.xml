@@ -31,5 +31,8 @@
     <string name="pref_description_refresh">Du bekommst eine Warnmeldung wenn der Plan älter als vier Wochen ist</string>
     <string name="pref_cat_notify">Benachrichtigungen</string>
     <string name="action_refesh">Refresh</string>
+    <string name="html_login_cancel"></string>
+    <string name="html_login_head">Persönlicher Stundenplan</string>
+    <string name="html_login_save"></string>
 
 </resources>

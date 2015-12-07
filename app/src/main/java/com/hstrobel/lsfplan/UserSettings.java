@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -12,9 +11,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.hstrobel.lsfplan.classes.Globals;
 
@@ -48,7 +45,7 @@ public class UserSettings extends AppCompatActivity {
                     editor.clear();
                     editor.commit();
                     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, true);
-                    Globals.initalized = false;
+                    Globals.initialized = false;
                     NavUtils.navigateUpFromSameTask(getActivity());
                     return true;
                 }

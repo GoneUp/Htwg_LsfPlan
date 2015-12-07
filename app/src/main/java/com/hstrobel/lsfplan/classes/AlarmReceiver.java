@@ -13,23 +13,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.i("LSF", "onReceive");
-        try {
-            //Process could be killed in the meantime, setup our calender, but NOT init the notifications to prevent duplicates loops etc
-            if (!Globals.initalized) Globals.InitCalender(context, false);
-            VEvent[] events = (VEvent[]) intent.getSerializableExtra("event");
-            for (VEvent e : events) {
-                CalenderUtils.showNotfication(e, context);
-            }
-            ScheduleNextEventNot(context);
-        } catch (Exception ex) {
-            Log.e("LSF", "FAIL onReceive:\n " + ExceptionUtils.getCause(ex));
-            Log.e("LSF", "FAIL onReceive ST:\n " + ExceptionUtils.getFullStackTrace(ex));
-        }
-    }
-
     public static void ScheduleNextEventNot(Context c) {
         //cancel for all cases
         CancelNextEventNot(c);
@@ -50,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Date start = CalenderUtils.getNextRecuringStartDate(events[0]); //all should have the same start time
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
-        start.setTime(start.getTime() - minutesBefore * 60 * 1000);
+        start.setTime(start.getTime() - (minutesBefore) * 60 * 1000);
 
         //DEBUG DEBUG REMOVE IT
         //start.setTime(new DateTime().getTime() + 30 * 1000);
@@ -69,9 +52,29 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public static void CancelNextEventNot(Context c) {
+        Log.i("LSF", "cancel sched");
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         Intent intentAlarm = new Intent(c, AlarmReceiver.class);
         alarmManager.cancel(PendingIntent.getBroadcast(c, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Log.i("LSF", "onReceive");
+        try {
+            //Process could be killed in the meantime, setup our calender, but NOT init the notifications to prevent duplicates loops etc
+            if (!Globals.initialized) Globals.InitCalender(context, false);
+
+
+            VEvent[] events = (VEvent[]) intent.getSerializableExtra("event");
+            for (VEvent e : events) {
+                CalenderUtils.showNotfication(e, context);
+            }
+            ScheduleNextEventNot(context);
+        } catch (Exception ex) {
+            Log.e("LSF", "FAIL onReceive:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL onReceive ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+        }
     }
 }

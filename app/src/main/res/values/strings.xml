@@ -74,11 +74,17 @@
     <string name="notification_short" formatted="false"> Time: %tR to %tR - Room: %s</string>
     <string name="icon_content_description" translatable="false">Desc</string>
     <string name="pref_github_info" translatable="false">Code on Github</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="title_activity_html_web_selector">HtmlWebSelector</string>
+    <string name="title_activity_html_web_selector" translatable="false">Download</string>
     <string name="action_refesh">Refresh</string>
     <string name="html_login_head">Personal Plan</string>
-    <string name="html_login_sub">Login</string>
+    <string name="html_login_sub" translatable="false">Login</string>
+    <string name="misc_personalPlanURL" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de/qisserver/rds?state=wplan&act=show&show=plan&P.subc=plan&navigationPosition=functions%2Cschedule&breadcrumb=schedule&topitem=functions&subitem=schedule]]></string>
+    <string name="misc_personalLoginURL" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de/qisserver/rds?state=user&type=1&category=auth.login&re=last&startpage=portal.vm&breadCrumbSource=portal]]></string>
+    <string name="html_login_username" translatable="false">Username</string>
+    <string name="html_login_password" translatable="false">Password</string>
+    <string name="html_login_save" translatable="false">Save login details</string>
+    <string name="html_login_cancel" translatable="false">Cancel</string>
+    <string name="html_login_login" translatable="false">Login</string>
 
 
 </resources>

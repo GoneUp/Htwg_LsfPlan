@@ -21,7 +21,8 @@
         android:layout_alignParentTop="true"
         android:choiceMode="singleChoice"
         android:drawSelectorOnTop="false"
-        android:listSelector="@drawable/list_selector" />
+        android:listSelector="@drawable/list_selector"
+        tools:listitem="@android:layout/simple_expandable_list_item_1" />
 
     <ProgressBar
         android:id="@+id/progressBarHtml"
