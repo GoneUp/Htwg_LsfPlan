@@ -1,10 +1,10 @@
 package com.hstrobel.lsfplan.frags;
 
 import android.app.DatePickerDialog;
+import android.app.ListFragment;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +12,10 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.classes.CalenderUtils;
 import com.hstrobel.lsfplan.classes.EventItem;
 import com.hstrobel.lsfplan.classes.Globals;
-import com.hstrobel.lsfplan.R;
 
 import net.fortuna.ical4j.model.component.VEvent;
 
@@ -24,6 +24,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -128,6 +129,12 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
     public void onDateDec() {
         cal.add(Calendar.DAY_OF_MONTH, -1);
+        onResume(); //update
+    }
+
+
+    public void onDateReset() {
+        cal = new GregorianCalendar();
         onResume(); //update
     }
 

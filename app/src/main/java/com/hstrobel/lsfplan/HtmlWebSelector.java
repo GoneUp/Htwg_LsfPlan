@@ -24,6 +24,7 @@ import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.classes.ICSLoader;
 import com.hstrobel.lsfplan.classes.LoginProcess;
 import com.hstrobel.lsfplan.classes.PlanGroup;
+import com.hstrobel.lsfplan.classes.PlanListAdapter;
 import com.hstrobel.lsfplan.frags.AbstractWebSelector;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -55,6 +56,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
         setContentView(R.layout.activity_html_web_selector);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

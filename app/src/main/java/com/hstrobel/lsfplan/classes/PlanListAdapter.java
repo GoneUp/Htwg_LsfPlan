@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan;
+package com.hstrobel.lsfplan.classes;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 
+import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.classes.PlanGroup;
 
 import java.util.LinkedList;

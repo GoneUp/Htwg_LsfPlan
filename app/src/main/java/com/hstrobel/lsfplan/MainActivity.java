@@ -120,7 +120,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "No plan, no notifications ;)", Toast.LENGTH_SHORT).show();
             }
+        } else if (id == R.id.action_reset) {
+            if (mListFragment != null){
+                mListFragment.onDateReset();
+            }
         }
+
 
         return super.onOptionsItemSelected(item);
     }
