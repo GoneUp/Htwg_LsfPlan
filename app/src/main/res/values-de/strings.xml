@@ -33,8 +33,13 @@
     <string name="action_refesh">Refresh</string>
     <string name="html_login_head">Persönlicher Stundenplan</string>
     <string name="pref_title_dl">Benutze alten Downloader</string>
-    <string name="pref_description_dl">Wenn der Download des Planes nicht korrekt funktioniert...</string>
+    <string name="pref_description_dl">Wenn der Download des Planes nicht korrekt funktioniert..</string>
     <string name="app_name">LsfPlan</string>
     <string name="main_set_today">Heute</string>
+    <string name="main_comment">Kommentar: %s</string>
+    <string name="main_recurring">Zyklus: %s\n</string>
+    <string name="main_startdate">Datum: %s\n</string>
+    <string name="main_topic">Thema: %s\n</string>
+    <string name="main_weekly">Wöchentlich</string>
 
 </resources>

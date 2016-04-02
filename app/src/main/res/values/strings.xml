@@ -89,5 +89,11 @@
     <string name="pref_description_dl">In case download plan is not working, check this</string>
     <string name="main_set_today">Set today</string>
 
+    <string name="main_topic" formatted="false">Topic: %s\n</string>
+    <string name="main_startdate" formatted="false">Start Date: %s\n</string>
+    <string name="main_recurring" formatted="false">Recurring: %s\n</string>
+    <string name="main_comment" formatted="false">Comment: %s</string>
+    <string name="main_weekly">Weekly</string>
+
 
 </resources>

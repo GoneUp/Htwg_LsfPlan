@@ -20,24 +20,27 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 /**
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
-    public static List getEventsNextWeek(Calendar myCal) {
+    public static List<VEvent> getEventsNextWeek(Calendar myCal) {
         java.util.Calendar today = java.util.Calendar.getInstance();
         return getEvents(myCal, today, new Dur(7, 0, 0, 0));
     }
 
-    public static List getEventsForDay(Calendar myCal, java.util.Calendar date) {
+    public static List<VEvent> getEventsForDay(Calendar myCal, java.util.Calendar date) {
         date.clear(java.util.Calendar.HOUR);
         date.clear(java.util.Calendar.HOUR_OF_DAY);
         date.clear(java.util.Calendar.MINUTE);
@@ -46,13 +49,12 @@ public class CalenderUtils {
         return getEvents(myCal, date, new Dur(1, 0, 0, 0));
     }
 
-    private static List getEvents(Calendar myCal, java.util.Calendar date, Dur duration) {
+    private static List<VEvent> getEvents(Calendar myCal, java.util.Calendar date, Dur duration) {
         Period period = new Period(new DateTime(date.getTime()), duration);
         Filter filter = new Filter(new PeriodRule(period));
 
-        Collection eventsTodayC = filter.filter(myCal.getComponents(Component.VEVENT));
-        List eventsToday = new ArrayList(eventsTodayC);
-        return eventsToday;
+        Collection<VEvent> eventsTodayC = filter.filter(myCal.getComponents(Component.VEVENT));
+        return new ArrayList<>(eventsTodayC);
     }
 
     private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
@@ -165,6 +167,15 @@ public class CalenderUtils {
 
         String room = event.getLocation().getValue();
         return String.format(c.getString(R.string.notification_short), time_start, time_end, room);
+    }
+
+    public static String formatDate(VEvent event) {
+        Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
+        Date time_start = getNextRecuringStartDate(event, dateWithOutTime(event));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.GERMANY);
+        sdf.setTimeZone(TimeZone.getDefault());
+        return sdf.format(time_start);
     }
 
     public static int getId(VEvent event) {
