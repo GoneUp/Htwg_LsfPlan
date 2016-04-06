@@ -44,15 +44,6 @@
             />
         </activity>
 
-        <receiver android:name=".classes.AlarmReceiver" />
-        <receiver
-            android:name=".classes.BootReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".HtmlWebSelector"
             android:label="@string/title_activity_html_web_selector"
@@ -62,6 +53,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hstrobel.lsfplan.MainActivity" />
         </activity>
+
+        <receiver android:name=".classes.AlarmReceiver" />
+        <receiver
+            android:name=".classes.BootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.hstrobel.lsfplan.classes.SyncService" />
+
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
