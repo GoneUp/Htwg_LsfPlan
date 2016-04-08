@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.classes.EventItem;
+import com.hstrobel.lsfplan.classes.gui.EventItem;
 
 import java.util.List;
 

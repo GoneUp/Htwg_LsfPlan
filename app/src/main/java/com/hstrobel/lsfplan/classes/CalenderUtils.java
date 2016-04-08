@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -35,6 +36,12 @@ import java.util.TimeZone;
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
+    private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
+        public int compare(VEvent c1, VEvent c2) {
+            return (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
+        }
+    };
+
     public static List<VEvent> getEventsNextWeek(Calendar myCal) {
         java.util.Calendar today = java.util.Calendar.getInstance();
         return getEvents(myCal, today, new Dur(7, 0, 0, 0));
@@ -57,12 +64,6 @@ public class CalenderUtils {
         return new ArrayList<>(eventsTodayC);
     }
 
-    private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
-        public int compare(VEvent c1, VEvent c2) {
-            return (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
-        }
-    };
-
     private static java.util.Calendar timeWithoutDate(VEvent c1) {
         java.util.Calendar d = java.util.Calendar.getInstance();
         d.setTimeInMillis(c1.getStartDate().getDate().getTime());
@@ -71,10 +72,11 @@ public class CalenderUtils {
     }
 
     private static DateTime dateWithOutTime(VEvent c1) {
-        DateTime d = new DateTime(c1.getStartDate().getDate().getTime());
-        d.setHours(0);
-        d.setMinutes(0);
-        return d;
+        java.util.Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(c1.getStartDate().getDate().getTime());
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.HOUR, 0);
+        return new DateTime(cal.getTimeInMillis());
     }
 
     public static List<VEvent> sortEvents(List<VEvent> events) {
@@ -193,12 +195,16 @@ public class CalenderUtils {
         String mode = Globals.mSettings.getString("soundMode", "");
         int soundMode = NotificationCompat.DEFAULT_LIGHTS;
 
-        if (mode.equals("Silent")) {
-            soundMode = NotificationCompat.DEFAULT_LIGHTS;
-        } else if (mode.equals("Vibrate")) {
-            soundMode = NotificationCompat.DEFAULT_VIBRATE;
-        } else if (mode.equals("Sound")) {
-            soundMode = NotificationCompat.DEFAULT_SOUND;
+        switch (mode) {
+            case "Silent":
+                soundMode = NotificationCompat.DEFAULT_LIGHTS;
+                break;
+            case "Vibrate":
+                soundMode = NotificationCompat.DEFAULT_VIBRATE;
+                break;
+            case "Sound":
+                soundMode = NotificationCompat.DEFAULT_SOUND;
+                break;
         }
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)

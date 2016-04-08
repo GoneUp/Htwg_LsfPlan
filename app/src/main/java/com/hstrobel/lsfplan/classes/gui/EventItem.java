@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.classes.gui;
 
 import android.graphics.drawable.Drawable;
 

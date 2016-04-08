@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.classes.CalenderUtils;
-import com.hstrobel.lsfplan.classes.EventItem;
 import com.hstrobel.lsfplan.classes.Globals;
+import com.hstrobel.lsfplan.classes.gui.EventItem;
 
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -37,6 +37,14 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private List<EventItem> mItems;        // ListView items list
     private Calendar cal;
     private EventListAdapter listadapter;
+    private int mCounter = 0;
+
+    /*
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_main_listview, container, false);
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,13 +61,6 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         setListAdapter(listadapter);
     }
 
-    /*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_listview, container, false);
-    }*/
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -67,8 +68,6 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         Log.d("LSF", "MainListFragment:onCreateView");
         getListView().setDivider(null);
     }
-
-    private int mCounter = 0;
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -140,9 +139,9 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 }
             }
         } catch (Exception ex) {
-            Toast.makeText(getActivity(), "Loading failed! Resetting the app may help.", Toast.LENGTH_SHORT).show();
             Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));
             Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Toast.makeText(getActivity(), "Loading failed! Resetting the app may help.", Toast.LENGTH_SHORT).show();
         }
 
     }

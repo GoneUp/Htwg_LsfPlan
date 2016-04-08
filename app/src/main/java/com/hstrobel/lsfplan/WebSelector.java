@@ -55,8 +55,8 @@ public class WebSelector extends AbstractWebSelector {
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                 //DisplayTost(getString(R.string.webView_fileLoading));
                 Log.d("LSF", "setDownloadListener");
-                Globals.loader = new ICSLoader(local, mHandler);
-                Globals.loader.execute(url);
+                Globals.icsLoader = new ICSLoader(local, mHandler, url);
+                new Thread(Globals.icsLoader).start();
             }
         });
         webView.getSettings().setBuiltInZoomControls(true);

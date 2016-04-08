@@ -31,13 +31,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences mSettings;
-    TextView infoText;
-    Menu mMenu;
-    AdView mAdView;
-
-    MainDefaultFragment mDefFragment;
-    MainListFragment mListFragment;
+    public MainDefaultFragment mDefFragment;
+    public MainListFragment mListFragment;
+    private SharedPreferences mSettings;
+    private TextView infoText;
+    private Menu mMenu;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +52,15 @@ public class MainActivity extends AppCompatActivity {
         }
         */
 
+        //Own Init
         infoText = (TextView) findViewById(R.id.txtInfo);
         mAdView = (AdView) findViewById(R.id.adView);
         mDefFragment = (MainDefaultFragment) getFragmentManager().findFragmentById(R.id.mainDefaultFragment);
         mListFragment = (MainListFragment)  getFragmentManager().findFragmentById(R.id.mainListFragment);
         if (mDefFragment.getView() != null) mDefFragment.getView().setVisibility(View.GONE);
         if (mListFragment.getView() != null )mListFragment.getView().setVisibility(View.GONE);
+
+        Globals.mainActivity = this;
 
         //Settings
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);

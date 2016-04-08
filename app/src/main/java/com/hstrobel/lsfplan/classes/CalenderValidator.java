@@ -30,7 +30,7 @@ public class CalenderValidator {
          */
         //Globals.icsFileStream.reset();
         Log.d("LSF", "CorrectEvents");
-        Globals.icsFileStream = IOUtils.toInputStream(Globals.loader.file);
+        Globals.icsFileStream = IOUtils.toInputStream(Globals.icsLoader.file);
         BufferedReader reader = new BufferedReader(new InputStreamReader(Globals.icsFileStream));
         StringBuilder builder = new StringBuilder();
         StringBuilder eventBuilder = null;

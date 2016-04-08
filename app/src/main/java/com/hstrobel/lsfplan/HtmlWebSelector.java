@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.classes.ICSLoader;
 import com.hstrobel.lsfplan.classes.LoginProcess;
-import com.hstrobel.lsfplan.classes.PlanGroup;
-import com.hstrobel.lsfplan.classes.PlanListAdapter;
+import com.hstrobel.lsfplan.classes.gui.PlanGroup;
+import com.hstrobel.lsfplan.classes.gui.PlanListAdapter;
 import com.hstrobel.lsfplan.frags.AbstractWebSelector;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -65,7 +65,8 @@ public class HtmlWebSelector extends AbstractWebSelector {
                 loadExportUrl();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         local = this;
         mList = (ExpandableListView) findViewById(R.id.listView);
@@ -164,8 +165,8 @@ public class HtmlWebSelector extends AbstractWebSelector {
             return;
         }
         Log.d("LSF", "exportCallback");
-        Globals.loader = new ICSLoader(this, new Handler());
-        Globals.loader.execute(url);
+        Globals.icsLoader = new ICSLoader(this, new Handler(), url);
+        new Thread(Globals.icsLoader).start();
     }
 
     private void loadOverview() {
