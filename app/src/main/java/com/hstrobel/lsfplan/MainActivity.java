@@ -1,11 +1,9 @@
 package com.hstrobel.lsfplan;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,8 +23,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -78,10 +74,6 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("URL", savedURL);
         }
         editor.apply();
-
-        if (shouldDisplayReloadDialog()) {
-            DisplayDialog();
-        }
 
         Log.d("LSF", "onCreate");
     }
@@ -174,52 +166,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
 
-    }
-
-    private boolean shouldDisplayReloadDialog() {
-        boolean enabled = mSettings.getBoolean("enableRefresh", true);
-        if (!enabled) return false;
-
-        GregorianCalendar now = new GregorianCalendar(); //one warning weekly
-        int week_shown = mSettings.getInt("ICS_WEEK_SHOWN", -1);
-        if (week_shown == now.get(Calendar.WEEK_OF_YEAR)) return false;
-
-        long time_load = mSettings.getLong("ICS_DATE", Calendar.getInstance().getTimeInMillis());
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(time_load);
-        cal.add(Calendar.WEEK_OF_YEAR, 4); //2 weeks reload timephase
-
-        if (cal.before(now)) {
-            Log.d("LSF", "displayReloadDialog: true # " + cal);
-            return true;
-        }
-        return false;
-    }
-
-    private void DisplayDialog() {
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setTitle(R.string.main_refresh_title)
-                .setMessage(R.string.main_refresh_body);
-
-        builder.setPositiveButton(getString(R.string.main_button_reload), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                onOptionsItemSelected(mMenu.findItem(R.id.action_setCalender));
-            }
-        });
-
-        builder.setNegativeButton(getString(R.string.main_button_no), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-        // 3. Get the AlertDialog from create()
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        mSettings.edit().putInt("ICS_WEEK_SHOWN", new GregorianCalendar().get(Calendar.WEEK_OF_YEAR)).apply();
     }
 
     @Override

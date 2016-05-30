@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -45,7 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         start.setTime(start.getTime() - (minutesBefore) * 60 * 1000);
 
         //DEBUG DEBUG REMOVE IT
-        start.setTime(new DateTime().getTime() + 30 * 1000);
+        //start.setTime(new DateTime().getTime() + 30 * 1000);
 
         Intent intentAlarm = new Intent(c, AlarmReceiver.class);
         intentAlarm.putExtra("event", events);

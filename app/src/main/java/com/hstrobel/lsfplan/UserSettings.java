@@ -15,6 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.hstrobel.lsfplan.classes.Globals;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+
 public class UserSettings extends AppCompatActivity {
 
     @Override
@@ -76,6 +80,15 @@ public class UserSettings extends AppCompatActivity {
 
             ListPreference sPref = (ListPreference) findPreference("soundMode");
             if (sPref.getEntry() != null) sPref.setSummary(sPref.getEntry());
+
+            DateFormat d = SimpleDateFormat.getDateTimeInstance();
+            long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
+            GregorianCalendar syncTime = new GregorianCalendar();
+            syncTime.setTimeInMillis(time_load);
+
+            myPref = findPreference("enableRefresh");
+            myPref.setSummary(String.format(getString(R.string.pref_description_refresh), d.format(syncTime.getTime())));
+
 
             myPref = findPreference("info");
             PackageInfo pInfo = null;
