@@ -1,7 +1,5 @@
 package com.hstrobel.lsfplan.classes;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -48,10 +46,7 @@ public class EventCache {
         }
 
         //Send a Intent to background service to pregenerate
-        Intent mServiceIntent = new Intent(Globals.mainActivity, SyncService.class);
-        mServiceIntent.setData(Uri.parse(""));
-        Globals.mainActivity.startService(mServiceIntent);
-
+        Globals.SyncStart(Globals.mainActivity);
         return cache.get(day);
     }
 

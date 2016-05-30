@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             if (Globals.myCal != null) {
                 List<VEvent> evs = CalenderUtils.getNextEvent(Globals.myCal);
                 for (VEvent ev : evs) {
-                    CalenderUtils.showNotfication(ev, this);
+                    CalenderUtils.showNotification(ev, this);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "No plan, no notifications ;)", Toast.LENGTH_SHORT).show();

@@ -30,12 +30,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.TimeZone;
 
 /**
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
+    private static final int NOTIFICATION_ID = 59556488;
     private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
         public int compare(VEvent c1, VEvent c2) {
             return (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
@@ -85,7 +87,7 @@ public class CalenderUtils {
         DateTime starttR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
-        java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() + ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
+        java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() - ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
 
         List events = getEventsNextWeek(myCal);
         for (Object comp : events) {
@@ -187,7 +189,7 @@ public class CalenderUtils {
         return Integer.parseInt(event.getDescription().getValue());
     }
 
-    public static void showNotfication(VEvent event, Context context) {
+    public static int showNotification(VEvent event, Context context) {
         String mode = Globals.mSettings.getString("soundMode", "");
         int soundMode = NotificationCompat.DEFAULT_LIGHTS;
 
@@ -217,13 +219,21 @@ public class CalenderUtils {
             mBuilder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
         }
 
-
+        Random rnd = new Random();
+        int notificationId = rnd.nextInt(100000);
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pi);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(getId(event), mBuilder.build());
+        mNotificationManager.notify(notificationId, mBuilder.build());
+
+        return notificationId;
+    }
+
+    public static void killNotification(int id, Context context) {
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(id);
     }
 }

@@ -73,9 +73,7 @@ public class Globals {
         }
 
         //Start the background service that downloads a new caleander from time to time
-        Intent mServiceIntent = new Intent(c, SyncService.class);
-        mServiceIntent.setData(Uri.parse(""));
-        c.startService(mServiceIntent);
+        SyncStart(c);
     }
 
     public static void InitNotifications(final Context c) {
@@ -88,9 +86,10 @@ public class Globals {
                     PackageManager.DONT_KILL_APP);
             new Thread(new Runnable() {
                 public void run() {
-                    AlarmReceiver.ScheduleNextEventNot(c);
+                    AlarmReceiver.ScheduleNextEventNot(c, new Integer[0]);
                 }
             }).start();
+
 
         } else {
             pm.setComponentEnabledSetting(receiver,
@@ -134,5 +133,10 @@ public class Globals {
         return Globals.icsLoader.file == null || !Globals.icsLoader.file.startsWith("BEGIN:VCALENDAR");
     }
 
+    public static void SyncStart(Context c) {
+        Intent mServiceIntent = new Intent(c, SyncService.class);
+        mServiceIntent.setData(Uri.parse(""));
+        c.startService(mServiceIntent);
+    }
 
 }
