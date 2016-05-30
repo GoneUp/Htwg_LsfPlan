@@ -36,27 +36,28 @@ public class SyncService extends IntentService implements DownloadCallback {
         long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
         GregorianCalendar now = new GregorianCalendar();
         //DEBUG REMOVE
-        now.add(Calendar.YEAR, 5);
+        //now.add(Calendar.YEAR, 5);
 
         GregorianCalendar syncExpire = new GregorianCalendar();
         syncExpire.setTimeInMillis(time_load);
         syncExpire.add(Calendar.WEEK_OF_YEAR, 1); //weekly syncs
 
-        if (now.getTimeInMillis() < syncExpire.getTimeInMillis())
-            return;
+        if (now.getTimeInMillis() < syncExpire.getTimeInMillis()) {
+            updateEventCache();
+            Log.i(TAG, "onHandleIntent: SyncS is already updated");
 
+        } else {
+            String url = Globals.mSettings.getString("ICS_URL", "");
 
-        String url = Globals.mSettings.getString("ICS_URL", "");
-
-        if (!url.isEmpty()) {
-            Log.i(TAG, "onHandleIntent: starting download");
-            Globals.icsLoader = new ICSLoader(this, new Handler(), url);
-            new Thread(Globals.icsLoader).start();
-        }
+            if (!url.isEmpty()) {
+                Log.i(TAG, "onHandleIntent: starting download");
+                Globals.icsLoader = new ICSLoader(this, new Handler(), url);
+                new Thread(Globals.icsLoader).start();
+            }
             /*The new Thread is not really needed since we are already on background task,
             but I wanted a single way to download the file from all classes.
              */
-
+        }
     }
 
     @Override
@@ -72,13 +73,24 @@ public class SyncService extends IntentService implements DownloadCallback {
 
             if (Globals.mainActivity != null && Globals.mainActivity.mListFragment != null) {
                 //Update main view
-                Globals.mainActivity.mListFragment.onResume();
+                Globals.mainActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Globals.mainActivity.mListFragment.onResume();
+                    }
+                });
             }
 
-
+            updateEventCache();
         } catch (Exception ex) {
             Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
             Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+        }
+    }
+
+    private void updateEventCache() {
+        if (Globals.mainActivity != null && Globals.mainActivity.mListFragment != null) {
+            Globals.mainActivity.mListFragment.onCheckCache();
         }
     }
 }

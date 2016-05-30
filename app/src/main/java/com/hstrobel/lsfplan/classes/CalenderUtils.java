@@ -48,10 +48,6 @@ public class CalenderUtils {
     }
 
     public static List<VEvent> getEventsForDay(Calendar myCal, java.util.Calendar date) {
-        date.clear(java.util.Calendar.HOUR);
-        date.clear(java.util.Calendar.HOUR_OF_DAY);
-        date.clear(java.util.Calendar.MINUTE);
-        date.clear(java.util.Calendar.SECOND);
         System.out.print(date.toString());
         return getEvents(myCal, date, new Dur(1, 0, 0, 0));
     }

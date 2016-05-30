@@ -228,5 +228,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("LSF", "onDestroy");
         //Globals.Save(); //no changes yet
     }
+
+
 }
 

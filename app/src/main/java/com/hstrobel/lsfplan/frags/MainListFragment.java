@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.classes.CalenderUtils;
+import com.hstrobel.lsfplan.classes.EventCache;
 import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.classes.gui.EventItem;
 
@@ -35,9 +36,13 @@ import java.util.Locale;
 
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
     private List<EventItem> mItems;        // ListView items list
-    private Calendar cal;
     private EventListAdapter listadapter;
-    private int mCounter = 0;
+
+    private Calendar selectedDay;
+    private EventCache cache;
+    private int eastereggCounter = 0;
+
+
 
     /*
     @Override
@@ -54,7 +59,8 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         // initialize the items list
         mItems = new ArrayList<EventItem>();
         Resources resources = getResources();
-        cal = Calendar.getInstance();
+        selectedDay = Calendar.getInstance();
+        cache = new EventCache();
 
         // initialize and set the list adapter
         listadapter = new EventListAdapter(getActivity(), mItems);
@@ -78,13 +84,13 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
         if (position == 0) {
             //Change day object
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, selectedDay.get(Calendar.YEAR), selectedDay.get(Calendar.MONTH), selectedDay.get(Calendar.DAY_OF_MONTH));
             dialog.show();
         } else {
             if (item.title.contains("Mathe")) {
-                if (mCounter > 3)
+                if (eastereggCounter > 3)
                     Toast.makeText(getActivity(), "Mathe. Burn in hell. Slowly.", Toast.LENGTH_SHORT).show();
-                mCounter++;
+                eastereggCounter++;
             } else {
                 //default case
                 StringBuilder message = new StringBuilder();
@@ -120,8 +126,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         //setup
         try {
             if (Globals.myCal != null) {
-                List<VEvent> evs = CalenderUtils.getEventsForDay(Globals.myCal, (Calendar) cal.clone());
-                CalenderUtils.sortEvents(evs);
+                List<VEvent> evs = cache.getDay((Calendar) selectedDay.clone());
 
                 SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy", Locale.GERMANY);
                 Drawable icon_book = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action);
@@ -129,7 +134,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 Drawable icon_right = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_right);
                 listadapter.clear();
                 listadapter.add(new EventItem(icon_left, icon_right,
-                        String.format(getString(R.string.main_lecture_day), d.format(cal.getTime())),
+                        String.format(getString(R.string.main_lecture_day), d.format(selectedDay.getTime())),
                         getString(R.string.main_lecture_change), this, null));
 
                 for (VEvent ev : evs) {
@@ -148,26 +153,28 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, monthOfYear);
-        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        selectedDay.set(Calendar.YEAR, year);
+        selectedDay.set(Calendar.MONTH, monthOfYear);
+        selectedDay.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         onResume(); //update
     }
 
     public void onDateInc() {
-        cal.add(Calendar.DAY_OF_MONTH, 1);
+        selectedDay.add(Calendar.DAY_OF_MONTH, 1);
         onResume(); //update
     }
 
     public void onDateDec() {
-        cal.add(Calendar.DAY_OF_MONTH, -1);
+        selectedDay.add(Calendar.DAY_OF_MONTH, -1);
         onResume(); //update
     }
-
 
     public void onDateReset() {
-        cal = new GregorianCalendar();
+        selectedDay = new GregorianCalendar();
         onResume(); //update
     }
 
+    public void onCheckCache() {
+        cache.generateFullCache((Calendar) selectedDay.clone());
+    }
 }
