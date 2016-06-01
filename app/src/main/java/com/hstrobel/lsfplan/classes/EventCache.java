@@ -14,7 +14,7 @@ import java.util.TreeMap;
  */
 public class EventCache {
     private static final String TAG = "LSF";
-    private static final int DAYS_TO_CACHE = 3;
+    private static final int DAYS_TO_CACHE = 5;
 
     private Map<java.util.Calendar, List<VEvent>> cache;
     private Calendar globalCal;

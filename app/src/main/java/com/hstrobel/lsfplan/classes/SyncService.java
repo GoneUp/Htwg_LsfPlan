@@ -33,17 +33,21 @@ public class SyncService extends IntentService implements DownloadCallback {
         if (!Globals.mSettings.getBoolean("gotICS", false))
             return;
 
+        updateEventCache();
+
+        if (!Globals.mSettings.getBoolean("enableRefresh", false))
+            return;
+
         long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
         GregorianCalendar now = new GregorianCalendar();
         //DEBUG REMOVE
-        //now.add(Calendar.YEAR, 5);
+        now.add(Calendar.YEAR, 5);
 
         GregorianCalendar syncExpire = new GregorianCalendar();
         syncExpire.setTimeInMillis(time_load);
         syncExpire.add(Calendar.WEEK_OF_YEAR, 1); //weekly syncs
 
         if (now.getTimeInMillis() < syncExpire.getTimeInMillis()) {
-            updateEventCache();
             Log.i(TAG, "onHandleIntent: SyncS is already updated");
 
         } else {

@@ -94,14 +94,14 @@ public class AlarmReceiver extends BroadcastReceiver {
             //Hide old notifications
             Integer[] oldNotifyIds = (Integer[]) intent.getSerializableExtra("oldNotifyIds");
             for (int id : oldNotifyIds) {
-                CalenderUtils.killNotification(id, context);
+                NotificationUtils.killNotification(id, context);
             }
 
             //Display the new notifications
             VEvent[] events = (VEvent[]) intent.getSerializableExtra("event");
             Integer[] notifyIDs = new Integer[events.length];
             for (int i = 0; i < events.length; i++) {
-                notifyIDs[i] = CalenderUtils.showNotification(events[i], context);
+                notifyIDs[i] = NotificationUtils.showNotification(events[i], context);
             }
 
             ScheduleNextEventNot(context, notifyIDs);

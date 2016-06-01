@@ -1,15 +1,5 @@
 package com.hstrobel.lsfplan.classes;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-
-import com.hstrobel.lsfplan.MainActivity;
-import com.hstrobel.lsfplan.R;
-
 import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
 import net.fortuna.ical4j.model.Calendar;
@@ -20,18 +10,13 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.Random;
-import java.util.TimeZone;
 
 /**
  * Created by Henry on 10.11.2015.
@@ -69,7 +54,7 @@ public class CalenderUtils {
         return d;
     }
 
-    private static DateTime dateWithOutTime(VEvent c1) {
+    public static DateTime dateWithOutTime(VEvent c1) {
         java.util.Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(c1.getStartDate().getDate().getTime());
         cal.set(java.util.Calendar.MINUTE, 0);
@@ -144,96 +129,5 @@ public class CalenderUtils {
 
         if (closest == null) throw new NoSuchElementException(event.getSummary().getValue());
         return closest.getStart();
-    }
-
-    public static String getTopic(VEvent event) {
-        String[] tops = event.getSummary().getValue().split("-");
-        if (tops.length > 1) {
-            return tops[1].trim();
-        }
-        return event.getSummary().getValue().trim();
-    }
-
-    public static String formatEventLong(VEvent event, Context c) {
-        String topic = getTopic(event);
-        String room_time = formatEventShort(event, c);
-        return String.format(c.getString(R.string.notification_long), topic) + room_time;
-    }
-
-    public static String formatEventShort(VEvent event, Context c) {
-        Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
-        Date time_start = getNextRecuringStartDate(event, dateWithOutTime(event));
-        Date time_end = d.getTime(time_start);
-
-        String room = event.getLocation().getValue();
-        return String.format(c.getString(R.string.notification_short), time_start, time_end, room);
-    }
-
-    public static String formatDate(VEvent event) {
-        Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
-        Date time_start = getNextRecuringStartDate(event, dateWithOutTime(event));
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.GERMANY);
-        sdf.setTimeZone(TimeZone.getDefault());
-        return sdf.format(time_start);
-    }
-
-    public static int getId(VEvent event) {
-        //SUMMARY:14220920 - Rechnerarchitekturen
-        //edge case: not persist over shutdown, add saving?
-        int num = java.util.Calendar.getInstance().get(java.util.Calendar.MILLISECOND) * 10;
-        if (event.getDescription().getValue().equals("")){
-            event.getDescription().setValue(Integer.toString(num));
-            return num;
-        }
-        return Integer.parseInt(event.getDescription().getValue());
-    }
-
-    public static int showNotification(VEvent event, Context context) {
-        String mode = Globals.mSettings.getString("soundMode", "");
-        int soundMode = NotificationCompat.DEFAULT_LIGHTS;
-
-        switch (mode) {
-            case "Silent":
-                soundMode = NotificationCompat.DEFAULT_LIGHTS;
-                break;
-            case "Vibrate":
-                soundMode = NotificationCompat.DEFAULT_VIBRATE;
-                break;
-            case "Sound":
-                soundMode = NotificationCompat.DEFAULT_SOUND;
-                break;
-        }
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentTitle(context.getString(R.string.notification_title)) // title for notification
-                .setContentText(formatEventShort(event, context)) // message for notification
-                .setAutoCancel(true) // clear notification after click
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventLong(event, context)))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setDefaults(soundMode);
-
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-            mBuilder.setSmallIcon(R.drawable.ic_notify_white);
-        } else {
-            mBuilder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
-        }
-
-        Random rnd = new Random();
-        int notificationId = rnd.nextInt(100000);
-
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        mBuilder.setContentIntent(pi);
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationId, mBuilder.build());
-
-        return notificationId;
-    }
-
-    public static void killNotification(int id, Context context) {
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancel(id);
     }
 }

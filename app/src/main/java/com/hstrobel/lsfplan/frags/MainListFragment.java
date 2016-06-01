@@ -15,9 +15,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.classes.CalenderUtils;
 import com.hstrobel.lsfplan.classes.EventCache;
 import com.hstrobel.lsfplan.classes.Globals;
+import com.hstrobel.lsfplan.classes.NotificationUtils;
 import com.hstrobel.lsfplan.classes.gui.EventItem;
 
 import net.fortuna.ical4j.model.Property;
@@ -94,8 +94,8 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             } else {
                 //default case
                 StringBuilder message = new StringBuilder();
-                message.append(String.format(getString(R.string.main_topic), CalenderUtils.getTopic(ev)));
-                message.append(String.format(getString(R.string.main_startdate), CalenderUtils.formatDate(ev)));
+                message.append(String.format(getString(R.string.main_topic), NotificationUtils.getTopic(ev)));
+                message.append(String.format(getString(R.string.main_startdate), NotificationUtils.formatDate(ev)));
 
                 //Repeating events
                 if (ev.getProperties(Property.RRULE).size() > 0){
@@ -139,8 +139,8 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
                 for (VEvent ev : evs) {
                     listadapter.add(new EventItem(icon_book, null,
-                            CalenderUtils.getTopic(ev),
-                            CalenderUtils.formatEventShort(ev, getActivity()), this, ev));
+                            NotificationUtils.getTopic(ev),
+                            NotificationUtils.formatEventShort(ev, getActivity()), this, ev));
                 }
             }
         } catch (Exception ex) {

@@ -59,7 +59,7 @@
         <item>@string/pref_soundMode_Vib</item>
         <item>@string/pref_soundMode_Sound</item>
     </string-array>
-    <string-array name="pref_soundMode_values">
+    <string-array name="pref_soundMode_values" translatable="false">
         <item>Silent</item>
         <item>Vibrate</item>
         <item>Sound</item>

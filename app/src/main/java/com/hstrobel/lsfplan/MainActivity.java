@@ -16,6 +16,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.hstrobel.lsfplan.classes.CalenderUtils;
 import com.hstrobel.lsfplan.classes.Globals;
+import com.hstrobel.lsfplan.classes.NotificationUtils;
 import com.hstrobel.lsfplan.frags.MainDefaultFragment;
 import com.hstrobel.lsfplan.frags.MainListFragment;
 
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             if (Globals.myCal != null) {
                 List<VEvent> evs = CalenderUtils.getNextEvent(Globals.myCal);
                 for (VEvent ev : evs) {
-                    CalenderUtils.showNotification(ev, this);
+                    NotificationUtils.showNotification(ev, this);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "No plan, no notifications ;)", Toast.LENGTH_SHORT).show();
