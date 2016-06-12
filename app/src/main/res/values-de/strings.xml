@@ -5,7 +5,7 @@
     <string name="main_lecture_day" formatted="false">Vorlesungen für %s</string>
     <string name="main_noCalender">Kein Plan vorhanden..\nBitte lade einen Vorlesungsplan via Menu -> Download Plan.</string>
     <string name="notification_long" formatted="false">Thema: %s - </string>
-    <string name="notification_short" formatted="false">Zeit: %tR bis %tR - Raum: %s</string>
+    <string name="notification_short" formatted="false">Zeit: %s bis %s - Raum: %s</string>
     <string name="notification_title">Nächste Vorlesung</string>
     <string name="pref_cat_general">Allgemein</string>
     <string name="pref_description_enableNotifications">Zeige Benachrichtigung bevor die Vorlesung beginnt</string>

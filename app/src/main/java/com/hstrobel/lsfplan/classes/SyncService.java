@@ -41,7 +41,7 @@ public class SyncService extends IntentService implements DownloadCallback {
         long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
         GregorianCalendar now = new GregorianCalendar();
         //DEBUG REMOVE
-        now.add(Calendar.YEAR, 5);
+        //now.add(Calendar.YEAR, 5);
 
         GregorianCalendar syncExpire = new GregorianCalendar();
         syncExpire.setTimeInMillis(time_load);

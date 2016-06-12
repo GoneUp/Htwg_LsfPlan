@@ -72,7 +72,7 @@ public class CalenderUtils {
         DateTime starttR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
-        java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() - ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
+        java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() + ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
 
         List events = getEventsNextWeek(myCal);
         for (Object comp : events) {
