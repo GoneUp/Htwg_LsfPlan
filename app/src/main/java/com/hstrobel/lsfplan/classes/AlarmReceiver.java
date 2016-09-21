@@ -38,6 +38,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.i(TAG, "ScheduleNextEventNot: ");
         Log.i(TAG, "ScheduleNextEventNot: events size " + events.length);
+        if (events.length == 0)
+            return;
 
         Date start = CalenderUtils.getNextRecuringStartDate(events[0]); //all should have the same start time
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));

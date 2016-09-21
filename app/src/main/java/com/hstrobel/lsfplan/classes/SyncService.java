@@ -22,45 +22,52 @@ public class SyncService extends IntentService implements DownloadCallback {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        // Gets data from the incoming Intent
-        String dataString = workIntent.getDataString();
-        Log.i(TAG, "onHandleIntent: SyncS started");
+        try {
 
-        //if the user is already downloading something new we don't interfere
-        if (Globals.icsLoader != null)
-            return;
 
-        if (!Globals.mSettings.getBoolean("gotICS", false))
-            return;
+            // Gets data from the incoming Intent
+            String dataString = workIntent.getDataString();
+            Log.i(TAG, "onHandleIntent: SyncS started");
 
-        updateEventCache();
+            //if the user is already downloading something new we don't interfere
+            if (Globals.icsLoader != null)
+                return;
 
-        if (!Globals.mSettings.getBoolean("enableRefresh", false))
-            return;
+            if (!Globals.mSettings.getBoolean("gotICS", false))
+                return;
 
-        long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
-        GregorianCalendar now = new GregorianCalendar();
-        //DEBUG REMOVE
-        //now.add(Calendar.YEAR, 5);
+            updateEventCache();
 
-        GregorianCalendar syncExpire = new GregorianCalendar();
-        syncExpire.setTimeInMillis(time_load);
-        syncExpire.add(Calendar.WEEK_OF_YEAR, 1); //weekly syncs
+            if (!Globals.mSettings.getBoolean("enableRefresh", false))
+                return;
 
-        if (now.getTimeInMillis() < syncExpire.getTimeInMillis()) {
-            Log.i(TAG, "onHandleIntent: SyncS is already updated");
+            long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
+            GregorianCalendar now = new GregorianCalendar();
+            //DEBUG REMOVE
+            //now.add(Calendar.YEAR, 5);
 
-        } else {
-            String url = Globals.mSettings.getString("ICS_URL", "");
+            GregorianCalendar syncExpire = new GregorianCalendar();
+            syncExpire.setTimeInMillis(time_load);
+            syncExpire.add(Calendar.WEEK_OF_YEAR, 1); //weekly syncs
 
-            if (!url.isEmpty()) {
-                Log.i(TAG, "onHandleIntent: starting download");
-                Globals.icsLoader = new ICSLoader(this, new Handler(), url);
-                new Thread(Globals.icsLoader).start();
-            }
+            if (now.getTimeInMillis() < syncExpire.getTimeInMillis()) {
+                Log.i(TAG, "onHandleIntent: SyncS is already updated");
+
+            } else {
+                String url = Globals.mSettings.getString("ICS_URL", "");
+
+                if (!url.isEmpty()) {
+                    Log.i(TAG, "onHandleIntent: starting download");
+                    Globals.icsLoader = new ICSLoader(this, new Handler(), url);
+                    new Thread(Globals.icsLoader).start();
+                }
             /*The new Thread is not really needed since we are already on background task,
             but I wanted a single way to download the file from all classes.
              */
+            }
+        } catch (Exception ex) {
+            Log.e("LSF", "FAIL Sync:\n " + ExceptionUtils.getCause(ex));
+            Log.e("LSF", "FAIL Sync ST:\n " + ExceptionUtils.getFullStackTrace(ex));
         }
     }
 
