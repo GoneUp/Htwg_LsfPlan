@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Einstellungen</string>
-    <string name="main_lecture_change">Drücken zum ändern</string>
     <string name="main_lecture_day" formatted="false">Vorlesungen für %s</string>
     <string name="main_noCalender">Kein Plan vorhanden..\nBitte lade einen Vorlesungsplan via Menu -> Download Plan.</string>
     <string name="notification_long" formatted="false">Thema: %s - </string>
@@ -38,5 +37,6 @@
     <string name="main_startdate">Datum: %s\n</string>
     <string name="main_topic">Thema: %s\n</string>
     <string name="main_weekly">Wöchentlich</string>
+    <string name="main_lecture_change">Wischen um den Tag zu ändern</string>
 
 </resources>

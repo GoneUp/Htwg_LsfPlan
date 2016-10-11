@@ -2,7 +2,6 @@ package com.hstrobel.lsfplan.frags;
 
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -73,6 +72,20 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         // remove the dividers from the ListView of the ListFragment
         Log.d("LSF", "MainListFragment:onCreateView");
         getListView().setDivider(null);
+
+        getListView().setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+            @Override
+            public void onSwipeLeft() {
+                //+1
+                onDateInc();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                //-1
+                onDateDec();
+            }
+        });
     }
 
     @Override
@@ -105,16 +118,10 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
                 message.append(String.format(getString(R.string.main_comment), ""));
 
-                final AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
-                ad.setCancelable(false); // This blocks the 'BACK' button
+                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
                 ad.setMessage(message);
-                ad.setButton(DialogInterface.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ad.dismiss();
-                    }
-                });
-                ad.show();
+                ad.setPositiveButton("Ok", null);
+                ad.create().show();
             }
         }
     }

@@ -13,7 +13,7 @@
     <string name="main_noCalender">Calender is missing.\nPlease download a Lecture Plan via Menu -> Download Calender</string>
 
     <string name="main_lecture_day">Lectures for %s</string>
-    <string name="main_lecture_change">Select to change</string>
+    <string name="main_lecture_change">Swipe to change</string>
 
     <string name="main_button_reload" translatable="false">Download</string>
     <string name="main_button_no" translatable="false">Nope</string>
