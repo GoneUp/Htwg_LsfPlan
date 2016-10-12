@@ -10,8 +10,6 @@ public class PlanGroup {
     public String name;
     public List<PlanItem> items = new LinkedList<>();
 
-    public PlanGroup() {
-    }
 
     public PlanGroup(String name) {
         this.name = name;
@@ -20,9 +18,6 @@ public class PlanGroup {
     public static class PlanItem {
         public String URL;
         public String name;
-
-        public PlanItem() {
-        }
 
         public PlanItem(String name, String url) {
             this.name = name;

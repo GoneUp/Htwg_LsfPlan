@@ -18,9 +18,9 @@ import com.hstrobel.lsfplan.classes.Globals;
 import com.hstrobel.lsfplan.classes.ICSLoader;
 import com.hstrobel.lsfplan.frags.AbstractWebSelector;
 
-public class WebSelector extends AbstractWebSelector {
+public class WebviewSelector extends AbstractWebSelector {
 
-    private WebSelector local;
+    private WebviewSelector local;
     private WebView webView;
     private SharedPreferences.Editor editor;
     private Handler mHandler;

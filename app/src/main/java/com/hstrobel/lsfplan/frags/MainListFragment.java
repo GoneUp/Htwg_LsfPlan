@@ -2,7 +2,6 @@ package com.hstrobel.lsfplan.frags;
 
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -35,7 +34,7 @@ import java.util.Locale;
 
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
     private List<EventItem> mItems;        // ListView items list
-    private EventListAdapter listadapter;
+    private EventListAdapter listAdapter;
 
     private Calendar selectedDay;
     private EventCache cache;
@@ -57,13 +56,19 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         Log.d("LSF", "MainListFragment:onCreate");
         // initialize the items list
         mItems = new ArrayList<EventItem>();
-        Resources resources = getResources();
         selectedDay = Calendar.getInstance();
         cache = new EventCache();
 
         // initialize and set the list adapter
-        listadapter = new EventListAdapter(getActivity(), mItems);
-        setListAdapter(listadapter);
+        listAdapter = new EventListAdapter(getActivity(), mItems);
+        setListAdapter(listAdapter);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateContent();
     }
 
     @Override
@@ -127,9 +132,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void updateContent() {
         //setup
         try {
             if (Globals.myCal != null) {
@@ -139,13 +142,13 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 Drawable icon_book = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action);
                 Drawable icon_left = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_left);
                 Drawable icon_right = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_right);
-                listadapter.clear();
-                listadapter.add(new EventItem(icon_left, icon_right,
+                listAdapter.clear();
+                listAdapter.add(new EventItem(icon_left, icon_right,
                         String.format(getString(R.string.main_lecture_day), d.format(selectedDay.getTime())),
                         getString(R.string.main_lecture_change), this, null));
 
                 for (VEvent ev : evs) {
-                    listadapter.add(new EventItem(icon_book, null,
+                    listAdapter.add(new EventItem(icon_book, null,
                             NotificationUtils.getTopic(ev),
                             NotificationUtils.formatEventShort(ev, getActivity()), this, ev));
                 }
@@ -155,7 +158,6 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
             Toast.makeText(getActivity(), "Loading failed! Resetting the app may help.", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -163,22 +165,22 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         selectedDay.set(Calendar.YEAR, year);
         selectedDay.set(Calendar.MONTH, monthOfYear);
         selectedDay.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        onResume(); //update
+        updateContent();
     }
 
     public void onDateInc() {
         selectedDay.add(Calendar.DAY_OF_MONTH, 1);
-        onResume(); //update
+        updateContent();
     }
 
     public void onDateDec() {
         selectedDay.add(Calendar.DAY_OF_MONTH, -1);
-        onResume(); //update
+        updateContent();
     }
 
     public void onDateReset() {
         selectedDay = new GregorianCalendar();
-        onResume(); //update
+        updateContent();
     }
 
     public void onCheckCache() {

@@ -1,5 +1,6 @@
 package com.hstrobel.lsfplan.classes;
 
+import android.os.Handler;
 import android.util.Log;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -24,7 +25,7 @@ public class EventCache {
     }
 
 
-    public List<VEvent> getDay(java.util.Calendar day) {
+    public List<VEvent> getDay(final java.util.Calendar day) {
         Log.i(TAG, "getDay: Query for " + day.get(java.util.Calendar.DAY_OF_MONTH));
         if (Globals.myCal == null)
             throw new IllegalArgumentException("myCal is null!");
@@ -41,12 +42,16 @@ public class EventCache {
         day.clear(java.util.Calendar.MILLISECOND);
 
         if (!cache.containsKey(day)) {
-            //generateFullCache(day);
             generateDay(day);
         }
 
-        //Send a Intent to background service to pregenerate
-        Globals.SyncStart(Globals.mainActivity);
+        //Generate the rest delayed
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                generateFullCache(day);
+            }
+        });
         return cache.get(day);
     }
 

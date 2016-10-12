@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.MainActivity;
 import com.hstrobel.lsfplan.classes.gui.PlanGroup;
 
@@ -29,21 +30,23 @@ import java.util.List;
  * Created by Henry on 09.11.2015.
  */
 public class Globals {
+    public static final String PREF_NOTIFYTIME = "notfiyTime";
+    public static final String FB_PROP_NOTIFY_ENABLE = "notify_enable";
+    public static final String FB_PROP_NOTIFY_TIME = "notify_time";
+    public static final String FB_PROP_CATEGORY = "course_category";
+    public static final String FB_PROP_SPECIFIC = "course_specific";
     public static boolean DEBUG = false;
     public static MainActivity mainActivity;
-
     public static ICSLoader icsLoader = null;
     public static InputStream icsFileStream = null;
     public static String icsFile = null; //ICS Calender as text
-
     public static SharedPreferences mSettings;
     public static boolean initialized = false;
     public static boolean updated = false;
     public static boolean changed = false;
-
-
     public static Calendar myCal = null;
     public static List<PlanGroup> cachedPlans = null;
+    public static FirebaseAnalytics firebaseAnalytics;
 
     public static void InitCalender(Context c, boolean initNotification) throws IOException, ParserException {
         //App Startup, load everthing from our settings file
@@ -56,6 +59,11 @@ public class Globals {
                 icsFile = mSettings.getString("ICS_FILE", "");
                 updated = true;
             }
+            firebaseAnalytics = FirebaseAnalytics.getInstance(c);
+            firebaseAnalytics.setAnalyticsCollectionEnabled(mSettings.getBoolean("enableAds", false));
+            firebaseAnalytics.setUserProperty(FB_PROP_NOTIFY_ENABLE, String.valueOf(mSettings.getBoolean("enableNotifications", false)));
+            firebaseAnalytics.setUserProperty(FB_PROP_NOTIFY_TIME, String.valueOf(mSettings.getString("notfiyTime", "")));
+
             initialized = true;
         }
 

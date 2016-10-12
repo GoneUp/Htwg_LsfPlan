@@ -69,7 +69,7 @@ public class CalenderUtils {
 
 
     public static List<VEvent> getNextEvent(Calendar myCal) {
-        DateTime starttR = null;
+        DateTime startR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
         int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
         java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() + ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
@@ -84,20 +84,20 @@ public class CalenderUtils {
 
             if (toReturn.isEmpty()) {
                 //first element
-                starttR = startE;
+                startR = startE;
                 toReturn.add(event);
             } else {
                 //compare to get the start datw wich is a) in future b) the closest
 
-                if (startE.compareTo(starttR) == 0) {
+                if (startE.compareTo(startR) == 0) {
                     //equal
                     toReturn.add(event);
 
-                } else if (startE.compareTo(starttR) < 0) {
+                } else if (startE.compareTo(startR) < 0) {
                     //closer
                     toReturn.clear();
                     toReturn.add(event);
-                    starttR = startE;
+                    startR = startE;
                 }
             }
 

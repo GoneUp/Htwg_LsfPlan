@@ -1,6 +1,7 @@
 package com.hstrobel.lsfplan.frags;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
         setNotifyOnChange(true);
     }
 
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
@@ -36,11 +38,11 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
 
             // initialize the view holder
             viewHolder = new ViewHolder();
-            viewHolder.ivIcon = (ImageView) convertView.findViewById(R.id.IconLeft);
-            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-            viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
-            if (convertView.findViewById(R.id.IconRight) != null)
-                viewHolder.ivIcon2 = (ImageView) convertView.findViewById(R.id.IconRight);
+            viewHolder.viewIconLeft = (ImageView) convertView.findViewById(R.id.IconLeft);
+            viewHolder.viewIconRight = (ImageView) convertView.findViewById(R.id.IconRight);
+            viewHolder.viewTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.viewDescription = (TextView) convertView.findViewById(R.id.tvDescription);
+
 
             convertView.setTag(viewHolder);
         } else {
@@ -50,42 +52,48 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
 
         // update the item view
         EventItem item = getItem(position);
-        viewHolder.ivIcon.setImageDrawable(item.icon);
-        viewHolder.ivIcon.setTag(item.fragment);
-        if (viewHolder.ivIcon2 != null) {
-            viewHolder.ivIcon2.setImageDrawable(item.icon2);
-            viewHolder.ivIcon2.setTag(item.fragment);
+        if (item == null)
+            return convertView;
+        viewHolder.viewIconLeft.setImageDrawable(item.iconLeft);
+        viewHolder.viewIconLeft.setTag(item.fragment);
+        if (item.iconRight != null && viewHolder.viewIconRight != null) {
+            viewHolder.viewIconRight.setImageDrawable(item.iconRight);
+            viewHolder.viewIconRight.setTag(item.fragment);
         }
-        viewHolder.tvTitle.setText(item.title);
-        viewHolder.tvDescription.setText(item.description);
+        viewHolder.viewTitle.setText(item.title);
+        viewHolder.viewDescription.setText(item.description);
 
 
         if (position == 0) {
-            viewHolder.ivIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainListFragment frag = (MainListFragment) v.getTag();
-                    frag.onDateDec();
+            if (viewHolder.viewIconLeft != null) {
+                viewHolder.viewIconLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainListFragment frag = (MainListFragment) v.getTag();
+                        frag.onDateDec();
 
-                }
+                    }
 
-            });
-            viewHolder.ivIcon2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainListFragment frag = (MainListFragment) v.getTag();
-                    frag.onDateInc();
-                }
+                });
+            }
+            if (viewHolder.viewIconRight != null) {
+                viewHolder.viewIconRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainListFragment frag = (MainListFragment) v.getTag();
+                        frag.onDateInc();
+                    }
 
-            });
+                });
+            }
         }
         return convertView;
     }
 
     private static class ViewHolder {
-        ImageView ivIcon;
-        ImageView ivIcon2;
-        TextView tvTitle;
-        TextView tvDescription;
+        ImageView viewIconLeft;
+        ImageView viewIconRight;
+        TextView viewTitle;
+        TextView viewDescription;
     }
 }

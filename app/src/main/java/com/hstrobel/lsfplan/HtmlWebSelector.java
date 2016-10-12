@@ -40,15 +40,16 @@ import java.util.List;
 
 public class HtmlWebSelector extends AbstractWebSelector {
 
+    private static final String MAGIC_WORD_LOGIN = "#LOGIN#";
     PlanExportLoader exportLoader = null;
     PlanOverviewLoader overviewLoader = null;
     LoginProcess loginProcess = null;
     private HtmlWebSelector local;
-    private ExpandableListView mList;
-    private PlanListAdapter mAdapter;
+    private ExpandableListView listView;
+    private PlanListAdapter listAdapter;
     private ProgressBar spinner;
-    private PlanGroup.PlanItem lastItem = null;
-
+    private PlanGroup selectedPlanGroup = null;
+    private PlanGroup.PlanItem selectedPlanItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +70,15 @@ public class HtmlWebSelector extends AbstractWebSelector {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         local = this;
-        mList = (ExpandableListView) findViewById(R.id.listView);
-        mAdapter = new PlanListAdapter(this);
-        mList.setAdapter(mAdapter);
+        listView = (ExpandableListView) findViewById(R.id.listView);
+        listAdapter = new PlanListAdapter(this);
+        listView.setAdapter(listAdapter);
 
         spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
 
         loadOverview();
 
-        mList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             private View lastHighlight = null;
 
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -85,17 +86,25 @@ public class HtmlWebSelector extends AbstractWebSelector {
                 getTheme().resolveAttribute(R.attr.background, typedValue, true);
 
                 v.setBackgroundResource(R.color.orange);
-                if (lastHighlight != null) lastHighlight.setBackgroundColor(typedValue.data);
+                if (lastHighlight != null)
+                    lastHighlight.setBackgroundColor(typedValue.data);
                 lastHighlight = v;
 
-                int index = parent.getFlatListPosition(ExpandableListView
+
+                int group_index = parent.getFlatListPosition(ExpandableListView
+                        .getPackedPositionForGroup(groupPosition));
+                int child_index = parent.getFlatListPosition(ExpandableListView
                         .getPackedPositionForChild(groupPosition, childPosition));
-                lastItem = (PlanGroup.PlanItem) parent.getItemAtPosition(index);
+
+
+                selectedPlanGroup = (PlanGroup) parent.getItemAtPosition(group_index);
+                selectedPlanItem = (PlanGroup.PlanItem) parent.getItemAtPosition(child_index);
                 return true;
             }
 
         });
     }
+
 
     @Override
     protected void onStop() {
@@ -132,15 +141,18 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
     private void loadExportUrl() {
         Log.d("LSF", "loadExportUrl");
-        if (lastItem == null) return;
+        if (selectedPlanItem == null) return;
         String planURL = "";
 
-        if (lastItem.URL.equals("#LOGIN#")) {
+        if (selectedPlanItem.URL.equals(MAGIC_WORD_LOGIN)) {
             showLoginForm();
         } else {
+            Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_CATEGORY, selectedPlanGroup.name);
+            Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_SPECIFIC, selectedPlanItem.name);
+
             spinner.setVisibility(View.VISIBLE);
-            mList.setEnabled(false);
-            planURL = lastItem.URL;
+            listView.setEnabled(false);
+            planURL = selectedPlanItem.URL;
 
             exportLoader = new PlanExportLoader();
             exportLoader.execute(planURL);
@@ -151,7 +163,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
         if (loginCookie == null) {
             Toast.makeText(this, "Login failed. Check your username/password.", Toast.LENGTH_LONG).show();
             spinner.setVisibility(View.GONE);
-            mList.setEnabled(true);
+            listView.setEnabled(true);
             return;
         }
 
@@ -177,7 +189,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
             overviewCallback(Globals.cachedPlans);
         } else {
             spinner.setVisibility(View.VISIBLE);
-            mList.setEnabled(false);
+            listView.setEnabled(false);
 
             String savedURL = Globals.mSettings.getString("URL", "missing");
             overviewLoader = new PlanOverviewLoader();
@@ -193,18 +205,18 @@ public class HtmlWebSelector extends AbstractWebSelector {
         Log.d("LSF", "overviewCallback");
         Globals.cachedPlans = results;
 
-        mAdapter.clear();
-        mAdapter.addPlanGroup(getString(R.string.html_login_head));
-        mAdapter.addPlanItem(getString(R.string.html_login_head), getString(R.string.html_login_sub), "#LOGIN#");
+        listAdapter.clear();
+        listAdapter.addPlanGroup(getString(R.string.html_login_head));
+        listAdapter.addPlanItem(getString(R.string.html_login_head), getString(R.string.html_login_sub), MAGIC_WORD_LOGIN);
 
         for (PlanGroup group : results) {
-            mAdapter.addPlanGroup(group.name);
+            listAdapter.addPlanGroup(group.name);
             for (PlanGroup.PlanItem item : group.items) {
-                mAdapter.addPlanItem(group.name, item.name, item.URL);
+                listAdapter.addPlanItem(group.name, item.name, item.URL);
             }
         }
-        mList.invalidateViews();
-        mList.setEnabled(true);
+        listView.invalidateViews();
+        listView.setEnabled(true);
         spinner.setVisibility(View.GONE);
     }
 
@@ -249,7 +261,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                     login.dismiss();
                     //login
                     spinner.setVisibility(View.VISIBLE);
-                    mList.setEnabled(false);
+                    listView.setEnabled(false);
 
                     loginProcess = new LoginProcess(local, new Handler());
                     loginProcess.execute(user, pw);

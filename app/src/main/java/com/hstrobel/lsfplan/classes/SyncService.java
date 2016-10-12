@@ -23,8 +23,6 @@ public class SyncService extends IntentService implements DownloadCallback {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         try {
-
-
             // Gets data from the incoming Intent
             String dataString = workIntent.getDataString();
             Log.i(TAG, "onHandleIntent: SyncS started");
@@ -35,8 +33,6 @@ public class SyncService extends IntentService implements DownloadCallback {
 
             if (!Globals.mSettings.getBoolean("gotICS", false))
                 return;
-
-            updateEventCache();
 
             if (!Globals.mSettings.getBoolean("enableRefresh", false))
                 return;
@@ -82,26 +78,18 @@ public class SyncService extends IntentService implements DownloadCallback {
 
             Globals.SetNewCalendar(getApplicationContext());
 
-            if (Globals.mainActivity != null && Globals.mainActivity.mListFragment != null) {
+            if (Globals.mainActivity != null && Globals.mainActivity.listFragment != null) {
                 //Update main view
                 Globals.mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Globals.mainActivity.mListFragment.onResume();
+                        Globals.mainActivity.listFragment.onResume();
                     }
                 });
             }
-
-            updateEventCache();
         } catch (Exception ex) {
             Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
             Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
-        }
-    }
-
-    private void updateEventCache() {
-        if (Globals.mainActivity != null && Globals.mainActivity.mListFragment != null) {
-            Globals.mainActivity.mListFragment.onCheckCache();
         }
     }
 }

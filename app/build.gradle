@@ -13,7 +13,7 @@ android {
     buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 18
         versionName "2.1"
@@ -50,7 +50,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    compile 'com.google.android.gms:play-services-ads:9.6.1'
+
+    compile 'com.google.firebase:firebase-core:9.6.1'
+    compile 'com.google.firebase:firebase-ads:9.6.1'
+
     compile 'org.mnode.ical4j:ical4j:1.0.6'
     compile 'commons-io:commons-io:2.4'
     compile 'org.jsoup:jsoup:1.7.3'
@@ -60,3 +63,4 @@ dependencies {
 }
 
 
+apply plugin: 'com.google.gms.google-services'
