@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,6 +21,7 @@
             android:title="@string/pref_title_dl" />
         <Preference
             android:key="reset"
+            android:summary="..."
             android:title="@string/pref_reset"/>
     </PreferenceCategory>
 
@@ -32,19 +32,19 @@
             android:summary="@string/pref_description_enableNotifications"
             android:title="@string/pref_title_enableNotifications" />
         <EditTextPreference
-            android:key="notfiyTime"
-            android:title="@string/pref_title_timeSetter"
-            android:summary="@string/pref_description_timeSetter"
-            android:numeric="integer"
             android:defaultValue="15"
+            android:key="notfiyTime"
+            android:numeric="integer"
+            android:summary="@string/pref_description_timeSetter"
+            android:title="@string/pref_title_timeSetter"
             />
         <ListPreference
-            android:key="soundMode"
-            android:title="@string/pref_soundMode"
+            android:defaultValue="@string/pref_soundMode_default"
             android:dialogTitle="@string/pref_soundMode"
             android:entries="@array/pref_soundMode_entries"
             android:entryValues="@array/pref_soundMode_values"
-            android:defaultValue="@string/pref_soundMode_default" />
+            android:key="soundMode"
+            android:title="@string/pref_soundMode" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_credits">

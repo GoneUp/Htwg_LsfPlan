@@ -1,10 +1,12 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model;
 
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.hstrobel.lsfplan.Globals;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 

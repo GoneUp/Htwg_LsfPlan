@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.frags;
+package com.hstrobel.lsfplan.gui;
 
 
 import android.app.Fragment;

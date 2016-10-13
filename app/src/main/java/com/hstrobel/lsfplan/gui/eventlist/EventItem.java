@@ -1,8 +1,6 @@
-package com.hstrobel.lsfplan.classes.gui;
+package com.hstrobel.lsfplan.gui.eventlist;
 
 import android.graphics.drawable.Drawable;
-
-import com.hstrobel.lsfplan.frags.MainListFragment;
 
 import net.fortuna.ical4j.model.component.VEvent;
 

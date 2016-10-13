@@ -1,4 +1,6 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model.calender;
+
+import com.hstrobel.lsfplan.Globals;
 
 import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
@@ -71,7 +73,7 @@ public class CalenderUtils {
     public static List<VEvent> getNextEvent(Calendar myCal) {
         DateTime startR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
-        int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
+        int minutesBefore = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
         java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() + ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
 
         List events = getEventsNextWeek(myCal);

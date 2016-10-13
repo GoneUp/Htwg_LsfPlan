@@ -6,6 +6,7 @@
     <string name="title_activity_web_selector" translatable="false">Download</string>
     <string name="title_activity_settings_activity_new">Settings</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3135430559590190/4069382066</string>
+    <string name="firebase_id" translatable="false">ca-app-pub-3135430559590190~9476787262</string>
 
     <!-- Main -->
     <string name="action_setCalender" translatable="false">Download Plan</string>
@@ -41,12 +42,12 @@
     <string name="pref_description_timeSetter">%d Minutes before</string>
 
     <string name="pref_title_refresh">Automatic sync</string>
-    <string name="pref_description_refresh" formatted="false">Update the new plan every week. \nLast Update: %s</string>
+    <string name="pref_description_refresh" formatted="false">Update the plan every week. \nLast Update: %s</string>
 
     <string name="pref_description_ads">Tip Jar!</string>
     <string name="pref_title_ads">Enable Ads</string>
 
-    <string name="pref_reset" translatable="false">Reset app</string>
+    <string name="pref_reset" translatable="false">Reset</string>
 
     <string name="pref_soundMode">Notification Tone</string>
     <string name="pref_soundMode_default" translatable="false">Vibrate</string>

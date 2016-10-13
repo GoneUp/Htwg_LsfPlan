@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan;
+package com.hstrobel.lsfplan.gui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,7 +13,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 
-import com.hstrobel.lsfplan.classes.Globals;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,19 +35,21 @@ public class UserSettings extends AppCompatActivity {
 
     @SuppressLint("ValidFragment")
     public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+        private boolean notifyChanged = false;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            // Load the preferences from an XML resource
+            // Load the settings from an XML resource
             addPreferencesFromResource(R.xml.settings);
 
-            onSharedPreferenceChanged(Globals.mSettings, "");
+            onSharedPreferenceChanged(Globals.settings, "");
 
             Preference myPref = findPreference("reset");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    SharedPreferences.Editor editor = Globals.mSettings.edit();
+                    SharedPreferences.Editor editor = Globals.settings.edit();
                     editor.clear();
                     editor.commit();
                     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, true);
@@ -71,18 +75,20 @@ public class UserSettings extends AppCompatActivity {
                 case "notfiyTime":
                 case "enableNotifications":
                     Globals.InitNotifications(getActivity());
+
+                    notifyChanged = true;
                     break;
             }
 
             Preference myPref = findPreference("notfiyTime");
-            int time = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
+            int time = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
             myPref.setSummary(String.format(getString(R.string.pref_description_timeSetter), time));
 
             ListPreference sPref = (ListPreference) findPreference("soundMode");
             if (sPref.getEntry() != null) sPref.setSummary(sPref.getEntry());
 
             DateFormat d = SimpleDateFormat.getDateTimeInstance();
-            long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
+            long time_load = Globals.settings.getLong("ICS_DATE", Integer.MAX_VALUE);
             GregorianCalendar syncTime = new GregorianCalendar();
             syncTime.setTimeInMillis(time_load);
 
@@ -103,14 +109,24 @@ public class UserSettings extends AppCompatActivity {
         @Override
         public void onResume() {
             super.onResume();
+            notifyChanged = false;
+
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         }
 
         @Override
         public void onPause() {
-            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
             super.onPause();
+
+            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+
+            if (notifyChanged) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, String.valueOf(Globals.settings.getBoolean("enableNotifications", false)));
+                bundle.putString(FirebaseAnalytics.Param.VALUE, Globals.settings.getString("notfiyTime", "15"));
+                Globals.firebaseAnalytics.logEvent("newSettings", bundle);
+            }
         }
     }
 }

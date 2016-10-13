@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.frags;
+package com.hstrobel.lsfplan.gui.download;
 
 import android.os.Looper;
 import android.support.design.widget.Snackbar;
@@ -9,16 +9,16 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.classes.DownloadCallback;
-import com.hstrobel.lsfplan.classes.Globals;
+import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Created by Henry on 04.12.2015.
  */
-public abstract class AbstractWebSelector extends AppCompatActivity implements DownloadCallback {
+public abstract class AbstractWebSelector extends AppCompatActivity implements IDownloadCallback {
     protected ProgressBar spinner;
 
     public void FileLoaded() {

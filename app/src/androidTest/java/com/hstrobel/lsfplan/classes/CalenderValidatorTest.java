@@ -1,11 +1,11 @@
 package com.hstrobel.lsfplan.classes;
 
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.model.calender.CalenderValidator;
+
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by Henry on 16.11.2015.

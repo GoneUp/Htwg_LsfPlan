@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,8 +9,12 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.hstrobel.lsfplan.MainActivity;
-import com.hstrobel.lsfplan.classes.gui.PlanGroup;
+import com.hstrobel.lsfplan.gui.MainActivity;
+import com.hstrobel.lsfplan.gui.download.CourseGroup;
+import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.model.AlarmReceiver;
+import com.hstrobel.lsfplan.model.BootReceiver;
+import com.hstrobel.lsfplan.model.SyncService;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -31,39 +35,33 @@ import java.util.List;
  */
 public class Globals {
     public static final String PREF_NOTIFYTIME = "notfiyTime";
-    public static final String FB_PROP_NOTIFY_ENABLE = "notify_enable";
-    public static final String FB_PROP_NOTIFY_TIME = "notify_time";
-    public static final String FB_PROP_CATEGORY = "course_category";
-    public static final String FB_PROP_SPECIFIC = "course_specific";
+
     public static boolean DEBUG = false;
     public static MainActivity mainActivity;
     public static ICSLoader icsLoader = null;
     public static InputStream icsFileStream = null;
     public static String icsFile = null; //ICS Calender as text
-    public static SharedPreferences mSettings;
+    public static SharedPreferences settings;
     public static boolean initialized = false;
     public static boolean updated = false;
     public static boolean changed = false;
     public static Calendar myCal = null;
-    public static List<PlanGroup> cachedPlans = null;
+    public static List<CourseGroup> cachedPlans = null;
     public static FirebaseAnalytics firebaseAnalytics;
 
     public static void InitCalender(Context c, boolean initNotification) throws IOException, ParserException {
         //App Startup, load everthing from our settings file
         if (!initialized) {
             //Try to load from file
-            mSettings = PreferenceManager.getDefaultSharedPreferences(c);
+            settings = PreferenceManager.getDefaultSharedPreferences(c);
             myCal = null;
-            if (mSettings.getBoolean("gotICS", false)) {
+            if (settings.getBoolean("gotICS", false)) {
                 //found something!
-                icsFile = mSettings.getString("ICS_FILE", "");
+                icsFile = settings.getString("ICS_FILE", "");
                 updated = true;
             }
             firebaseAnalytics = FirebaseAnalytics.getInstance(c);
-            firebaseAnalytics.setAnalyticsCollectionEnabled(mSettings.getBoolean("enableAds", false));
-            firebaseAnalytics.setUserProperty(FB_PROP_NOTIFY_ENABLE, String.valueOf(mSettings.getBoolean("enableNotifications", false)));
-            firebaseAnalytics.setUserProperty(FB_PROP_NOTIFY_TIME, String.valueOf(mSettings.getString("notfiyTime", "")));
-
+            firebaseAnalytics.setAnalyticsCollectionEnabled(settings.getBoolean("enableAds", false));
             initialized = true;
         }
 
@@ -88,7 +86,7 @@ public class Globals {
         ComponentName receiver = new ComponentName(c, BootReceiver.class);
         PackageManager pm = c.getPackageManager();
 
-        if (Globals.mSettings.getBoolean("enableNotifications", false)) {
+        if (Globals.settings.getBoolean("enableNotifications", false)) {
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
@@ -112,7 +110,7 @@ public class Globals {
         updated = true;
         InitCalender(act, false);
 
-        SharedPreferences.Editor editor = Globals.mSettings.edit();
+        SharedPreferences.Editor editor = Globals.settings.edit();
         editor.putBoolean("gotICS", true);
         editor.putString("ICS_FILE", Globals.icsFile);
         editor.putLong("ICS_DATE", java.util.Calendar.getInstance().getTimeInMillis());
@@ -130,7 +128,7 @@ public class Globals {
             output.output(myCal, w);
             icsFile = w.toString();
 
-            SharedPreferences.Editor editor = mSettings.edit();
+            SharedPreferences.Editor editor = settings.edit();
             editor.putString("ICS_FILE", Globals.icsFile);
             editor.apply();
         }

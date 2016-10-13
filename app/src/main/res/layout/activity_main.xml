@@ -9,7 +9,7 @@
     android:orientation="horizontal">
     <fragment
         android:id="@+id/mainDefaultFragment"
-        android:name="com.hstrobel.lsfplan.frags.MainDefaultFragment"
+        android:name="com.hstrobel.lsfplan.gui.MainDefaultFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/adView"
@@ -18,7 +18,7 @@
         tools:layout="@layout/fragment_main_def" />
     <fragment
         android:id="@+id/mainListFragment"
-        android:name="com.hstrobel.lsfplan.frags.MainListFragment"
+        android:name="com.hstrobel.lsfplan.gui.eventlist.MainListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/adView"

@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.classes.gui;
+package com.hstrobel.lsfplan.gui.download;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -17,11 +17,11 @@ import java.util.List;
 /**
  * Created by Henry on 02.12.2015.
  */
-public class PlanListAdapter implements ExpandableListAdapter {
-    private List<PlanGroup> list;
+public class CourseListAdapter implements ExpandableListAdapter {
+    private List<CourseGroup> list;
     private Context mContext;
 
-    public PlanListAdapter(Context mContext) {
+    public CourseListAdapter(Context mContext) {
         list = new LinkedList<>();
         this.mContext = mContext;
     }
@@ -81,7 +81,7 @@ public class PlanListAdapter implements ExpandableListAdapter {
 
         TextView text = (TextView) convertView.findViewById(android.R.id.text1);
         text.setTypeface(null, Typeface.BOLD);
-        PlanGroup group = list.get(groupPosition);
+        CourseGroup group = list.get(groupPosition);
         text.setText(group.name);
 
         return convertView;
@@ -93,7 +93,7 @@ public class PlanListAdapter implements ExpandableListAdapter {
         convertView = inflater.inflate(R.layout.planview_item, parent, false);
 
         TextView text = (TextView) convertView.findViewById(R.id.planText);
-        PlanGroup group = list.get(groupPosition);
+        CourseGroup group = list.get(groupPosition);
         text.setText(" -- " + group.items.get(childPosition).name);
 
         return convertView;
@@ -139,13 +139,13 @@ public class PlanListAdapter implements ExpandableListAdapter {
     }
 
     public void addPlanGroup(String name) {
-        PlanGroup group = new PlanGroup(name);
+        CourseGroup group = new CourseGroup(name);
         list.add(group);
     }
 
     public void addPlanItem(String groupName, String name, String url) {
-        PlanGroup group = null;
-        for (PlanGroup g : list) {
+        CourseGroup group = null;
+        for (CourseGroup g : list) {
             if (g.name == groupName) {
                 group = g;
                 break;
@@ -153,7 +153,7 @@ public class PlanListAdapter implements ExpandableListAdapter {
         }
         if (group == null) return;
 
-        PlanGroup.PlanItem item = new PlanGroup.PlanItem(name, url);
+        CourseGroup.Course item = new CourseGroup.Course(name, url);
         group.items.add(item);
     }
 

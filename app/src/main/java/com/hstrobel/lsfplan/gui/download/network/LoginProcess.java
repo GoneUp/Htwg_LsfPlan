@@ -1,11 +1,11 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.gui.download.network;
 
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import com.hstrobel.lsfplan.HtmlWebSelector;
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.gui.download.HtmlWebSelector;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jsoup.Jsoup;

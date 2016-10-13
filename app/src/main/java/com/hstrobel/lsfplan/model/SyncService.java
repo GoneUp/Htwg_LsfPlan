@@ -1,9 +1,13 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
+
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -13,7 +17,7 @@ import java.util.GregorianCalendar;
 /**
  * Created by Henry on 06.04.2016.
  */
-public class SyncService extends IntentService implements DownloadCallback {
+public class SyncService extends IntentService implements IDownloadCallback {
     private static String TAG = "LSF";
 
     public SyncService() {
@@ -31,13 +35,13 @@ public class SyncService extends IntentService implements DownloadCallback {
             if (Globals.icsLoader != null)
                 return;
 
-            if (!Globals.mSettings.getBoolean("gotICS", false))
+            if (!Globals.settings.getBoolean("gotICS", false))
                 return;
 
-            if (!Globals.mSettings.getBoolean("enableRefresh", false))
+            if (!Globals.settings.getBoolean("enableRefresh", false))
                 return;
 
-            long time_load = Globals.mSettings.getLong("ICS_DATE", Integer.MAX_VALUE);
+            long time_load = Globals.settings.getLong("ICS_DATE", Integer.MAX_VALUE);
             GregorianCalendar now = new GregorianCalendar();
             //DEBUG REMOVE
             //now.add(Calendar.YEAR, 5);
@@ -50,7 +54,7 @@ public class SyncService extends IntentService implements DownloadCallback {
                 Log.i(TAG, "onHandleIntent: SyncS is already updated");
 
             } else {
-                String url = Globals.mSettings.getString("ICS_URL", "");
+                String url = Globals.settings.getString("ICS_URL", "");
 
                 if (!url.isEmpty()) {
                     Log.i(TAG, "onHandleIntent: starting download");

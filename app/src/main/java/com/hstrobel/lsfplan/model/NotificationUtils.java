@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import com.hstrobel.lsfplan.MainActivity;
+import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.gui.MainActivity;
+import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -63,7 +65,7 @@ public class NotificationUtils {
 
 
     public static int showNotification(VEvent event, Context context) {
-        String mode = Globals.mSettings.getString("soundMode", "");
+        String mode = Globals.settings.getString("soundMode", "");
         int soundMode = NotificationCompat.DEFAULT_LIGHTS;
 
         switch (mode) {

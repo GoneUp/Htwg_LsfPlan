@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan;
+package com.hstrobel.lsfplan.gui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,11 +16,13 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.hstrobel.lsfplan.classes.CalenderUtils;
-import com.hstrobel.lsfplan.classes.Globals;
-import com.hstrobel.lsfplan.classes.NotificationUtils;
-import com.hstrobel.lsfplan.frags.MainDefaultFragment;
-import com.hstrobel.lsfplan.frags.MainListFragment;
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.gui.download.HtmlWebSelector;
+import com.hstrobel.lsfplan.gui.download.WebviewSelector;
+import com.hstrobel.lsfplan.gui.eventlist.MainListFragment;
+import com.hstrobel.lsfplan.model.NotificationUtils;
+import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
 import net.fortuna.ical4j.model.component.VEvent;
 
@@ -49,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle(R.string.title_activity_main);
+
         //Ads
-        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3135430559590190~9476787262");
+        MobileAds.initialize(getApplicationContext(), getString(R.string.firebase_id));
         MobileAds.setAppMuted(true);
         adView = (AdView) findViewById(R.id.adView);
 

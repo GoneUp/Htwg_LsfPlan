@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan;
+package com.hstrobel.lsfplan.gui.download;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.hstrobel.lsfplan.classes.Globals;
-import com.hstrobel.lsfplan.classes.ICSLoader;
-import com.hstrobel.lsfplan.frags.AbstractWebSelector;
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 
 public class WebviewSelector extends AbstractWebSelector {
 

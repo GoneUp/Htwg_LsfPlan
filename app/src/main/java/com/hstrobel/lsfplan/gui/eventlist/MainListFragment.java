@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.frags;
+package com.hstrobel.lsfplan.gui.eventlist;
 
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
@@ -12,11 +12,10 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.classes.EventCache;
-import com.hstrobel.lsfplan.classes.Globals;
-import com.hstrobel.lsfplan.classes.NotificationUtils;
-import com.hstrobel.lsfplan.classes.gui.EventItem;
+import com.hstrobel.lsfplan.model.NotificationUtils;
+import com.hstrobel.lsfplan.model.calender.EventCache;
 
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;

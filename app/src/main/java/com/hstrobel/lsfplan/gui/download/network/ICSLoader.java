@@ -1,7 +1,9 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.gui.download.network;
 
 import android.os.Handler;
 import android.util.Log;
+
+import com.hstrobel.lsfplan.model.calender.CalenderValidator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -16,10 +18,10 @@ public class ICSLoader implements Runnable {
     public String file = "";
     public String url = "";
     public InputStream fileStream = null;
-    private DownloadCallback mSelector;
+    private IDownloadCallback mSelector;
     private Handler mHandler;
 
-    public ICSLoader(DownloadCallback selector, Handler handler, String url) {
+    public ICSLoader(IDownloadCallback selector, Handler handler, String url) {
         this.url = url;
         mSelector = selector;
         mHandler = handler;

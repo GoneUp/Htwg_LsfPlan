@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.frags;
+package com.hstrobel.lsfplan.gui.eventlist;
 
 /**
  * Created by Henry on 04.10.2016.

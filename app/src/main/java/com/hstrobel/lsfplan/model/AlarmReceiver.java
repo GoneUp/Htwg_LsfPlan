@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,6 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -42,7 +45,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
 
         Date start = CalenderUtils.getNextRecuringStartDate(events[0]); //all should have the same start time
-        int minutesBefore = Integer.parseInt(Globals.mSettings.getString("notfiyTime", "15"));
+        int minutesBefore = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
         start.setTime(start.getTime() - (minutesBefore) * 60 * 1000);
 
         //DEBUG DEBUG REMOVE IT

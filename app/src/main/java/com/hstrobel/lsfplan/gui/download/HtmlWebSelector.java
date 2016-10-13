@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan;
+package com.hstrobel.lsfplan.gui.download;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -20,12 +20,11 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.hstrobel.lsfplan.classes.Globals;
-import com.hstrobel.lsfplan.classes.ICSLoader;
-import com.hstrobel.lsfplan.classes.LoginProcess;
-import com.hstrobel.lsfplan.classes.gui.PlanGroup;
-import com.hstrobel.lsfplan.classes.gui.PlanListAdapter;
-import com.hstrobel.lsfplan.frags.AbstractWebSelector;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.gui.download.network.LoginProcess;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jsoup.Connection;
@@ -46,10 +45,10 @@ public class HtmlWebSelector extends AbstractWebSelector {
     LoginProcess loginProcess = null;
     private HtmlWebSelector local;
     private ExpandableListView listView;
-    private PlanListAdapter listAdapter;
+    private CourseListAdapter listAdapter;
     private ProgressBar spinner;
-    private PlanGroup selectedPlanGroup = null;
-    private PlanGroup.PlanItem selectedPlanItem = null;
+    private CourseGroup selectedCourseGroup = null;
+    private CourseGroup.Course selectedCourse = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +70,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
         local = this;
         listView = (ExpandableListView) findViewById(R.id.listView);
-        listAdapter = new PlanListAdapter(this);
+        listAdapter = new CourseListAdapter(this);
         listView.setAdapter(listAdapter);
 
         spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
@@ -97,8 +96,8 @@ public class HtmlWebSelector extends AbstractWebSelector {
                         .getPackedPositionForChild(groupPosition, childPosition));
 
 
-                selectedPlanGroup = (PlanGroup) parent.getItemAtPosition(group_index);
-                selectedPlanItem = (PlanGroup.PlanItem) parent.getItemAtPosition(child_index);
+                selectedCourseGroup = (CourseGroup) parent.getItemAtPosition(group_index);
+                selectedCourse = (CourseGroup.Course) parent.getItemAtPosition(child_index);
                 return true;
             }
 
@@ -141,18 +140,22 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
     private void loadExportUrl() {
         Log.d("LSF", "loadExportUrl");
-        if (selectedPlanItem == null) return;
+        if (selectedCourse == null) return;
         String planURL = "";
 
-        if (selectedPlanItem.URL.equals(MAGIC_WORD_LOGIN)) {
+        if (selectedCourse.URL.equals(MAGIC_WORD_LOGIN)) {
             showLoginForm();
         } else {
-            Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_CATEGORY, selectedPlanGroup.name);
-            Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_SPECIFIC, selectedPlanItem.name);
+            //Tracking
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, selectedCourseGroup.name);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, selectedCourse.name);
+            Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
+            //UI
             spinner.setVisibility(View.VISIBLE);
             listView.setEnabled(false);
-            planURL = selectedPlanItem.URL;
+            planURL = selectedCourse.URL;
 
             exportLoader = new PlanExportLoader();
             exportLoader.execute(planURL);
@@ -191,13 +194,13 @@ public class HtmlWebSelector extends AbstractWebSelector {
             spinner.setVisibility(View.VISIBLE);
             listView.setEnabled(false);
 
-            String savedURL = Globals.mSettings.getString("URL", "missing");
+            String savedURL = Globals.settings.getString("URL", "missing");
             overviewLoader = new PlanOverviewLoader();
             overviewLoader.execute(savedURL);
         }
     }
 
-    private void overviewCallback(List<PlanGroup> results) {
+    private void overviewCallback(List<CourseGroup> results) {
         if (results == null) {
             Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
             return;
@@ -209,9 +212,9 @@ public class HtmlWebSelector extends AbstractWebSelector {
         listAdapter.addPlanGroup(getString(R.string.html_login_head));
         listAdapter.addPlanItem(getString(R.string.html_login_head), getString(R.string.html_login_sub), MAGIC_WORD_LOGIN);
 
-        for (PlanGroup group : results) {
+        for (CourseGroup group : results) {
             listAdapter.addPlanGroup(group.name);
-            for (PlanGroup.PlanItem item : group.items) {
+            for (CourseGroup.Course item : group.items) {
                 listAdapter.addPlanItem(group.name, item.name, item.URL);
             }
         }
@@ -235,11 +238,11 @@ public class HtmlWebSelector extends AbstractWebSelector {
         final EditText txtUsername = (EditText) login.findViewById(R.id.txtUsername);
         final EditText txtPassword = (EditText) login.findViewById(R.id.txtPassword);
 
-        boolean autoSave = Globals.mSettings.getBoolean("loginAutoSave", true);
+        boolean autoSave = Globals.settings.getBoolean("loginAutoSave", true);
         box.setChecked(autoSave);
         if (autoSave) {
-            String user = Globals.mSettings.getString("loginUser", "");
-            String pw = Globals.mSettings.getString("loginPassword", "");
+            String user = Globals.settings.getString("loginUser", "");
+            String pw = Globals.settings.getString("loginPassword", "");
             if (!user.equals("")) {
                 user = new String(Base64.decode(user, Base64.DEFAULT));
                 pw = new String(Base64.decode(pw, Base64.DEFAULT));
@@ -267,7 +270,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                     loginProcess.execute(user, pw);
                 }
 
-                SharedPreferences.Editor editor = Globals.mSettings.edit();
+                SharedPreferences.Editor editor = Globals.settings.edit();
                 editor.putBoolean("loginAutoSave", box.isChecked());
                 if (box.isChecked()) {
                     editor.putString("loginUser", Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
@@ -287,16 +290,16 @@ public class HtmlWebSelector extends AbstractWebSelector {
         login.show();
     }
 
-    public class PlanOverviewLoader extends AsyncTask<String, String, List<PlanGroup>> {
+    public class PlanOverviewLoader extends AsyncTask<String, String, List<CourseGroup>> {
         public PlanOverviewLoader() {
         }
 
         @Override
-        protected List<PlanGroup> doInBackground(String... params) {
+        protected List<CourseGroup> doInBackground(String... params) {
             // Making HTTP request
-            List<PlanGroup> list = new LinkedList<>();
-            PlanGroup group;
-            PlanGroup.PlanItem item;
+            List<CourseGroup> list = new LinkedList<>();
+            CourseGroup group;
+            CourseGroup.Course item;
 
             try {
 
@@ -310,19 +313,19 @@ public class HtmlWebSelector extends AbstractWebSelector {
                     //course name
                     Element courseURL = columns.get(0).child(0); //row 0 --> a class --> inner text
                     if (Globals.DEBUG) Log.d("LSF", courseURL.text());
-                    group = new PlanGroup(courseURL.text());
+                    group = new CourseGroup(courseURL.text());
 
                     //course semesters
                     for (Element ele : columns.get(1).children()) {
                         if (ele.tagName() != "a") continue;
                         if (Globals.DEBUG) Log.d("LSF", String.format("%s : %s", ele.text(), ele.attr("href")));
-                        item = new PlanGroup.PlanItem(ele.text(), ele.attr("href"));
+                        item = new CourseGroup.Course(ele.text(), ele.attr("href"));
                         group.items.add(item);
                     }
                     //course everthing
                     Element allURL = columns.get(2).child(0); //row 0 --> a class --> inner text
                     if (Globals.DEBUG) Log.d("LSF", String.format("%s : %s", allURL.text(), allURL.attr("href")));
-                    item = new PlanGroup.PlanItem(allURL.text(), allURL.attr("href"));
+                    item = new CourseGroup.Course(allURL.text(), allURL.attr("href"));
                     group.items.add(item);
 
                     list.add(group);
@@ -338,7 +341,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
         }
 
         @Override
-        protected void onPostExecute(List<PlanGroup> result) {
+        protected void onPostExecute(List<CourseGroup> result) {
             super.onPostExecute(result);
             overviewCallback(result);
         }

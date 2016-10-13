@@ -1,5 +1,7 @@
 package com.hstrobel.lsfplan.classes;
 
+import com.hstrobel.lsfplan.model.calender.EventCache;
+
 import junit.framework.TestCase;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -17,8 +19,7 @@ public class EventCacheTest extends TestCase {
     @Test
     public void testGetDay() throws Exception {
         Calendar cal = new Calendar();
-        EventCache cache = new EventCache(cal);
-
+        EventCache cache = new EventCache();
 
         List<VEvent> list = cache.getDay(java.util.Calendar.getInstance());
         assertEquals(0, list.size());

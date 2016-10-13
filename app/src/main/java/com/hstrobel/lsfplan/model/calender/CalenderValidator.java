@@ -1,6 +1,8 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model.calender;
 
 import android.util.Log;
+
+import com.hstrobel.lsfplan.Globals;
 
 import org.apache.commons.io.IOUtils;
 

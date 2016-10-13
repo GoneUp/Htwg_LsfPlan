@@ -1,4 +1,4 @@
-package com.hstrobel.lsfplan.frags;
+package com.hstrobel.lsfplan.gui.eventlist;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.classes.gui.EventItem;
 
 import java.util.List;
 

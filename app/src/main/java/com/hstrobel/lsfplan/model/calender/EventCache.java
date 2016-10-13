@@ -1,7 +1,9 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.model.calender;
 
 import android.os.Handler;
 import android.util.Log;
+
+import com.hstrobel.lsfplan.Globals;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -23,7 +25,6 @@ public class EventCache {
     public EventCache() {
         cache = new TreeMap<>();
     }
-
 
     public List<VEvent> getDay(final java.util.Calendar day) {
         Log.i(TAG, "getDay: Query for " + day.get(java.util.Calendar.DAY_OF_MONTH));
