@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         if (defaultFragment.getView() != null) defaultFragment.getView().setVisibility(View.GONE);
         if (listFragment.getView() != null) listFragment.getView().setVisibility(View.GONE);
 
-        Globals.mainActivity = this;
 
         //Settings
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);

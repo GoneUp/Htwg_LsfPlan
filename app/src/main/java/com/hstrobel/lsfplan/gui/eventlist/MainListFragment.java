@@ -2,10 +2,15 @@ package com.hstrobel.lsfplan.gui.eventlist;
 
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +53,19 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main_listview, container, false);
     }*/
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Globals.INTENT_UPDATE_LIST)) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateContent();
+                    }
+                });
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,11 +82,17 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         setListAdapter(listAdapter);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Globals.INTENT_UPDATE_LIST));
         updateContent();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -92,7 +116,6 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             }
         });
     }
-
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -123,7 +146,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
             ad.setMessage(message);
             ad.setPositiveButton("Ok", null);
-            if (isMathe && eastereggCounter > 1)
+            if (isMathe && eastereggCounter > 0)
                 ad.setNeutralButton("...", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -138,7 +161,6 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             }
         }
     }
-
 
     private void updateContent() {
         //setup

@@ -2,6 +2,7 @@ package com.hstrobel.lsfplan.model;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.Globals;
@@ -76,15 +77,10 @@ public class SyncService extends IntentService implements IDownloadCallback {
 
             Globals.SetNewCalendar(getApplicationContext());
 
-            if (Globals.mainActivity != null && Globals.mainActivity.listFragment != null) {
-                //Update main view
-                Globals.mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Globals.mainActivity.listFragment.onResume();
-                    }
-                });
-            }
+            //Update our ui (if present)
+            Intent in = new Intent();
+            in.setAction(Globals.INTENT_UPDATE_LIST);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(in);
         } catch (Exception ex) {
             Log.e(TAG, "SyncS Fileloaded: ", ex);
         }

@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.hstrobel.lsfplan.gui.MainActivity;
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
@@ -33,10 +32,10 @@ import java.util.List;
  * Created by Henry on 09.11.2015.
  */
 public class Globals {
+    public static final String INTENT_UPDATE_LIST = "INTENT_UPDATE_LIST";
     public static final String PREF_NOTIFYTIME = "notfiyTime";
 
     public static boolean DEBUG = false;
-    public static MainActivity mainActivity;
     public static ICSLoader icsLoader = null;
     public static InputStream icsFileStream = null;
     public static String icsFile = null; //ICS Calender as text
