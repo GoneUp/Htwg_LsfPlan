@@ -13,8 +13,6 @@ import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 /**
  * Created by Henry on 04.12.2015.
  */
@@ -38,9 +36,8 @@ public abstract class AbstractWebSelector extends AppCompatActivity implements I
             NavUtils.navigateUpFromSameTask(this);
 
         } catch (Exception ex) {
-            Toast.makeText(this, "DL FAIL ", Toast.LENGTH_SHORT).show();
-            Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Toast.makeText(this, "Download failed", Toast.LENGTH_SHORT).show();
+            Log.e("LSF", "DL: FileLoaded: ", ex);
             spinner.setVisibility(View.GONE);
         }
     }

@@ -1,15 +1,12 @@
 package com.hstrobel.lsfplan.gui.download.network;
 
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.HtmlWebSelector;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 /**
  * Created by Henry on 07.12.2015.
@@ -17,16 +14,11 @@ import org.jsoup.nodes.Document;
 
 
 public class LoginProcess extends AsyncTask<String, String, String> {
-    public String file = "";
+    private static final String TAG = "LSF";
     private HtmlWebSelector context = null;
-    private Handler mHandler;
 
-    private String user;
-    private String pw;
-
-    public LoginProcess(HtmlWebSelector c, Handler handler) {
+    public LoginProcess(HtmlWebSelector c) {
         context = c;
-        mHandler = handler;
     }
 
     //1. post, 2. handle answer (cookie or a fail message), 3.return cookie?
@@ -70,8 +62,8 @@ Connection: Keep-Alive
     @Override
     protected String doInBackground(String... params) {
         try {
-            user = params[0];
-            pw = params[1];
+            String user = params[0];
+            String pw = params[1];
 
 
             org.jsoup.Connection connection = Jsoup.connect(context.getString(R.string.misc_personalLoginURL))
@@ -82,7 +74,7 @@ Connection: Keep-Alive
                     .timeout(5000)
                     .userAgent("Mozilla");
 
-            Document doc = connection.post();
+            connection.post();
             org.jsoup.Connection.Response response = connection.response();
             Log.d("LSF", String.valueOf(response.method()));
 
@@ -100,11 +92,9 @@ Connection: Keep-Alive
             return null;
 
         } catch (Exception ex) {
-            System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
-            file = null;
+            Log.e(TAG, "Login failed ", ex);
         }
-        return file;
+        return "";
     }
 
     @Override

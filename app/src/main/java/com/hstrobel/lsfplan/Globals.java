@@ -22,10 +22,9 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
@@ -67,10 +66,9 @@ public class Globals {
 
         //Update the Calender object with the n(new) fileStream
         if (updated) {
-            icsFileStream = IOUtils.toInputStream(icsFile, "UTF-8");
-            if (icsFileStream != null) {
+            if (icsFile != null) {
                 CalendarBuilder builder = new CalendarBuilder();
-                myCal = builder.build(icsFileStream);
+                myCal = builder.build(new StringReader(icsFile));
             }
             updated = false;
             if (initNotification){

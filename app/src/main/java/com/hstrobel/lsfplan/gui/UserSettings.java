@@ -62,7 +62,7 @@ public class UserSettings extends AppCompatActivity {
             myPref = findPreference("github");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GoneUp/Htwg_LsfPlan"));
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.about_github_url)));
                     startActivity(i);
                     return true;
                 }
@@ -97,7 +97,7 @@ public class UserSettings extends AppCompatActivity {
 
 
             myPref = findPreference("info");
-            PackageInfo pInfo = null;
+            PackageInfo pInfo;
             try {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 myPref.setSummary(getString(R.string.pref_description_info) + pInfo.versionName);
@@ -124,8 +124,8 @@ public class UserSettings extends AppCompatActivity {
             if (notifyChanged) {
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, String.valueOf(Globals.settings.getBoolean("enableNotifications", false)));
-                bundle.putString(FirebaseAnalytics.Param.VALUE, Globals.settings.getString("notfiyTime", "15"));
-                Globals.firebaseAnalytics.logEvent("newSettings", bundle);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Globals.settings.getString("notfiyTime", "15"));
+                Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             }
         }
     }

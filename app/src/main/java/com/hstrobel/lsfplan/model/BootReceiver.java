@@ -8,19 +8,17 @@ import android.util.Log;
 
 import com.hstrobel.lsfplan.Globals;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 public class BootReceiver extends BroadcastReceiver {
+    private static final String TAG = "LSF";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            Log.i("LSF", "Setting Bootup");
+            Log.i(TAG, "Setting Bootup");
             try {
                 Globals.InitCalender(context, true);
             } catch (Exception ex) {
-                Log.e("LSF", "FAIL Bootup:\n " + ExceptionUtils.getCause(ex));
-                Log.e("LSF", "FAIL Bootup ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+                Log.e(TAG, "Bootup: ", ex);
             }
 
         }

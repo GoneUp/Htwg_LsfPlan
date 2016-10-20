@@ -3,8 +3,8 @@ package com.hstrobel.lsfplan.gui.download;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +22,6 @@ public class WebviewSelector extends AbstractWebSelector {
 
     private WebviewSelector local;
     private WebView webView;
-    private SharedPreferences.Editor editor;
     private Handler mHandler;
 
     @Override
@@ -53,18 +52,15 @@ public class WebviewSelector extends AbstractWebSelector {
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                //DisplayTost(getString(R.string.webView_fileLoading));
                 Log.d("LSF", "setDownloadListener");
-                Globals.icsLoader = new ICSLoader(local, mHandler, url);
+                Globals.icsLoader = new ICSLoader(local, url);
                 new Thread(Globals.icsLoader).start();
             }
         });
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
 
-        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = mSettings.edit();
-        String savedURL = mSettings.getString("URL", "missing");
+        String savedURL = Globals.settings.getString("URL", "missing");
         webView.loadUrl(savedURL);
 
     }
@@ -89,6 +85,18 @@ public class WebviewSelector extends AbstractWebSelector {
 
         // Otherwise defer to system default behavior.
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        String url = webView.getUrl();
+        if (!TextUtils.isEmpty(url)) {
+            SharedPreferences.Editor editor = Globals.settings.edit();
+            editor.putString("URL", url);
+            editor.apply();
+        }
     }
 
     protected void DisplayTost(final String text) {

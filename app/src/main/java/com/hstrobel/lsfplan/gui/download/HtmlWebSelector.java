@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -26,7 +25,6 @@ import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.gui.download.network.LoginProcess;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,8 +36,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HtmlWebSelector extends AbstractWebSelector {
-
     private static final String MAGIC_WORD_LOGIN = "#LOGIN#";
+    private static final String TAG = "LSF";
+    
     PlanExportLoader exportLoader = null;
     PlanOverviewLoader overviewLoader = null;
     LoginProcess loginProcess = null;
@@ -139,26 +138,26 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
 
     private void loadExportUrl() {
-        Log.d("LSF", "loadExportUrl");
-        if (selectedCourse == null) return;
-        String planURL = "";
+        Log.d(TAG, "loadExportUrl");
+        if (selectedCourse == null)
+            return;
 
         if (selectedCourse.URL.equals(MAGIC_WORD_LOGIN)) {
             showLoginForm();
         } else {
             //Tracking
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, selectedCourseGroup.name);
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, selectedCourse.name);
-            Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, selectedCourseGroup.name);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, selectedCourse.name);
+            Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
+
 
             //UI
             spinner.setVisibility(View.VISIBLE);
             listView.setEnabled(false);
-            planURL = selectedCourse.URL;
 
             exportLoader = new PlanExportLoader();
-            exportLoader.execute(planURL);
+            exportLoader.execute(selectedCourse.URL);
         }
     }
 
@@ -179,13 +178,13 @@ public class HtmlWebSelector extends AbstractWebSelector {
             Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
             return;
         }
-        Log.d("LSF", "exportCallback");
-        Globals.icsLoader = new ICSLoader(this, new Handler(), url);
+        Log.d(TAG, "exportCallback");
+        Globals.icsLoader = new ICSLoader(this, url);
         new Thread(Globals.icsLoader).start();
     }
 
     private void loadOverview() {
-        Log.d("LSF", "loadOverview");
+        Log.d(TAG, "loadOverview");
 
         if (Globals.cachedPlans != null) {
             // got a saved version
@@ -205,7 +204,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
             Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
             return;
         }
-        Log.d("LSF", "overviewCallback");
+        Log.d(TAG, "overviewCallback");
         Globals.cachedPlans = results;
 
         listAdapter.clear();
@@ -266,7 +265,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                     spinner.setVisibility(View.VISIBLE);
                     listView.setEnabled(false);
 
-                    loginProcess = new LoginProcess(local, new Handler());
+                    loginProcess = new LoginProcess(local);
                     loginProcess.execute(user, pw);
                 }
 
@@ -291,9 +290,6 @@ public class HtmlWebSelector extends AbstractWebSelector {
     }
 
     public class PlanOverviewLoader extends AsyncTask<String, String, List<CourseGroup>> {
-        public PlanOverviewLoader() {
-        }
-
         @Override
         protected List<CourseGroup> doInBackground(String... params) {
             // Making HTTP request
@@ -312,19 +308,21 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
                     //course name
                     Element courseURL = columns.get(0).child(0); //row 0 --> a class --> inner text
-                    if (Globals.DEBUG) Log.d("LSF", courseURL.text());
+                    if (Globals.DEBUG) Log.d(TAG, courseURL.text());
                     group = new CourseGroup(courseURL.text());
 
                     //course semesters
                     for (Element ele : columns.get(1).children()) {
                         if (ele.tagName() != "a") continue;
-                        if (Globals.DEBUG) Log.d("LSF", String.format("%s : %s", ele.text(), ele.attr("href")));
+                        if (Globals.DEBUG)
+                            Log.d(TAG, String.format("%s : %s", ele.text(), ele.attr("href")));
                         item = new CourseGroup.Course(ele.text(), ele.attr("href"));
                         group.items.add(item);
                     }
                     //course everthing
                     Element allURL = columns.get(2).child(0); //row 0 --> a class --> inner text
-                    if (Globals.DEBUG) Log.d("LSF", String.format("%s : %s", allURL.text(), allURL.attr("href")));
+                    if (Globals.DEBUG)
+                        Log.d(TAG, String.format("%s : %s", allURL.text(), allURL.attr("href")));
                     item = new CourseGroup.Course(allURL.text(), allURL.attr("href"));
                     group.items.add(item);
 
@@ -332,8 +330,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                 }
 
             } catch (Exception ex) {
-                Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
-                Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+                Log.e(TAG, "FAIL DL: ", ex);
                 list = null;
             }
 
@@ -348,9 +345,6 @@ public class HtmlWebSelector extends AbstractWebSelector {
     }
 
     public class PlanExportLoader extends AsyncTask<String, String, String> {
-        public PlanExportLoader() {
-        }
-
         @Override
         protected String doInBackground(String... params) {
             // Making HTTP request
@@ -367,7 +361,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                     if (imgs.hasAttr("src")) {
                         if (imgs.attr("src").equals("/QIS/images//calendar_go.gif")) {
                             //found export ;)
-                            Log.d("LSF", imgs.parent().attr("href"));
+                            Log.d(TAG, imgs.parent().attr("href"));
                             url = imgs.parent().attr("href");
                             break;
                         }
@@ -375,8 +369,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                 }
 
             } catch (Exception ex) {
-                System.out.println("FAIL DL:\n " + ExceptionUtils.getCause(ex));
-                System.out.println("FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+                Log.e(TAG, "FAIL DL: ", ex);
                 url = null;
             }
             return url;

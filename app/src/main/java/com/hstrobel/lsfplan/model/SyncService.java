@@ -2,14 +2,11 @@ package com.hstrobel.lsfplan.model;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -27,8 +24,6 @@ public class SyncService extends IntentService implements IDownloadCallback {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         try {
-            // Gets data from the incoming Intent
-            String dataString = workIntent.getDataString();
             Log.i(TAG, "onHandleIntent: SyncS started");
 
             //if the user is already downloading something new we don't interfere
@@ -58,7 +53,7 @@ public class SyncService extends IntentService implements IDownloadCallback {
 
                 if (!url.isEmpty()) {
                     Log.i(TAG, "onHandleIntent: starting download");
-                    Globals.icsLoader = new ICSLoader(this, new Handler(), url);
+                    Globals.icsLoader = new ICSLoader(this, url);
                     new Thread(Globals.icsLoader).start();
                 }
             /*The new Thread is not really needed since we are already on background task,
@@ -66,8 +61,7 @@ public class SyncService extends IntentService implements IDownloadCallback {
              */
             }
         } catch (Exception ex) {
-            Log.e("LSF", "FAIL Sync:\n " + ExceptionUtils.getCause(ex));
-            Log.e("LSF", "FAIL Sync ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e(TAG, "SyncS Intent: ", ex);
         }
     }
 
@@ -92,8 +86,7 @@ public class SyncService extends IntentService implements IDownloadCallback {
                 });
             }
         } catch (Exception ex) {
-            Log.e("LSF", "FAIL DL:\n " + ExceptionUtils.getCause(ex));
-            Log.e("LSF", "FAIL DL ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e(TAG, "SyncS Fileloaded: ", ex);
         }
     }
 }

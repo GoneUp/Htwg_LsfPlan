@@ -93,6 +93,8 @@
     <string name="main_recurring" formatted="false">Recurring: %s\n</string>
     <string name="main_comment" formatted="false">Comment: %s</string>
     <string name="main_weekly">Weekly</string>
+    <string name="webview_htwg_starturl" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList]]></string>
+    <string name="about_github_url" translatable="false">https://github.com/GoneUp/Htwg_LsfPlan</string>
 
 
 </resources>

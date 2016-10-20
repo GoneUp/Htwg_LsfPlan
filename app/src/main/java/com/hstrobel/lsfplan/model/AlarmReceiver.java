@@ -13,8 +13,6 @@ import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.component.VEvent;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -111,8 +109,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             ScheduleNextEventNot(context, notifyIDs);
         } catch (Exception ex) {
-            Log.e(TAG, "FAIL onReceive:\n " + ExceptionUtils.getCause(ex));
-            Log.e(TAG, "FAIL onReceive ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e(TAG, "onReceive: ", ex);
         }
     }
 }

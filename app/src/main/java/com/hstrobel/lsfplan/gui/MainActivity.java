@@ -26,11 +26,10 @@ import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
 import net.fortuna.ical4j.model.component.VEvent;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "LSF";
 
     public MainDefaultFragment defaultFragment;
     public MainListFragment listFragment;
@@ -79,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("starts", starts); // maybe for a rating dialog later
 
         if (savedURL.equals("missing")) {
-            savedURL = "https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList";
+            savedURL = getString(R.string.webview_htwg_starturl);
             editor.putString("URL", savedURL);
         }
         editor.apply();
 
-        Log.d("LSF", "onCreate");
+        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -175,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         } catch (Exception ex) {
-            Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getMessage(ex));
-            Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e(TAG, "Main onResume: ", ex);
         }
 
     }
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("LSF", "onDestroy");
+        Log.d(TAG, "onDestroy");
         //Globals.Save(); //no changes yet
     }
 

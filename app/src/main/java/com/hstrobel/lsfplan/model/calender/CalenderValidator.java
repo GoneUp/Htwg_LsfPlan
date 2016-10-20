@@ -4,11 +4,9 @@ import android.util.Log;
 
 import com.hstrobel.lsfplan.Globals;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.StringReader;
 
 /**
  * Created by Henry on 16.11.2015.
@@ -32,8 +30,8 @@ public class CalenderValidator {
          */
         //Globals.icsFileStream.reset();
         Log.d("LSF", "CorrectEvents");
-        Globals.icsFileStream = IOUtils.toInputStream(Globals.icsLoader.file);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(Globals.icsFileStream));
+
+        BufferedReader reader = new BufferedReader(new StringReader(Globals.icsLoader.file));
         StringBuilder builder = new StringBuilder();
         StringBuilder eventBuilder = null;
         boolean vaildEvent = true;

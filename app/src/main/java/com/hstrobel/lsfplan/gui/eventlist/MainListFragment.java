@@ -2,6 +2,7 @@ package com.hstrobel.lsfplan.gui.eventlist;
 
 import android.app.DatePickerDialog;
 import android.app.ListFragment;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -21,8 +22,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.RRule;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +31,8 @@ import java.util.Locale;
 
 
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
+    private static final String TAG = "LSF";
+
     private List<EventItem> mItems;        // ListView items list
     private EventListAdapter listAdapter;
 
@@ -92,6 +93,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         });
     }
 
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // retrieve theListView item
@@ -104,28 +106,35 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, selectedDay.get(Calendar.YEAR), selectedDay.get(Calendar.MONTH), selectedDay.get(Calendar.DAY_OF_MONTH));
             dialog.show();
         } else {
-            if (item.title.contains("Mathe")) {
-                if (eastereggCounter > 3)
-                    Toast.makeText(getActivity(), "Mathe. Burn in hell. Slowly.", Toast.LENGTH_SHORT).show();
+            boolean isMathe = item.title.contains("Mathe");
+
+            StringBuilder message = new StringBuilder();
+            message.append(String.format(getString(R.string.main_topic), NotificationUtils.getTopic(ev)));
+            message.append(String.format(getString(R.string.main_startdate), NotificationUtils.formatDate(ev)));
+
+            //Repeating events
+            if (ev.getProperties(Property.RRULE).size() > 0) {
+                RRule rule = (RRule) ev.getProperties(Property.RRULE).get(0);
+                message.append(String.format(getString(R.string.main_recurring), rule.getRecur().getFrequency().replace("WEEKLY", getString(R.string.main_weekly))));
+            }
+
+            message.append(String.format(getString(R.string.main_comment), ""));
+
+            AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+            ad.setMessage(message);
+            ad.setPositiveButton("Ok", null);
+            if (isMathe && eastereggCounter > 1)
+                ad.setNeutralButton("...", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getActivity(), "Mathe. Burn in hell. Slowly.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            ad.create().show();
+
+            if (isMathe) {
                 eastereggCounter++;
-            } else {
-                //default case
-                StringBuilder message = new StringBuilder();
-                message.append(String.format(getString(R.string.main_topic), NotificationUtils.getTopic(ev)));
-                message.append(String.format(getString(R.string.main_startdate), NotificationUtils.formatDate(ev)));
-
-                //Repeating events
-                if (ev.getProperties(Property.RRULE).size() > 0){
-                    RRule rule = (RRule) ev.getProperties(Property.RRULE).get(0);
-                    message.append(String.format(getString(R.string.main_recurring), rule.getRecur().getFrequency().replace("WEEKLY", getString(R.string.main_weekly))));
-                }
-
-                message.append(String.format(getString(R.string.main_comment), ""));
-
-                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
-                ad.setMessage(message);
-                ad.setPositiveButton("Ok", null);
-                ad.create().show();
             }
         }
     }
@@ -153,8 +162,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 }
             }
         } catch (Exception ex) {
-            Log.e("LSF", "FAIL onResume:\n " + ExceptionUtils.getCause(ex));
-            Log.e("LSF", "FAIL onResume ST:\n " + ExceptionUtils.getFullStackTrace(ex));
+            Log.e(TAG, "List updateContent: ", ex);
             Toast.makeText(getActivity(), "Loading failed! Resetting the app may help.", Toast.LENGTH_SHORT).show();
         }
     }

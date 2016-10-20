@@ -47,15 +47,12 @@ public class NotificationUtils {
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.GERMANY);
         SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-        String lel = sdf.format(time_start);
-        String lel2 = sdf2.format(time_start);
-
         String room = event.getLocation().getValue();
+
         return String.format(c.getString(R.string.notification_short), sdf.format(time_start), sdf.format(time_end), room);
     }
 
     public static String formatDate(VEvent event) {
-        Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
         Date time_start = CalenderUtils.getNextRecuringStartDate(event, CalenderUtils.dateWithOutTime(event));
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm", Locale.GERMANY);
