@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.model.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,6 +68,26 @@ public class UserSettings extends AppCompatActivity {
                     return true;
                 }
             });
+
+
+            final ListPreference newpref = new ListPreference(getActivity());
+            newpref.setTitle(R.string.pref_set_college);
+            newpref.setSummary("EXPERIMENTAL");
+            newpref.setEntries(new String[]{"HTWG", "UNI"});
+            newpref.setEntryValues(new String[]{String.valueOf(Utils.MODE_HTWG), String.valueOf(Utils.MODE_UNI_KN)});
+            newpref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    if (o != null) {
+                        Globals.setCollege(Integer.parseInt((String) o));
+                        Globals.cachedPlans = null;
+                    }
+                    return true;
+                }
+            });
+
+            this.getPreferenceScreen().addPreference(newpref);
+
         }
 
         @Override
@@ -122,9 +143,11 @@ public class UserSettings extends AppCompatActivity {
             getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 
             if (notifyChanged) {
+                String info = String.valueOf(Globals.settings.getBoolean("enableNotifications", false)) + "_" + Globals.settings.getString("notfiyTime", "15");
+
                 Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, String.valueOf(Globals.settings.getBoolean("enableNotifications", false)));
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Globals.settings.getString("notfiyTime", "15"));
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Globals.CONTENT_NOTIFY);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, info);
                 Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             }
         }

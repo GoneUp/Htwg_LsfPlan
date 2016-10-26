@@ -18,7 +18,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.gui.download.HtmlWebSelector;
+import com.hstrobel.lsfplan.gui.download.NativeSelector;
 import com.hstrobel.lsfplan.gui.download.WebviewSelector;
 import com.hstrobel.lsfplan.gui.eventlist.MainListFragment;
 import com.hstrobel.lsfplan.model.NotificationUtils;
@@ -69,17 +69,11 @@ public class MainActivity extends AppCompatActivity {
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int starts = preferences.getInt("starts", 0);
-        String savedURL = preferences.getString("URL", "missing");
 
         starts++;
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("starts", starts); // maybe for a rating dialog later
-
-        if (savedURL.equals("missing")) {
-            savedURL = getString(R.string.webview_htwg_starturl);
-            editor.putString("URL", savedURL);
-        }
         editor.apply();
 
         Log.d(TAG, "onCreate");
@@ -108,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, WebviewSelector.class);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(this, HtmlWebSelector.class);
+                Intent intent = new Intent(this, NativeSelector.class);
                 startActivity(intent);
             }
         } else if (id == R.id.action_testNotfication) {

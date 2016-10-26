@@ -1,7 +1,7 @@
 package com.hstrobel.lsfplan.classes;
 
 import com.hstrobel.lsfplan.Globals;
-import com.hstrobel.lsfplan.model.FileUtils;
+import com.hstrobel.lsfplan.model.Utils;
 import com.hstrobel.lsfplan.model.calender.CalenderValidator;
 
 import junit.framework.TestCase;
@@ -13,7 +13,7 @@ public class CalenderValidatorTest extends TestCase {
 
 
     public void testCorrectEvents() throws Exception {
-        Globals.icsFileStream = FileUtils.stringToInputstream("BEGIN:VCALENDAR\n" +
+        Globals.icsFileStream = Utils.stringToInputstream("BEGIN:VCALENDAR\n" +
                 "PRODID:QIS-LSF HIS GmbH\n" +
                 "VERSION:2.0\n" +
                 "BEGIN:VTIMEZONE\n" +
@@ -297,7 +297,7 @@ public class CalenderValidatorTest extends TestCase {
                 "END:VEVENT\n" +
                 "END:VCALENDAR\n");
         CalenderValidator.CorrectEvents();
-        Globals.icsFileStream = FileUtils.stringToInputstream("BEGIN:VCALENDAR\n" +
+        Globals.icsFileStream = Utils.stringToInputstream("BEGIN:VCALENDAR\n" +
                     "PRODID:QIS-LSF HIS GmbH\n" +
                     "VERSION:2.0\n" +
                     "BEGIN:VTIMEZONE\n" +

@@ -3,8 +3,9 @@ package com.hstrobel.lsfplan.gui.download.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.gui.download.HtmlWebSelector;
+import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.gui.download.NativeSelector;
+import com.hstrobel.lsfplan.model.Utils;
 
 import org.jsoup.Jsoup;
 
@@ -15,9 +16,9 @@ import org.jsoup.Jsoup;
 
 public class LoginProcess extends AsyncTask<String, String, String> {
     private static final String TAG = "LSF";
-    private HtmlWebSelector context = null;
+    private NativeSelector context = null;
 
-    public LoginProcess(HtmlWebSelector c) {
+    public LoginProcess(NativeSelector c) {
         context = c;
     }
 
@@ -66,14 +67,13 @@ Connection: Keep-Alive
             String pw = params[1];
 
 
-            org.jsoup.Connection connection = Jsoup.connect(context.getString(R.string.misc_personalLoginURL))
+            org.jsoup.Connection connection = Jsoup.connect(Utils.getLoginUrl(context, Globals.getCollege()))
                     .data("asdf", user)
                     .data("fdsa", pw)
                     .data("submit", "Anmelden")
-                            // and other hidden fields which are being passed in post request.
-                    .timeout(5000)
+                    .timeout(NativeSelector.TIMEOUT)
                     .userAgent("Mozilla");
-
+            // and other hidden fields which are being passed in post request.
             connection.post();
             org.jsoup.Connection.Response response = connection.response();
             Log.d("LSF", String.valueOf(response.method()));

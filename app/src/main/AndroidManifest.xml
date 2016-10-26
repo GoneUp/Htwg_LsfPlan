@@ -43,7 +43,7 @@
         </activity>
 
         <activity
-            android:name=".gui.download.HtmlWebSelector"
+            android:name=".gui.download.NativeSelector"
             android:label="@string/title_activity_html_web_selector"
             android:parentActivityName=".gui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">

@@ -24,6 +24,7 @@ import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.gui.download.network.LoginProcess;
+import com.hstrobel.lsfplan.model.Utils;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -35,14 +36,14 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HtmlWebSelector extends AbstractWebSelector {
+public class NativeSelector extends AbstractWebSelector {
+    public static final int TIMEOUT = 10 * 1000;
     private static final String MAGIC_WORD_LOGIN = "#LOGIN#";
     private static final String TAG = "LSF";
-    
     PlanExportLoader exportLoader = null;
     PlanOverviewLoader overviewLoader = null;
     LoginProcess loginProcess = null;
-    private HtmlWebSelector local;
+    private NativeSelector local;
     private ExpandableListView listView;
     private CourseListAdapter listAdapter;
     private ProgressBar spinner;
@@ -126,8 +127,6 @@ public class HtmlWebSelector extends AbstractWebSelector {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             Globals.cachedPlans = null;
             loadOverview();
@@ -146,38 +145,46 @@ public class HtmlWebSelector extends AbstractWebSelector {
             showLoginForm();
         } else {
             //Tracking
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, selectedCourseGroup.name);
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, selectedCourse.name);
-            Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle);
-
+            logDownload();
 
             //UI
-            spinner.setVisibility(View.VISIBLE);
-            listView.setEnabled(false);
+            enableLoading();
 
             exportLoader = new PlanExportLoader();
             exportLoader.execute(selectedCourse.URL);
         }
     }
 
+    private void logDownload() {
+        //Max 36 chars ^^
+        String content = (selectedCourseGroup.name + "_" + selectedCourse.name).substring(0, 35);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Globals.CONTENT_DL);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, content);
+        Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_CATEGORY, selectedCourseGroup.name);
+        Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_SPECIFIC, selectedCourse.name);
+    }
+
     public void loginCallback(String loginCookie) {
         if (loginCookie == null) {
             Toast.makeText(this, "Login failed. Check your username/password.", Toast.LENGTH_LONG).show();
-            spinner.setVisibility(View.GONE);
-            listView.setEnabled(true);
+            disableLoading();
             return;
         }
 
         exportLoader = new PlanExportLoader();
-        exportLoader.execute(getString(R.string.misc_personalPlanURL), loginCookie);
+        exportLoader.execute(Utils.getPersonalPlanUrl(this, Globals.getCollege()), loginCookie);
     }
 
     private void exportCallback(String url) {
         if (url == null) {
+            disableLoading();
             Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
             return;
         }
+
         Log.d(TAG, "exportCallback");
         Globals.icsLoader = new ICSLoader(this, url);
         new Thread(Globals.icsLoader).start();
@@ -190,12 +197,11 @@ public class HtmlWebSelector extends AbstractWebSelector {
             // got a saved version
             overviewCallback(Globals.cachedPlans);
         } else {
-            spinner.setVisibility(View.VISIBLE);
-            listView.setEnabled(false);
+            enableLoading();
 
-            String savedURL = Globals.settings.getString("URL", "missing");
+            String url = Utils.getCoursesOverviewUrl(this, Globals.getCollege());
             overviewLoader = new PlanOverviewLoader();
-            overviewLoader.execute(savedURL);
+            overviewLoader.execute(url);
         }
     }
 
@@ -218,8 +224,8 @@ public class HtmlWebSelector extends AbstractWebSelector {
             }
         }
         listView.invalidateViews();
-        listView.setEnabled(true);
-        spinner.setVisibility(View.GONE);
+
+        disableLoading();
     }
 
 
@@ -262,8 +268,7 @@ public class HtmlWebSelector extends AbstractWebSelector {
                 if ((user.length() > 0) && (pw.length() > 0)) {
                     login.dismiss();
                     //login
-                    spinner.setVisibility(View.VISIBLE);
-                    listView.setEnabled(false);
+                    enableLoading();
 
                     loginProcess = new LoginProcess(local);
                     loginProcess.execute(user, pw);
@@ -287,6 +292,16 @@ public class HtmlWebSelector extends AbstractWebSelector {
 
         // Make dialog box visible.
         login.show();
+    }
+
+    private void enableLoading() {
+        spinner.setVisibility(View.VISIBLE);
+        listView.setEnabled(false);
+    }
+
+    private void disableLoading() {
+        listView.setEnabled(true);
+        spinner.setVisibility(View.GONE);
     }
 
     public class PlanOverviewLoader extends AsyncTask<String, String, List<CourseGroup>> {
@@ -351,8 +366,11 @@ public class HtmlWebSelector extends AbstractWebSelector {
             String url = null;
             try {
                 Connection con = Jsoup.connect(params[0]);
-                if (params.length > 1) con.cookie("JSESSIONID", params[1]);
+                if (params.length > 1) {
+                    con.cookie("JSESSIONID", params[1]);
+                }
                 con.userAgent("LSF APP");
+                con.timeout(TIMEOUT);
                 Document doc = con.get();
 
 

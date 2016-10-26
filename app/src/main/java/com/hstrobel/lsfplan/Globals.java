@@ -14,6 +14,7 @@ import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
 import com.hstrobel.lsfplan.model.BootReceiver;
 import com.hstrobel.lsfplan.model.SyncService;
+import com.hstrobel.lsfplan.model.Utils;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -33,7 +34,14 @@ import java.util.List;
  */
 public class Globals {
     public static final String INTENT_UPDATE_LIST = "INTENT_UPDATE_LIST";
-    public static final String PREF_NOTIFYTIME = "notfiyTime";
+
+    public static final String CONTENT_NOTIFY = "notify";
+    public static final String CONTENT_DL = "download";
+
+    public static final String PREF_COLLEGE = "college";
+    public static final int PREF_COLLEGE_DEFAULT = Utils.MODE_HTWG;
+    public static final String FB_PROP_CATEGORY = "course_category";
+    public static final String FB_PROP_SPECIFIC = "course_specific";
 
     public static boolean DEBUG = false;
     public static ICSLoader icsLoader = null;
@@ -52,6 +60,7 @@ public class Globals {
         if (!initialized) {
             //Try to load from file
             settings = PreferenceManager.getDefaultSharedPreferences(c);
+            cachedPlans = null;
             myCal = null;
             if (settings.getBoolean("gotICS", false)) {
                 //found something!
@@ -140,6 +149,21 @@ public class Globals {
         Intent mServiceIntent = new Intent(c, SyncService.class);
         mServiceIntent.setData(Uri.parse(""));
         c.startService(mServiceIntent);
+    }
+
+    public static int getCollege() {
+        int mode = settings.getInt(PREF_COLLEGE, -1);
+        if (mode == -1) {
+            setCollege(PREF_COLLEGE_DEFAULT);
+            mode = PREF_COLLEGE_DEFAULT;
+        }
+        return mode;
+    }
+
+    public static void setCollege(int mode) {
+        SharedPreferences.Editor edit = settings.edit();
+        edit.putInt(PREF_COLLEGE, mode);
+        edit.apply();
     }
 
 }

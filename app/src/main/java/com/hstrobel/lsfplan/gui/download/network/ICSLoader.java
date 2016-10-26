@@ -2,7 +2,7 @@ package com.hstrobel.lsfplan.gui.download.network;
 
 import android.util.Log;
 
-import com.hstrobel.lsfplan.model.FileUtils;
+import com.hstrobel.lsfplan.model.Utils;
 import com.hstrobel.lsfplan.model.calender.CalenderValidator;
 
 import java.io.InputStream;
@@ -29,7 +29,7 @@ public class ICSLoader implements Runnable {
         try {
             Log.i(TAG, "run: " + url);
             InputStream fileStream = new URL(url).openStream();
-            file = FileUtils.streamToString(fileStream, "UTF-8");
+            file = Utils.streamToString(fileStream, "UTF-8");
 
             boolean ignoring = CalenderValidator.CorrectEvents();
             if (ignoring)

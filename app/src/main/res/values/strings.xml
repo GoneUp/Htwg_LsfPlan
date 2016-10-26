@@ -72,13 +72,12 @@
     <string name="notification_long" formatted="false">Topic: %s - </string>
     <string name="notification_short" formatted="false"> Time: %s to %s - Room: %s</string>
     <string name="icon_content_description" translatable="false">Desc</string>
-    <string name="pref_github_info" translatable="false">Code on Github</string>
+    <string name="pref_github_info" translatable="false">Sourcecode on Github</string>
     <string name="title_activity_html_web_selector" translatable="false">Download</string>
     <string name="action_refesh">Refresh</string>
     <string name="html_login_head">Personal Plan</string>
     <string name="html_login_sub" translatable="false">Login</string>
-    <string name="misc_personalPlanURL" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de/qisserver/rds?state=wplan&act=show&show=plan&P.subc=plan&navigationPosition=functions%2Cschedule&breadcrumb=schedule&topitem=functions&subitem=schedule]]></string>
-    <string name="misc_personalLoginURL" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de/qisserver/rds?state=user&type=1&category=auth.login&re=last&startpage=portal.vm&breadCrumbSource=portal]]></string>
+
     <string name="html_login_username" translatable="false">Username</string>
     <string name="html_login_password" translatable="false">Password</string>
     <string name="html_login_save" translatable="false">Save login details</string>
@@ -93,8 +92,16 @@
     <string name="main_recurring" formatted="false">Recurring: %s\n</string>
     <string name="main_comment" formatted="false">Comment: %s</string>
     <string name="main_weekly">Weekly</string>
-    <string name="webview_htwg_starturl" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList]]></string>
+
+
+    <string name="misc_baseUrl_HTWG" translatable="false"><![CDATA[https://lsf.htwg-konstanz.de]]></string>
+    <string name="misc_baseUrl_UNI_KN" translatable="false"><![CDATA[https://lsf.uni-konstanz.de]]></string>
+    <string name="misc_personalPlanURL" translatable="false"><![CDATA[/qisserver/rds?state=wplan&act=show&show=plan&P.subc=plan&navigationPosition=functions%2Cschedule&breadcrumb=schedule&topitem=functions&subitem=schedule]]></string>
+    <string name="misc_personalLoginURL" translatable="false"><![CDATA[/qisserver/rds?state=user&type=1&category=auth.login&re=last&startpage=portal.vm&breadCrumbSource=portal]]></string>
+    <string name="misc_coursesOverviewURL" translatable="false"><![CDATA[/qisserver/rds?state=verpublish&publishContainer=stgPlanList&navigationPosition=lectures%2CcurriculaschedulesList&breadcrumb=curriculaschedules&topitem=lectures&subitem=curriculaschedulesList]]></string>
+
     <string name="about_github_url" translatable="false">https://github.com/GoneUp/Htwg_LsfPlan</string>
+    <string name="pref_set_college">Set College</string>
 
 
 </resources>

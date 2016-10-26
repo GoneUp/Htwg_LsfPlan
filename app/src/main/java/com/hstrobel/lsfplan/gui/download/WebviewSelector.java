@@ -1,10 +1,8 @@
 package com.hstrobel.lsfplan.gui.download;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +15,7 @@ import android.widget.Toast;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.model.Utils;
 
 public class WebviewSelector extends AbstractWebSelector {
 
@@ -60,8 +59,8 @@ public class WebviewSelector extends AbstractWebSelector {
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
 
-        String savedURL = Globals.settings.getString("URL", "missing");
-        webView.loadUrl(savedURL);
+        String url = Utils.getCoursesOverviewUrl(this, Globals.getCollege());
+        webView.loadUrl(url);
 
     }
 
@@ -90,13 +89,6 @@ public class WebviewSelector extends AbstractWebSelector {
     @Override
     protected void onStop() {
         super.onStop();
-
-        String url = webView.getUrl();
-        if (!TextUtils.isEmpty(url)) {
-            SharedPreferences.Editor editor = Globals.settings.edit();
-            editor.putString("URL", url);
-            editor.apply();
-        }
     }
 
     protected void DisplayTost(final String text) {

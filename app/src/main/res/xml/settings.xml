@@ -23,6 +23,8 @@
             android:key="reset"
             android:summary="..."
             android:title="@string/pref_reset"/>
+
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_notify">
@@ -54,6 +56,6 @@
             android:title="@string/pref_title_info" />
         <Preference
             android:key="github"
-            android:title="@string/pref_github_info"/>
+            android:title="@string/pref_github_info" />
     </PreferenceCategory>
 </PreferenceScreen>
