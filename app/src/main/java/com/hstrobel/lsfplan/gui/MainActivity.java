@@ -8,14 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.NativeSelector;
@@ -28,23 +22,13 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IOpenDownloader {
     private static final String TAG = "LSF";
 
     public MainDefaultFragment defaultFragment;
     public MainListFragment listFragment;
     private SharedPreferences preferences;
-    private TextView infoText;
 
-    private AdView adView;
-    private AdListener adListener = new AdListener() {
-        @Override
-        public void onAdFailedToLoad(int i) {
-            super.onAdFailedToLoad(i);
-            //hide ad
-            adView.setVisibility(View.GONE);
-        }
-    };
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,18 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(R.string.title_activity_main);
 
-        //Ads
-        MobileAds.initialize(getApplicationContext(), getString(R.string.firebase_id));
-        MobileAds.setAppMuted(true);
-        adView = (AdView) findViewById(R.id.adView);
-
-        //Own Init
-        infoText = (TextView) findViewById(R.id.txtInfo);
-        defaultFragment = (MainDefaultFragment) getFragmentManager().findFragmentById(R.id.mainDefaultFragment);
-        listFragment = (MainListFragment) getFragmentManager().findFragmentById(R.id.mainListFragment);
-        if (defaultFragment.getView() != null) defaultFragment.getView().setVisibility(View.GONE);
-        if (listFragment.getView() != null) listFragment.getView().setVisibility(View.GONE);
-
+        //init
+        listFragment = new MainListFragment();
+        defaultFragment = new MainDefaultFragment();
 
         //Settings
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
@@ -98,13 +73,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, UserSettings.class);
             startActivity(intent);
         } else if (id == R.id.action_setCalender) {
-            if (preferences.getBoolean("enableOldDL", false)) {
-                Intent intent = new Intent(this, WebviewSelector.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(this, NativeSelector.class);
-                startActivity(intent);
-            }
+            openDownloader();
+
         } else if (id == R.id.action_testNotfication) {
             if (Globals.myCal != null) {
                 List<VEvent> evs = CalenderUtils.getNextEvent(Globals.myCal);
@@ -135,35 +105,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             Globals.InitCalender(this, true);
 
-            //Ads meh
-            if (preferences.getBoolean("enableAds", false)) {
-                adView.setVisibility(View.VISIBLE);
-                AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                        .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
-                        .addTestDevice("E624D76F3DFE84D3E8E20B6C33C4A7C5")
-                        .build();
-                adView.setAdListener(adListener);
-                adView.loadAd(adRequest);
-            } else {
-                adView.setVisibility(View.GONE);
-            }
-
-
             if (Globals.myCal == null) {
-                if (defaultFragment.getView() != null)
-                    defaultFragment.getView().setVisibility(View.VISIBLE);
-                if (listFragment.getView() != null) listFragment.getView().setVisibility(View.GONE);
-
-                infoText.setText(R.string.main_noCalender);
-                adView.setVisibility(View.GONE); //disable ads on empty mode, too aggresive
+                //show intro
+                getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, defaultFragment).commit();
+                //infoText.setText(R.string.main_noCalender);
             } else {
-                if (defaultFragment.getView() != null)
-                    defaultFragment.getView().setVisibility(View.GONE);
-                if (listFragment.getView() != null)
-                    listFragment.getView().setVisibility(View.VISIBLE);
+                getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, listFragment).commit();
             }
-
 
 
         } catch (Exception ex) {
@@ -180,5 +128,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void openDownloader() {
+        if (preferences.getBoolean("enableOldDL", false)) {
+            Intent intent = new Intent(this, WebviewSelector.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, NativeSelector.class);
+            startActivity(intent);
+        }
+    }
 }
 

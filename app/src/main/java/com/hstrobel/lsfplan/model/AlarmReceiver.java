@@ -20,6 +20,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static final String TAG = "LSF";
 
     private static final int NOTIFICATION_ID = 5955648;
+    private static final String INTENT_ACTION = "LSF_ALARM";
+    private static final String INTENT_EVENT = "event";
+    private static final String INTENT_OLD_ID = "oldNotifyIds";
+
     private static AlarmManager alarmManager = null;
     private static LinkedList<PendingIntent> alarms = null;
 
@@ -50,8 +54,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         //start.setTime(new DateTime().getTime() + 30 * 1000);
 
         Intent intentAlarm = new Intent(c, AlarmReceiver.class);
-        intentAlarm.putExtra("event", events);
-        intentAlarm.putExtra("oldNotifyIds", oldNotifyIds);
+        intentAlarm.setAction(INTENT_ACTION);
+        intentAlarm.putExtra(INTENT_EVENT, events);
+        intentAlarm.putExtra(INTENT_OLD_ID, oldNotifyIds);
 
 
         PendingIntent alert = PendingIntent.getBroadcast(c, NOTIFICATION_ID, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -69,25 +74,32 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.i(TAG, "cancel sched");
         enforceInit(c);
 
-        if (alarms == null)
+        if (alarms == null) {
             return;
-        while (!alarms.isEmpty())
+        }
+        while (!alarms.isEmpty()) {
             alarmManager.cancel(alarms.remove());
+        }
 
     }
 
     private static void enforceInit(Context c) {
-        if (alarmManager == null)
+        if (alarmManager == null) {
             alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-        if (alarms == null)
+        }
+        if (alarms == null) {
             alarms = new LinkedList<>();
-
+        }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "onReceive");
         try {
+            if (!intent.getAction().equals(INTENT_ACTION)) {
+                return;
+            }
+
             //Process could be killed in the meantime, setup our calender, but NOT init the notifications to prevent duplicates loops etc
             if (!Globals.initialized)
                 Globals.InitCalender(context, false);
@@ -95,19 +107,23 @@ public class AlarmReceiver extends BroadcastReceiver {
             enforceInit(context);
 
             //Hide old notifications
-            Integer[] oldNotifyIds = (Integer[]) intent.getSerializableExtra("oldNotifyIds");
-            for (int id : oldNotifyIds) {
-                NotificationUtils.killNotification(id, context);
+            Integer[] oldNotifyIds = (Integer[]) intent.getSerializableExtra(INTENT_OLD_ID);
+            if (oldNotifyIds != null) {
+                for (int id : oldNotifyIds) {
+                    NotificationUtils.killNotification(id, context);
+                }
             }
 
             //Display the new notifications
-            VEvent[] events = (VEvent[]) intent.getSerializableExtra("event");
-            Integer[] notifyIDs = new Integer[events.length];
-            for (int i = 0; i < events.length; i++) {
-                notifyIDs[i] = NotificationUtils.showNotification(events[i], context);
-            }
+            VEvent[] events = (VEvent[]) intent.getSerializableExtra(INTENT_EVENT);
+            if (events != null) {
+                Integer[] notifyIDs = new Integer[events.length];
+                for (int i = 0; i < events.length; i++) {
+                    notifyIDs[i] = NotificationUtils.showNotification(events[i], context);
+                }
 
-            ScheduleNextEventNot(context, notifyIDs);
+                ScheduleNextEventNot(context, notifyIDs);
+            }
         } catch (Exception ex) {
             Log.e(TAG, "onReceive: ", ex);
         }

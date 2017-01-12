@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.hstrobel.lsfplan.R;
 
@@ -22,7 +23,17 @@ public class MainDefaultFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.d("LSF", "MainDefaultFragment:onCreateView");
-        return inflater.inflate(R.layout.fragment_main_def, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_def, container, false);
+
+        Button downloadButton = (Button) view.findViewById(R.id.buttonIntro);
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((IOpenDownloader) getActivity()).openDownloader();
+            }
+        });
+
+        return view;
     }
 
 

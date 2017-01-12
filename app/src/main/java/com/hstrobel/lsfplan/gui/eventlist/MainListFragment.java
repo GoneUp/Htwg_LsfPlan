@@ -13,11 +13,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.model.NotificationUtils;
@@ -38,6 +44,8 @@ import java.util.Locale;
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "LSF";
 
+    private AdView adView;
+
     private List<EventItem> mItems;        // ListView items list
     private EventListAdapter listAdapter;
 
@@ -45,14 +53,6 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private EventCache cache;
     private int eastereggCounter = 0;
 
-
-
-    /*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_listview, container, false);
-    }*/
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -66,6 +66,14 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             }
         }
     };
+    private AdListener adListener = new AdListener() {
+        @Override
+        public void onAdFailedToLoad(int i) {
+            super.onAdFailedToLoad(i);
+            //hide ad
+            adView.setVisibility(View.GONE);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +81,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
         Log.d("LSF", "MainListFragment:onCreate");
         // initialize the items list
-        mItems = new ArrayList<EventItem>();
+        mItems = new ArrayList<>();
         selectedDay = Calendar.getInstance();
         cache = new EventCache();
 
@@ -83,16 +91,33 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Globals.INTENT_UPDATE_LIST));
-        updateContent();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_main_listview, container, false);
+
+        initAd(view);
+        return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(broadcastReceiver);
+    private void initAd(View view) {
+        //Ads
+        MobileAds.initialize(getActivity().getApplicationContext(), getString(R.string.firebase_id));
+        MobileAds.setAppMuted(true);
+
+        adView = (AdView) view.findViewById(R.id.adView);
+        adView.setAdListener(adListener);
+
+        //Ads meh
+        if (Globals.settings.getBoolean("enableAds", false)) {
+            adView.setVisibility(View.VISIBLE);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
+                    .addTestDevice("E624D76F3DFE84D3E8E20B6C33C4A7C5")
+                    .build();
+            adView.loadAd(adRequest);
+        } else {
+            adView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -115,6 +140,33 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 onDateDec();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Globals.INTENT_UPDATE_LIST));
+        updateContent();
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(broadcastReceiver);
+        if (adView != null) {
+            adView.pause();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (adView != null) {
+            adView.destroy();
+        }
     }
 
     @Override
@@ -210,9 +262,5 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     public void onDateReset() {
         selectedDay = new GregorianCalendar();
         updateContent();
-    }
-
-    public void onCheckCache() {
-        cache.generateFullCache((Calendar) selectedDay.clone());
     }
 }

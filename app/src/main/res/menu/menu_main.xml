@@ -15,7 +15,7 @@
     <item
         android:id="@+id/action_testNotfication"
         android:orderInCategory="100"
-        android:title="Test Notify"
+        android:title="Show test notification"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_reset"

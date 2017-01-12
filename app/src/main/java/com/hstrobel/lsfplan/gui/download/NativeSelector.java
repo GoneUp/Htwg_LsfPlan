@@ -38,6 +38,8 @@ import java.util.List;
 
 public class NativeSelector extends AbstractWebSelector {
     public static final int TIMEOUT = 10 * 1000;
+    public static final int FIREBASE_MAX_LENGTH = 99;
+
     private static final String MAGIC_WORD_LOGIN = "#LOGIN#";
     private static final String TAG = "LSF";
     PlanExportLoader exportLoader = null;
@@ -156,8 +158,13 @@ public class NativeSelector extends AbstractWebSelector {
     }
 
     private void logDownload() {
-        //Max 36 chars ^^
-        String content = (selectedCourseGroup.name + "_" + selectedCourse.name).substring(0, 35);
+        //limit size
+        String content = (selectedCourseGroup.name + "_" + selectedCourse.name);
+        if (content.length() > FIREBASE_MAX_LENGTH) {
+            content = content.substring(0, FIREBASE_MAX_LENGTH);
+        }
+
+
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Globals.CONTENT_DL);
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, content);
@@ -328,7 +335,7 @@ public class NativeSelector extends AbstractWebSelector {
 
                     //course semesters
                     for (Element ele : columns.get(1).children()) {
-                        if (ele.tagName() != "a") continue;
+                        if (!ele.tagName().equals("a")) continue;
                         if (Globals.DEBUG)
                             Log.d(TAG, String.format("%s : %s", ele.text(), ele.attr("href")));
                         item = new CourseGroup.Course(ele.text(), ele.attr("href"));
