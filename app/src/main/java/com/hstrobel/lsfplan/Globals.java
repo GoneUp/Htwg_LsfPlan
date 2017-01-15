@@ -141,7 +141,7 @@ public class Globals {
 
     }
 
-    public static boolean isDownloadValid() {
+    public static boolean isDownloadInvalid() {
         return Globals.icsLoader.file == null || !Globals.icsLoader.file.startsWith("BEGIN:VCALENDAR");
     }
 

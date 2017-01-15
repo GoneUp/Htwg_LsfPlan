@@ -14,9 +14,12 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.model.Utils;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -69,10 +72,24 @@ public class UserSettings extends AppCompatActivity {
                 }
             });
 
+            myPref = findPreference("about");
+            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                public boolean onPreferenceClick(Preference preference) {
+                    new LibsBuilder()
+                            .withActivityStyle(Libs.ActivityStyle.LIGHT)
+                            .withAboutIconShown(true)
+                            .withAboutVersionShown(true)
+                            .withFields(R.string.class.getFields())
+                            .withAboutDescription("Created by Henry Strobel <hstrobel.dev@gmail.com> " + (BuildConfig.DEBUG ? "DEBUG" : ""))
+                            .start(getActivity());
+                    return true;
+                }
+            });
 
-            final ListPreference newpref = new ListPreference(getActivity());
+
+            ListPreference newpref = (ListPreference) findPreference("college_pref");
             newpref.setTitle(R.string.pref_set_college);
-            newpref.setSummary("EXPERIMENTAL");
+            newpref.setSummary("");
             newpref.setEntries(new String[]{"HTWG", "UNI"});
             newpref.setEntryValues(new String[]{String.valueOf(Utils.MODE_HTWG), String.valueOf(Utils.MODE_UNI_KN)});
             newpref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -86,9 +103,9 @@ public class UserSettings extends AppCompatActivity {
                 }
             });
 
-            this.getPreferenceScreen().addPreference(newpref);
-
+            newpref.setEnabled(BuildConfig.DEBUG);
         }
+
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

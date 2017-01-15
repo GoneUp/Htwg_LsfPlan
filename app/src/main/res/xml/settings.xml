@@ -19,6 +19,12 @@
             android:key="enableOldDL"
             android:summary="@string/pref_description_dl"
             android:title="@string/pref_title_dl" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="skipWeekend"
+            android:summary="@string/pref_skipweekend_desc"
+            android:title="@string/pref_skipweekend_title" />
+        <ListPreference android:key="college_pref" />
         <Preference
             android:key="reset"
             android:summary="..."
@@ -50,12 +56,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_cat_credits">
+        <!--
         <Preference
             android:key="info"
             android:summary="@string/pref_description_info"
             android:title="@string/pref_title_info" />
+            -->
         <Preference
             android:key="github"
             android:title="@string/pref_github_info" />
+        <Preference
+            android:key="about"
+            android:title="About/Used Library's" />
     </PreferenceCategory>
 </PreferenceScreen>

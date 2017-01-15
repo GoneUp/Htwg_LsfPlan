@@ -69,7 +69,7 @@ public class SyncService extends IntentService implements IDownloadCallback {
     @Override
     public void FileLoaded() {
         try {
-            if (Globals.isDownloadValid()) {
+            if (Globals.isDownloadInvalid()) {
                 //not a ics file
                 Log.i(TAG, "FileLoaded: Download not valid");
                 return;

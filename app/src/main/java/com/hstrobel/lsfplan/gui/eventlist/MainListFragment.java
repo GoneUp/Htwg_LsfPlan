@@ -51,7 +51,10 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
     private Calendar selectedDay;
     private EventCache cache;
+    private boolean skipWeekend = false;
+
     private int eastereggCounter = 0;
+
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -147,6 +150,8 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         super.onResume();
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Globals.INTENT_UPDATE_LIST));
         updateContent();
+
+        skipWeekend = Globals.settings.getBoolean("skipWeekend", false);
         if (adView != null) {
             adView.resume();
         }
@@ -251,11 +256,28 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
     public void onDateInc() {
         selectedDay.add(Calendar.DAY_OF_MONTH, 1);
+        if (skipWeekend) {
+            int day = selectedDay.get(Calendar.DAY_OF_WEEK);
+            if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
+                while (selectedDay.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+                    selectedDay.add(Calendar.DAY_OF_MONTH, 1);
+                }
+            }
+        }
         updateContent();
     }
 
+
     public void onDateDec() {
         selectedDay.add(Calendar.DAY_OF_MONTH, -1);
+        if (skipWeekend) {
+            int day = selectedDay.get(Calendar.DAY_OF_WEEK);
+            if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
+                while (selectedDay.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+                    selectedDay.add(Calendar.DAY_OF_MONTH, -1);
+                }
+            }
+        }
         updateContent();
     }
 

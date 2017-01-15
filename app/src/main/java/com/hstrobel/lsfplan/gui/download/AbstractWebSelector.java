@@ -22,7 +22,7 @@ public abstract class AbstractWebSelector extends AppCompatActivity implements I
     public void FileLoaded() {
         try {
             Looper.prepare();
-            if (Globals.isDownloadValid()) {
+            if (Globals.isDownloadInvalid()) {
                 //not a ics file
                 Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileNotValid, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 spinner.setVisibility(View.GONE);

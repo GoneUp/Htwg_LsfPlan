@@ -36,7 +36,7 @@
     <string name="pref_description_enableNotifications">Show next lecture (room/time) as a notification</string>
 
     <string name="pref_title_info" translatable="false">Erstellt von Henry Strobel</string>
-    <string name="pref_description_info" translatable="false">Version: </string>
+    <string name="pref_description_info" translatable="false">Version:  </string>
 
     <string name="pref_title_timeSetter">When do you want to be notfied?</string>
     <string name="pref_description_timeSetter">%d Minutes before</string>
@@ -102,6 +102,8 @@
 
     <string name="about_github_url" translatable="false">https://github.com/GoneUp/Htwg_LsfPlan</string>
     <string name="pref_set_college">Set College</string>
+    <string name="pref_skipweekend_desc">Skip weekend on wipe to save time</string>
+    <string name="pref_skipweekend_title">Skip weekend</string>
 
 
 </resources>
