@@ -11,6 +11,7 @@ android {
     }
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
+
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
         minSdkVersion 16
@@ -18,6 +19,7 @@ android {
         versionCode 23
         versionName "2.2"
 
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         jackOptions {
             enabled false
         }
@@ -48,9 +50,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.android.support:design:25.1.0'
+    compile "com.android.support:appcompat-v7:${androidSupportLibraryVersion}"
+    compile "com.android.support:support-v4:${androidSupportLibraryVersion}"
+    compile "com.android.support:design:${androidSupportLibraryVersion}"
+    compile "com.android.support:support-annotations:${androidSupportLibraryVersion}"
 
     compile 'com.google.firebase:firebase-core:10.0.0'
     compile 'com.google.firebase:firebase-ads:10.0.0'
@@ -61,8 +64,16 @@ dependencies {
         transitive = true
     }
 
-    testCompile 'junit:junit:4.12'
+
+    androidTestCompile "org.robolectric:robolectric:3.1.1"
     androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile "com.android.support:support-annotations:${androidSupportLibraryVersion}"
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:$robolectricVersion"
+    // testCompile "org.robolectric:shadows-play-services:$robolectricVersion"
+    testCompile "org.robolectric:shadows-support-v4:$robolectricVersion"
 }
 
 

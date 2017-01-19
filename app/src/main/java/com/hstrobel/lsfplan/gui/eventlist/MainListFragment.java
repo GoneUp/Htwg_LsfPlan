@@ -101,6 +101,10 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         return view;
     }
 
+    private boolean areAdsEnabled() {
+        return Globals.settings.getBoolean("enableAds", false);
+    }
+
     private void initAd(View view) {
         //Ads
         MobileAds.initialize(getActivity().getApplicationContext(), getString(R.string.firebase_id));
@@ -110,8 +114,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         adView.setAdListener(adListener);
 
         //Ads meh
-        if (Globals.settings.getBoolean("enableAds", false)) {
-            adView.setVisibility(View.VISIBLE);
+        if (areAdsEnabled()) {
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
@@ -152,6 +155,11 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         updateContent();
 
         skipWeekend = Globals.settings.getBoolean("skipWeekend", false);
+        if (areAdsEnabled()) {
+            adView.setVisibility(View.VISIBLE);
+        } else {
+            adView.setVisibility(View.GONE);
+        }
         if (adView != null) {
             adView.resume();
         }

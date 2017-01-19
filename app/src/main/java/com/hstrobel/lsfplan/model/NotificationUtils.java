@@ -26,7 +26,8 @@ import java.util.TimeZone;
  */
 public class NotificationUtils {
     public static String getTopic(VEvent event) {
-        String[] tops = event.getSummary().getValue().split("-");
+        //1453052420 - IT-Security
+        String[] tops = event.getSummary().getValue().split(" - ");
         if (tops.length > 1) {
             return tops[1].trim();
         }

@@ -1,11 +1,25 @@
-package com.hstrobel.lsfplan.classes;
+package com.hstrobel.lsfplan.tests;
 
+
+import android.content.Context;
+
+import com.hstrobel.lsfplan.BuildConfig;
+import com.hstrobel.lsfplan.model.NotificationUtils;
 
 import junit.framework.TestCase;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.component.VEvent;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -14,6 +28,9 @@ import java.io.StringReader;
  * Created by Henry on 15.01.2017.
  */
 
+
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = "src/main/AndroidManifest.xml", sdk = 23, constants = BuildConfig.class)
 public class CalenderTests extends TestCase {
     private String testFile = "BEGIN:VCALENDAR\n" +
             "PRODID:QIS-LSF HIS GmbH\n" +
@@ -54,11 +71,33 @@ public class CalenderTests extends TestCase {
             "END:VCALENDAR";
 
 
+    @Test
     public void testHyphen() throws IOException, ParserException {
+        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+
         CalendarBuilder builder = new CalendarBuilder();
         Calendar myCal = builder.build(new StringReader(testFile));
 
 
+        ComponentList components = myCal.getComponents(Component.VEVENT);
+        for (Object obj : components) {
+            if (obj instanceof VEvent) {
+                VEvent event = (VEvent) obj;
+
+                if (event.getSummary().getValue().equals("1453052420 - IT-Security")) {
+                    String topicParsed = NotificationUtils.getTopic(event);
+                    assertEquals("IT-Security", topicParsed);
+                }
+            }
+
+        }
+
+        assertNotNull(myCal);
+    }
+
+    @Test
+    public void testLOL() {
+        fail();
     }
 
 }
