@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.Globals;
@@ -13,6 +14,9 @@ import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,9 +50,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (events.length == 0)
             return;
 
-        Date start = CalenderUtils.getNextRecuringStartDate(events[0]); //all should have the same start time
+
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTimeInMillis(CalenderUtils.getNextRecuringStartDate(events[0]).getTime()); //all should have the same start time
         int minutesBefore = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
-        start.setTime(start.getTime() - (minutesBefore) * 60 * 1000);
+        cal.add(Calendar.MINUTE, -minutesBefore);
 
         //DEBUG DEBUG REMOVE IT
         //start.setTime(new DateTime().getTime() + 30 * 1000);
@@ -60,13 +66,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
         PendingIntent alert = PendingIntent.getBroadcast(c, NOTIFICATION_ID, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, start.getTime(), alert);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), alert);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), alert);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), alert);
+        }
+
+
         alarms.add(alert);
 
         for (VEvent e : events) {
             Log.i(TAG, "Alarm Scheduled for event " + e.getSummary().getValue());
         }
-        Log.i(TAG, "time sched  " + start.toString());
+        Log.i(TAG, "time sched  " + SimpleDateFormat.getDateTimeInstance().format(cal.getTime()));
 
     }
 

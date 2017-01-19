@@ -78,7 +78,7 @@ public class NotificationUtils {
                 break;
         }
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(context.getString(R.string.notification_title)) // title for notification
                 .setContentText(formatEventShort(event, context)) // message for notification
                 .setAutoCancel(true) // clear notification after click
@@ -87,9 +87,9 @@ public class NotificationUtils {
                 .setDefaults(soundMode);
 
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            mBuilder.setSmallIcon(R.drawable.ic_notify_white);
+            builder.setSmallIcon(R.drawable.ic_notify_white);
         } else {
-            mBuilder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
+            builder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
         }
 
         Random rnd = new Random();
@@ -97,10 +97,10 @@ public class NotificationUtils {
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        mBuilder.setContentIntent(pi);
+        builder.setContentIntent(pi);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationId, mBuilder.build());
+        mNotificationManager.notify(notificationId, builder.build());
 
         return notificationId;
     }
