@@ -1,9 +1,13 @@
 package com.hstrobel.lsfplan.model.calender;
 
+import android.util.Log;
+
+import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Globals;
 
 import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.PeriodRule;
+import net.fortuna.ical4j.filter.Rule;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
@@ -12,6 +16,7 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,10 +25,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 /**
  * Created by Henry on 10.11.2015.
  */
 public class CalenderUtils {
+
+
     private static final int NOTIFICATION_ID = 59556488;
     private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
         public int compare(VEvent c1, VEvent c2) {
@@ -37,16 +45,31 @@ public class CalenderUtils {
     }
 
     public static List<VEvent> getEventsForDay(Calendar myCal, java.util.Calendar date) {
-        System.out.print(date.toString());
+        if (BuildConfig.DEBUG) {
+            Log.d(Globals.TAG, "getEventsForDay: " + SimpleDateFormat.getDateTimeInstance().format(date));
+        }
         return getEvents(myCal, date, new Dur(1, 0, 0, 0));
     }
 
     private static List<VEvent> getEvents(Calendar myCal, java.util.Calendar date, Dur duration) {
-        Period period = new Period(new DateTime(date.getTime()), duration);
-        Filter filter = new Filter(new PeriodRule(period));
+        DateTime startDate = new DateTime(date.getTime());
 
-        Collection<VEvent> eventsTodayC = filter.filter(myCal.getComponents(Component.VEVENT));
-        return new ArrayList<>(eventsTodayC);
+        Period period = new Period(startDate, duration);
+        Filter filter = new Filter(new Rule[]{new PeriodRule(period)}, Filter.MATCH_ANY);
+
+        Collection eventsTodayC = filter.filter(myCal.getComponents(Component.VEVENT));
+        return convertComponentCollection(eventsTodayC);
+    }
+
+
+    private static List<VEvent> convertComponentCollection(Collection eventsTodayC) {
+        List<VEvent> result = new ArrayList<>();
+        for (Object comp : eventsTodayC) {
+            if (comp instanceof VEvent) {
+                result.add((VEvent) comp);
+            }
+        }
+        return result;
     }
 
     private static java.util.Calendar timeWithoutDate(VEvent c1) {

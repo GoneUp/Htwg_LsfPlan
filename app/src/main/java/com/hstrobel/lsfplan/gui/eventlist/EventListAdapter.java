@@ -23,7 +23,20 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        ViewHolder viewHolder = null;
+
+        if (convertView != null) {
+            // recycle the already inflated view
+            viewHolder = (ViewHolder) convertView.getTag();
+
+            if (viewHolder.isHeader && position != 0) {
+                //old header layout as a normal item
+                convertView = null;
+            } else if (position == 0 && !viewHolder.isHeader) {
+                //old list item as header
+                convertView = null;
+            }
+        }
 
         if (convertView == null) {
             // inflate the GridView item layout
@@ -34,19 +47,15 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
                 convertView = inflater.inflate(R.layout.listview_item, parent, false);
             }
 
-
             // initialize the view holder
             viewHolder = new ViewHolder();
             viewHolder.viewIconLeft = (ImageView) convertView.findViewById(R.id.IconLeft);
             viewHolder.viewIconRight = (ImageView) convertView.findViewById(R.id.IconRight);
             viewHolder.viewTitle = (TextView) convertView.findViewById(R.id.tvTitle);
             viewHolder.viewDescription = (TextView) convertView.findViewById(R.id.tvDescription);
-
+            viewHolder.isHeader = (position == 0);
 
             convertView.setTag(viewHolder);
-        } else {
-            // recycle the already inflated view
-            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         // update the item view
@@ -55,10 +64,12 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
             return convertView;
         viewHolder.viewIconLeft.setImageDrawable(item.iconLeft);
         viewHolder.viewIconLeft.setTag(item.fragment);
-        if (item.iconRight != null && viewHolder.viewIconRight != null) {
+
+        if (viewHolder.viewIconRight != null && item.iconRight != null) {
             viewHolder.viewIconRight.setImageDrawable(item.iconRight);
             viewHolder.viewIconRight.setTag(item.fragment);
         }
+
         viewHolder.viewTitle.setText(item.title);
         viewHolder.viewDescription.setText(item.description);
 
@@ -86,10 +97,13 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
                 });
             }
         }
+
         return convertView;
     }
 
     private static class ViewHolder {
+        boolean isHeader = false;
+
         ImageView viewIconLeft;
         ImageView viewIconRight;
         TextView viewTitle;

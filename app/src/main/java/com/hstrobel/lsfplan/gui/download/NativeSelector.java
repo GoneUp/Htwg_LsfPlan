@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
@@ -330,20 +331,20 @@ public class NativeSelector extends AbstractWebSelector {
 
                     //course name
                     Element courseURL = columns.get(0).child(0); //row 0 --> a class --> inner text
-                    if (Globals.DEBUG) Log.d(TAG, courseURL.text());
+                    if (BuildConfig.DEBUG) Log.d(TAG, courseURL.text());
                     group = new CourseGroup(courseURL.text());
 
                     //course semesters
                     for (Element ele : columns.get(1).children()) {
                         if (!ele.tagName().equals("a")) continue;
-                        if (Globals.DEBUG)
+                        if (BuildConfig.DEBUG)
                             Log.d(TAG, String.format("%s : %s", ele.text(), ele.attr("href")));
                         item = new CourseGroup.Course(ele.text(), ele.attr("href"));
                         group.items.add(item);
                     }
                     //course everthing
                     Element allURL = columns.get(2).child(0); //row 0 --> a class --> inner text
-                    if (Globals.DEBUG)
+                    if (BuildConfig.DEBUG)
                         Log.d(TAG, String.format("%s : %s", allURL.text(), allURL.attr("href")));
                     item = new CourseGroup.Course(allURL.text(), allURL.attr("href"));
                     group.items.add(item);

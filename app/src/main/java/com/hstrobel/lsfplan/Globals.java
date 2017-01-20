@@ -33,6 +33,8 @@ import java.util.List;
  * Created by Henry on 09.11.2015.
  */
 public class Globals {
+    public static final String TAG = "LSF";
+
     public static final String INTENT_UPDATE_LIST = "INTENT_UPDATE_LIST";
 
     public static final String CONTENT_NOTIFY = "notify";
@@ -43,7 +45,6 @@ public class Globals {
     public static final String FB_PROP_CATEGORY = "course_category";
     public static final String FB_PROP_SPECIFIC = "course_specific";
 
-    public static boolean DEBUG = false;
     public static ICSLoader icsLoader = null;
     public static InputStream icsFileStream = null;
     public static String icsFile = null; //ICS Calender as text

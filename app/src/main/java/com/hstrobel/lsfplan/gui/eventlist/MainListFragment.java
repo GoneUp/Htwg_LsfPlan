@@ -86,7 +86,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         // initialize the items list
         mItems = new ArrayList<>();
         selectedDay = Calendar.getInstance();
-        cache = new EventCache();
+        cache = new EventCache(true);
 
         // initialize and set the list adapter
         listAdapter = new EventListAdapter(getActivity(), mItems);
@@ -107,23 +107,9 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
 
     private void initAd(View view) {
         //Ads
-        MobileAds.initialize(getActivity().getApplicationContext(), getString(R.string.firebase_id));
-        MobileAds.setAppMuted(true);
-
         adView = (AdView) view.findViewById(R.id.adView);
         adView.setAdListener(adListener);
-
-        //Ads meh
-        if (areAdsEnabled()) {
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
-                    .addTestDevice("E624D76F3DFE84D3E8E20B6C33C4A7C5")
-                    .build();
-            adView.loadAd(adRequest);
-        } else {
-            adView.setVisibility(View.GONE);
-        }
+        adView.setVisibility(View.GONE);
     }
 
     @Override
@@ -155,11 +141,23 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         updateContent();
 
         skipWeekend = Globals.settings.getBoolean("skipWeekend", false);
+
+        //Ads meh
         if (areAdsEnabled()) {
+            MobileAds.initialize(getActivity().getApplicationContext(), getString(R.string.firebase_id));
+            MobileAds.setAppMuted(true);
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
+                    .addTestDevice("E624D76F3DFE84D3E8E20B6C33C4A7C5")
+                    .build();
+            adView.loadAd(adRequest);
             adView.setVisibility(View.VISIBLE);
         } else {
             adView.setVisibility(View.GONE);
         }
+
         if (adView != null) {
             adView.resume();
         }
@@ -231,7 +229,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         //setup
         try {
             if (Globals.myCal != null) {
-                List<VEvent> evs = cache.getDay((Calendar) selectedDay.clone());
+                List<VEvent> evs = cache.getDay(selectedDay);
 
                 SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy", Locale.GERMANY);
                 Drawable icon_book = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action);

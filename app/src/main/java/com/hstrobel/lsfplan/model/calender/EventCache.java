@@ -1,6 +1,6 @@
 package com.hstrobel.lsfplan.model.calender;
 
-import android.os.Handler;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.Globals;
@@ -8,6 +8,7 @@ import com.hstrobel.lsfplan.Globals;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -17,17 +18,23 @@ import java.util.TreeMap;
  */
 public class EventCache {
     private static final String TAG = "LSF";
-    private static final int DAYS_TO_CACHE = 5;
+    private static final int DAYS_TO_CACHE = 10;
 
     private Map<java.util.Calendar, List<VEvent>> cache;
     private Calendar globalCal;
+    private boolean preGenerate;
 
-    public EventCache() {
+
+    public EventCache(boolean preGenerate) {
+        this.preGenerate = preGenerate;
         cache = new TreeMap<>();
     }
 
-    public List<VEvent> getDay(final java.util.Calendar day) {
-        Log.i(TAG, "getDay: Query for " + day.get(java.util.Calendar.DAY_OF_MONTH));
+    public List<VEvent> getDay(java.util.Calendar day) {
+        final java.util.Calendar localDay = GregorianCalendar.getInstance();
+        localDay.setTime(day.getTime());
+
+        Log.i(TAG, "getDay: Query for " + localDay.get(java.util.Calendar.DAY_OF_MONTH));
         if (Globals.myCal == null)
             throw new IllegalArgumentException("myCal is null!");
         if (globalCal != Globals.myCal) {
@@ -36,37 +43,33 @@ public class EventCache {
             globalCal = Globals.myCal;
         }
 
-        day.clear(java.util.Calendar.HOUR);
-        day.clear(java.util.Calendar.HOUR_OF_DAY);
-        day.clear(java.util.Calendar.MINUTE);
-        day.clear(java.util.Calendar.SECOND);
-        day.clear(java.util.Calendar.MILLISECOND);
+        localDay.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        localDay.set(java.util.Calendar.MINUTE, 1);
+        localDay.set(java.util.Calendar.SECOND, 0);
+        localDay.set(java.util.Calendar.MILLISECOND, 0);
 
-        if (!cache.containsKey(day)) {
-            generateDay(day);
+        if (!cache.containsKey(localDay)) {
+            generateDay(localDay);
         }
 
-        //Generate the rest delayed
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                generateFullCache(day);
-            }
-        });
-        return cache.get(day);
+        if (preGenerate) {
+            //Generate the rest delayed
+            BgAsyncTask bgTask = new BgAsyncTask();
+            bgTask.execute(localDay);
+        }
+        return cache.get(localDay);
     }
 
-    public void generateFullCache(java.util.Calendar day) {
+    private void generateFullCache(java.util.Calendar day) {
         for (int i = -DAYS_TO_CACHE; i < DAYS_TO_CACHE; i++) {
             java.util.Calendar actualDay = (java.util.Calendar) day.clone();
-            actualDay.add(java.util.Calendar.DATE, i);
+            actualDay.add(java.util.Calendar.DAY_OF_MONTH, i);
 
             if (!cache.containsKey(actualDay)) {
                 generateDay(actualDay);
             }
         }
     }
-
 
     private void generateDay(java.util.Calendar day) {
         List<VEvent> evs = CalenderUtils.getEventsForDay(Globals.myCal, day);
@@ -76,4 +79,15 @@ public class EventCache {
     }
 
 
+    private class BgAsyncTask extends AsyncTask<java.util.Calendar, String, String> {
+        @Override
+        protected String doInBackground(java.util.Calendar... params) {
+            if (params.length == 0 || params[0] == null)
+                return null;
+            generateFullCache(params[0]);
+            return null;
+        }
+    }
+
+    ;
 }
