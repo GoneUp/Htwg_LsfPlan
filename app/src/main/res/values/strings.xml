@@ -2,7 +2,7 @@
     <!-- App -->
     <string name="app_name" translatable="false">Lsf Plan</string>
 
-    <string name="title_activity_main">Lesson Plan</string>
+    <string name="title_activity_main">Lecture Plan</string>
     <string name="title_activity_web_selector" translatable="false">Download</string>
     <string name="title_activity_settings_activity_new">Settings</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3135430559590190/4069382066</string>
@@ -13,7 +13,7 @@
     <string name="action_settings">Settings</string>
     <string name="main_noCalender">Calender is missing.\nPlease download a Lecture Plan via Menu -> Download Calender</string>
 
-    <string name="main_lecture_day">Lectures for %s</string>
+    <string name="main_lecture_day">%s</string>
     <string name="main_lecture_change">Swipe to change</string>
 
     <string name="main_button_reload" translatable="false">Download</string>
@@ -104,6 +104,9 @@
     <string name="pref_set_college">Set College</string>
     <string name="pref_skipweekend_desc">Skip weekend on wipe to save time</string>
     <string name="pref_skipweekend_title">Skip weekend</string>
+    <string name="dev_options" translatable="false">Dev options</string>
+    <string name="pref_skipweekend_days_title">Only skip if there are no courses</string>
+    <string name="pref_skipweekend_days_desc">Skip the weekend normally, but show days with courses</string>
 
 
 </resources>

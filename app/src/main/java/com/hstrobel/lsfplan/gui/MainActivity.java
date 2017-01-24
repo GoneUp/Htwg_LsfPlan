@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
 
         } else if (id == R.id.action_testNotfication) {
             if (Globals.myCal != null) {
-                List<VEvent> evs = CalenderUtils.getNextEvent(Globals.myCal);
+                List<VEvent> evs = CalenderUtils.getNextEvents(Globals.myCal);
                 for (VEvent ev : evs) {
                     NotificationUtils.showNotification(ev, this);
                 }

@@ -24,11 +24,16 @@
             android:key="skipWeekend"
             android:summary="@string/pref_skipweekend_desc"
             android:title="@string/pref_skipweekend_title" />
-        <ListPreference android:key="college_pref" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="skipWeekendDaysWithoutEvents"
+            android:summary="@string/pref_skipweekend_days_desc"
+            android:title="@string/pref_skipweekend_days_title" />
         <Preference
             android:key="reset"
             android:summary="..."
-            android:title="@string/pref_reset"/>
+            android:title="@string/pref_reset" />
 
 
     </PreferenceCategory>
@@ -44,8 +49,7 @@
             android:key="notfiyTime"
             android:numeric="integer"
             android:summary="@string/pref_description_timeSetter"
-            android:title="@string/pref_title_timeSetter"
-            />
+            android:title="@string/pref_title_timeSetter" />
         <ListPreference
             android:defaultValue="@string/pref_soundMode_default"
             android:dialogTitle="@string/pref_soundMode"
@@ -55,16 +59,35 @@
             android:title="@string/pref_soundMode" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_cat_credits">
+    <PreferenceCategory
+        android:key="credits"
+        android:title="@string/pref_cat_credits">
         <!--
         <Preference
             android:key="info"
             android:summary="@string/pref_description_info"
             android:title="@string/pref_title_info" />
             -->
+        <PreferenceScreen
+            android:key="dev_options"
+            android:title="@string/dev_options">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="notifyDebug"
+                android:title="notifyDebug" />
+            <ListPreference android:key="college_pref" />
+        </PreferenceScreen>
         <Preference
             android:key="github"
-            android:title="@string/pref_github_info" />
+            android:title="@string/pref_github_info">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/about_github_url" />
+        </Preference>
+
+
         <Preference
             android:key="about"
             android:title="About/Used Library's" />

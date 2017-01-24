@@ -11,10 +11,12 @@ import android.util.Log;
 import com.hstrobel.lsfplan.Globals;
 import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
-import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -42,26 +44,34 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        List<VEvent> tmpList = CalenderUtils.getNextEvent(Globals.myCal);
-        VEvent[] events = tmpList.toArray(new VEvent[tmpList.size()]);
+        List<VEvent> events = CalenderUtils.getNextEvents(Globals.myCal);
+        String[] eventUids = new String[events.size()];
+        for (int i = 0; i < events.size(); i++) {
+            VEvent event = events.get(i);
+            eventUids[i] = event.getUid().getValue();
+        }
 
         Log.i(TAG, "ScheduleNextEventNot: ");
-        Log.i(TAG, "ScheduleNextEventNot: events size " + events.length);
-        if (events.length == 0)
+        Log.i(TAG, "ScheduleNextEventNot: events size " + eventUids.length);
+        if (eventUids.length == 0)
             return;
 
 
         Calendar cal = GregorianCalendar.getInstance();
-        cal.setTimeInMillis(CalenderUtils.getNextRecuringStartDate(events[0]).getTime()); //all should have the same start time
+        cal.setTimeInMillis(CalenderUtils.getNextRecuringStartDate(events.get(0)).getTime()); //all should have the same start time
         int minutesBefore = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
         cal.add(Calendar.MINUTE, -minutesBefore);
 
         //DEBUG DEBUG REMOVE IT
-        //start.setTime(new DateTime().getTime() + 30 * 1000);
+        if (Globals.settings.getBoolean("notifyDebug", false)) {
+            cal.setTimeInMillis(new DateTime().getTime() + 30 * 1000);
+            Log.w(TAG, "ScheduleNextEventNot: notifyDebug is on!!");
+        }
+
 
         Intent intentAlarm = new Intent(c, AlarmReceiver.class);
         intentAlarm.setAction(INTENT_ACTION);
-        intentAlarm.putExtra(INTENT_EVENT, events);
+        intentAlarm.putExtra(INTENT_EVENT, eventUids);
         intentAlarm.putExtra(INTENT_OLD_ID, oldNotifyIds);
 
 
@@ -129,17 +139,39 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
 
             //Display the new notifications
-            VEvent[] events = (VEvent[]) intent.getSerializableExtra(INTENT_EVENT);
-            if (events != null) {
-                Integer[] notifyIDs = new Integer[events.length];
-                for (int i = 0; i < events.length; i++) {
-                    notifyIDs[i] = NotificationUtils.showNotification(events[i], context);
-                }
+            String[] eventUids = (String[]) intent.getSerializableExtra(INTENT_EVENT);
+            List<Integer> notifyIDs = new ArrayList<>();
+            if (eventUids != null) {
+                for (String eventUid : eventUids) {
+                    VEvent event = getEventForUid(eventUid);
 
-                ScheduleNextEventNot(context, notifyIDs);
+                    if (event == null) {
+                        Log.w(TAG, "onReceive: could not find event " + eventUid);
+                        continue;
+                    }
+
+                    int id = NotificationUtils.showNotification(event, context);
+                    notifyIDs.add(id);
+                }
+            } else {
+                Log.w(TAG, "onReceive: events are null");
             }
+
+            ScheduleNextEventNot(context, notifyIDs.toArray(new Integer[]{}));
         } catch (Exception ex) {
             Log.e(TAG, "onReceive: ", ex);
         }
+    }
+
+    private VEvent getEventForUid(String uid) {
+        for (Object c : Globals.myCal.getComponents(Component.VEVENT)) {
+            if (c instanceof VEvent) {
+                VEvent tmpEvent = (VEvent) c;
+                if (tmpEvent.getUid().getValue().equals(uid)) {
+                    return tmpEvent;
+                }
+            }
+        }
+        return null;
     }
 }

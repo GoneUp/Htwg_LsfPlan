@@ -83,8 +83,8 @@ public class NotificationUtils {
                 .setContentText(formatEventShort(event, context)) // message for notification
                 .setAutoCancel(true) // clear notification after click
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventLong(event, context)))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setDefaults(soundMode);
+                .setDefaults(soundMode)
+                .setCategory(NotificationCompat.CATEGORY_EVENT);
 
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             builder.setSmallIcon(R.drawable.ic_notify_white);

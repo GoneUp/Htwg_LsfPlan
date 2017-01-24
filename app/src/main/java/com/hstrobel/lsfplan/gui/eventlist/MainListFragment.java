@@ -33,12 +33,12 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.RRule;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
@@ -52,6 +52,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private Calendar selectedDay;
     private EventCache cache;
     private boolean skipWeekend = false;
+    private boolean skipOnlyEmptyDays = false;
 
     private int eastereggCounter = 0;
 
@@ -141,6 +142,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         updateContent();
 
         skipWeekend = Globals.settings.getBoolean("skipWeekend", false);
+        skipOnlyEmptyDays = Globals.settings.getBoolean("skipWeekendDaysWithoutEvents", false);
 
         //Ads meh
         if (areAdsEnabled()) {
@@ -231,7 +233,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             if (Globals.myCal != null) {
                 List<VEvent> evs = cache.getDay(selectedDay);
 
-                SimpleDateFormat d = new SimpleDateFormat("E, dd MMMM yyyy", Locale.GERMANY);
+                DateFormat d = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);
                 Drawable icon_book = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action);
                 Drawable icon_left = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_left);
                 Drawable icon_right = ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_right);
@@ -266,6 +268,11 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             int day = selectedDay.get(Calendar.DAY_OF_WEEK);
             if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
                 while (selectedDay.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+                    //dont skip if we see events
+                    if (skipOnlyEmptyDays && cache.getDay(selectedDay).size() > 0) {
+                        break;
+                    }
+
                     selectedDay.add(Calendar.DAY_OF_MONTH, 1);
                 }
             }
@@ -280,6 +287,11 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             int day = selectedDay.get(Calendar.DAY_OF_WEEK);
             if (day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
                 while (selectedDay.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
+                    //dont skip if we see events
+                    if (skipOnlyEmptyDays && cache.getDay(selectedDay).size() > 0) {
+                        break;
+                    }
+
                     selectedDay.add(Calendar.DAY_OF_MONTH, -1);
                 }
             }

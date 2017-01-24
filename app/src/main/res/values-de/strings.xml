@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Einstellungen</string>
-    <string name="main_lecture_day" formatted="false">Vorlesungen für %s</string>
+    <string name="main_lecture_day" formatted="false">%s</string>
     <string name="main_noCalender">Kein Plan vorhanden..\nBitte lade einen Vorlesungsplan via Menu -> Download Plan.</string>
     <string name="notification_long" formatted="false">Thema: %s - </string>
     <string name="notification_short" formatted="false">Zeit: %s bis %s - Raum: %s</string>
@@ -40,6 +40,8 @@
     <string name="main_lecture_change">Wischen um den Tag zu ändern</string>
     <string name="pref_set_college">Hochschule auswählen</string>
     <string name="pref_skipweekend_title">Wochenende überspringen</string>
-    <string name="pref_skipweekend_desc">"Wochenende beim Wischen überspringen "</string>
+    <string name="pref_skipweekend_desc">Wochenende beim Wischen überspringen</string>
+    <string name="pref_skipweekend_days_title">Nur leere Tage überspringen</string>
+    <string name="pref_skipweekend_days_desc">Nur Wochenendtage ohne Kurse überspringen</string>
 
 </resources>

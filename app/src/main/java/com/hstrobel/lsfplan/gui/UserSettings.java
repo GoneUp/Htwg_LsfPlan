@@ -1,13 +1,12 @@
 package com.hstrobel.lsfplan.gui;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
@@ -41,6 +40,8 @@ public class UserSettings extends AppCompatActivity {
     public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
         private boolean notifyChanged = false;
 
+
+        //TODO: kill magic values :/
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -48,7 +49,10 @@ public class UserSettings extends AppCompatActivity {
             // Load the settings from an XML resource
             addPreferencesFromResource(R.xml.settings);
 
+            //general info update
             onSharedPreferenceChanged(Globals.settings, "");
+            //update dep state
+            onSharedPreferenceChanged(Globals.settings, "skipWeekend");
 
             Preference myPref = findPreference("reset");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -63,14 +67,6 @@ public class UserSettings extends AppCompatActivity {
                 }
             });
 
-            myPref = findPreference("github");
-            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.about_github_url)));
-                    startActivity(i);
-                    return true;
-                }
-            });
 
             myPref = findPreference("about");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -104,6 +100,11 @@ public class UserSettings extends AppCompatActivity {
             });
 
             newpref.setEnabled(BuildConfig.DEBUG);
+
+            PreferenceCategory credits = (PreferenceCategory) findPreference("credits");
+            if (!BuildConfig.DEBUG) {
+                credits.removePreference(findPreference("dev_options"));
+            }
         }
 
 
@@ -115,6 +116,9 @@ public class UserSettings extends AppCompatActivity {
                     Globals.InitNotifications(getActivity());
 
                     notifyChanged = true;
+                    break;
+                case "skipWeekend":
+                    findPreference("skipWeekendDaysWithoutEvents").setEnabled(sharedPreferences.getBoolean(key, false));
                     break;
             }
 

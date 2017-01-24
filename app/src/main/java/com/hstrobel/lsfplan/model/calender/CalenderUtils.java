@@ -46,7 +46,7 @@ public class CalenderUtils {
 
     public static List<VEvent> getEventsForDay(Calendar myCal, java.util.Calendar date) {
         if (BuildConfig.DEBUG) {
-            Log.d(Globals.TAG, "getEventsForDay: " + SimpleDateFormat.getDateTimeInstance().format(date));
+            Log.d(Globals.TAG, "getEventsForDay: " + SimpleDateFormat.getDateTimeInstance().format(date.getTime()));
         }
         return getEvents(myCal, date, new Dur(1, 0, 0, 0));
     }
@@ -93,7 +93,7 @@ public class CalenderUtils {
     }
 
 
-    public static List<VEvent> getNextEvent(Calendar myCal) {
+    public static List<VEvent> getNextEvents(Calendar myCal) {
         DateTime startR = null;
         List<VEvent> toReturn = new ArrayList<VEvent>();
         int minutesBefore = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
