@@ -18,4 +18,6 @@ public class Constants {
     public static final int PREF_COLLEGE_DEFAULT = MODE_HTWG;
     public static final int FIREBASE_MAX_LENGTH = 99;
     public static final String MAGIC_WORD_LOGIN = "#LOGIN#";
+    public static final int NETWORK_TIMEOUT = 10 * 1000;
+    public static final String NETWORK_USERAGENT = "Android_lsfapp";
 }

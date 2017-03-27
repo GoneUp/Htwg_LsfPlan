@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
-import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
 import com.hstrobel.lsfplan.model.BootReceiver;
 import com.hstrobel.lsfplan.model.SyncService;
@@ -22,7 +22,6 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -34,18 +33,20 @@ import java.util.List;
 public class GlobalState {
     public static final String TAG = "LSF";
     private static GlobalState instance;
-    public ICSLoader icsLoader = null;
-    public InputStream icsFileStream = null;
+
+    public IcsFileDownloader icsLoader = null;
     public String icsFile = null; //ICS Calender as text
     public SharedPreferences settings;
     public boolean initialized = false;
     public boolean updated = false;
-    public boolean changed = false;
     public Calendar myCal = null;
     public List<CourseGroup> cachedPlans = null;
     public FirebaseAnalytics firebaseAnalytics;
 
     public static GlobalState getInstance() {
+        if (instance == null) {
+            instance = new GlobalState();
+        }
         return instance;
     }
 
@@ -73,7 +74,7 @@ public class GlobalState {
                 myCal = builder.build(new StringReader(icsFile));
             }
             updated = false;
-            if (initNotification){
+            if (initNotification) {
                 InitNotifications(c);
             }
         }
@@ -114,7 +115,7 @@ public class GlobalState {
         editor.putBoolean("gotICS", true);
         editor.putString("ICS_FILE", icsFile);
         editor.putLong("ICS_DATE", java.util.Calendar.getInstance().getTimeInMillis());
-        editor.putString("ICS_URL", icsLoader.url);
+        editor.putString("ICS_URL", icsLoader.getUrl());
         editor.apply();
 
         //Set to null to show that noting is download --> used by SyncService
@@ -122,21 +123,20 @@ public class GlobalState {
     }
 
     public void Save() throws IOException, ValidationException {
-        if (changed) {
-            Writer w = new StringWriter();
-            CalendarOutputter output = new CalendarOutputter();
-            output.output(myCal, w);
-            icsFile = w.toString();
+        Writer w = new StringWriter();
+        CalendarOutputter output = new CalendarOutputter();
+        output.output(myCal, w);
+        String newFile = w.toString();
 
+        if (!icsFile.equals(newFile)) {
             SharedPreferences.Editor editor = settings.edit();
             editor.putString("ICS_FILE", icsFile);
             editor.apply();
         }
-
     }
 
     public boolean isDownloadInvalid() {
-        return icsLoader.file == null || !icsLoader.file.startsWith("BEGIN:VCALENDAR");
+        return icsLoader.getFile() == null || !icsLoader.getFile().startsWith("BEGIN:VCALENDAR");
     }
 
     public void SyncStart(Context c) {

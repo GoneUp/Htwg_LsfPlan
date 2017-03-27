@@ -7,7 +7,7 @@ import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.gui.download.NativeSelector;
 import com.hstrobel.lsfplan.model.Utils;
 
-import org.jsoup.Jsoup;
+import org.jsoup.Connection;
 
 /**
  * Created by Henry on 07.12.2015.
@@ -67,19 +67,17 @@ Connection: Keep-Alive
             String pw = params[1];
 
 
-            org.jsoup.Connection connection = Jsoup.connect(Utils.getLoginUrl(context, GlobalState.getInstance().getCollege()))
+            String url = Utils.getLoginUrl(context, GlobalState.getInstance().getCollege());
+            Connection connection = Utils.setupAppConnection(url)
                     .data("asdf", user)
                     .data("fdsa", pw)
-                    .data("submit", "Anmelden")
-                    .timeout(NativeSelector.TIMEOUT)
-                    .userAgent("Mozilla");
-            // and other hidden fields which are being passed in post request.
+                    .data("submit", "Anmelden");
             connection.post();
-            org.jsoup.Connection.Response response = connection.response();
+            Connection.Response response = connection.response();
             Log.d("LSF", String.valueOf(response.method()));
 
             //get is successfull because it will redirect. if it fails we get a modified post response.
-            if (response.method() == org.jsoup.Connection.Method.GET) {
+            if (response.method() == Connection.Method.GET) {
                 //yay
                 for (String key : response.cookies().keySet()) {
                     Log.d("LSF", String.format("%s : %s", key, response.cookie(key)));
@@ -94,7 +92,7 @@ Connection: Keep-Alive
         } catch (Exception ex) {
             Log.e(TAG, "Login failed ", ex);
         }
-        return "";
+        return null;
     }
 
     @Override

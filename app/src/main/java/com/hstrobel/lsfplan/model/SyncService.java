@@ -7,8 +7,8 @@ import android.util.Log;
 
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
-import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
+import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -56,7 +56,7 @@ public class SyncService extends IntentService implements IDownloadCallback {
 
                 if (!url.isEmpty()) {
                     Log.i(TAG, "onHandleIntent: starting download");
-                    state.icsLoader = new ICSLoader(this, url);
+                    state.icsLoader = new IcsFileDownloader(this, url);
                     new Thread(state.icsLoader).start();
                 }
             /*The new Thread is not really needed since we are already on background task,

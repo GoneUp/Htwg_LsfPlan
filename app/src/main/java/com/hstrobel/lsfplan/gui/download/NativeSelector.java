@@ -24,23 +24,19 @@ import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.gui.download.network.LoginProcess;
 import com.hstrobel.lsfplan.model.Utils;
 
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 public class NativeSelector extends AbstractWebSelector {
-    public static final int TIMEOUT = 10 * 1000;
-
     private static final String TAG = "LSF";
     PlanExportLoader exportLoader = null;
     PlanOverviewLoader overviewLoader = null;
@@ -198,7 +194,7 @@ public class NativeSelector extends AbstractWebSelector {
         }
 
         Log.d(TAG, "exportCallback");
-        state.icsLoader = new ICSLoader(this, url);
+        state.icsLoader = new IcsFileDownloader(this, url);
         new Thread(state.icsLoader).start();
     }
 
@@ -277,7 +273,7 @@ public class NativeSelector extends AbstractWebSelector {
                 String user = txtUsername.getText().toString().trim();
                 String pw = txtPassword.getText().toString().trim();
 
-                if ((user.length() > 0) && (pw.length() > 0)) {
+                if (!user.isEmpty() && !pw.isEmpty()) {
                     login.dismiss();
                     //login
                     enableLoading();
@@ -286,9 +282,11 @@ public class NativeSelector extends AbstractWebSelector {
                     loginProcess.execute(user, pw);
                 }
 
+
                 SharedPreferences.Editor editor = state.settings.edit();
                 editor.putBoolean("loginAutoSave", box.isChecked());
                 if (box.isChecked()) {
+                    //Well, at least it's no cleartext ;)
                     editor.putString("loginUser", Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
                     editor.putString("loginPassword", Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
                 }
@@ -325,8 +323,8 @@ public class NativeSelector extends AbstractWebSelector {
             CourseGroup.Course item;
 
             try {
-
-                Document doc = Jsoup.parse(new URL(params[0]), 5000);
+                Connection connection = Utils.setupAppConnection(params[0]);
+                Document doc = connection.get();
 
                 Elements tableRows = doc.select("tr");
                 for (Element row : tableRows) {
@@ -377,12 +375,10 @@ public class NativeSelector extends AbstractWebSelector {
             // Making HTTP request
             String url = null;
             try {
-                Connection con = Jsoup.connect(params[0]);
+                Connection con = Utils.setupAppConnection(params[0]);
                 if (params.length > 1) {
                     con.cookie("JSESSIONID", params[1]);
                 }
-                con.userAgent("LSF APP");
-                con.timeout(TIMEOUT);
                 Document doc = con.get();
 
 
@@ -390,7 +386,7 @@ public class NativeSelector extends AbstractWebSelector {
                 for (Element imgs : images) {
                     if (imgs.hasAttr("src")) {
                         if (imgs.attr("src").equals("/QIS/images//calendar_go.gif")) {
-                            //found export ;)
+                            //found export/target ics file ;)
                             Log.d(TAG, imgs.parent().attr("href"));
                             url = imgs.parent().attr("href");
                             break;

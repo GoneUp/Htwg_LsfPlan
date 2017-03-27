@@ -5,6 +5,9 @@ import android.content.Context;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.R;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,5 +53,12 @@ public class Utils {
 
     public static String getCoursesOverviewUrl(Context c, int mode) {
         return getBaseUrl(c, mode) + c.getString(R.string.misc_coursesOverviewURL);
+    }
+
+    public static Connection setupAppConnection(String url) {
+        Connection con = Jsoup.connect(url)
+                .userAgent(Constants.NETWORK_USERAGENT)
+                .timeout(Constants.NETWORK_TIMEOUT);
+        return con;
     }
 }

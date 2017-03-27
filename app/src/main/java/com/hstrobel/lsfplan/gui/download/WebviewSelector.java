@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
+import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.model.Utils;
 
 public class WebviewSelector extends AbstractWebSelector {
@@ -53,7 +53,7 @@ public class WebviewSelector extends AbstractWebSelector {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                 Log.d("LSF", "setDownloadListener");
-                state.icsLoader = new ICSLoader(local, url);
+                state.icsLoader = new IcsFileDownloader(local, url);
                 new Thread(state.icsLoader).start();
             }
         });

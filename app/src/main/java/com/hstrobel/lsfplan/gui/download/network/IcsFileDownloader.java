@@ -11,14 +11,14 @@ import java.net.URL;
 /**
  * Created by Henry on 04.12.2015.
  */
-public class ICSLoader implements Runnable {
+public class IcsFileDownloader implements Runnable {
     private static final String TAG = "LSF";
 
-    public String file = "";
-    public String url = "";
+    private String file = "";
+    private String url = "";
     private IDownloadCallback downloadCallback;
 
-    public ICSLoader(IDownloadCallback selector, String url) {
+    public IcsFileDownloader(IDownloadCallback selector, String url) {
         this.url = url;
         downloadCallback = selector;
     }
@@ -40,5 +40,11 @@ public class ICSLoader implements Runnable {
         }
     }
 
+    public String getUrl() {
+        return url;
+    }
 
+    public String getFile() {
+        return file;
+    }
 }
