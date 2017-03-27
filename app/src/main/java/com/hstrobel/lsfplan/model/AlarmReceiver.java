@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
 import net.fortuna.ical4j.model.Component;
@@ -39,12 +39,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Cancel old alarms
         CancelNextEventNot(c);
 
-        if (Globals.myCal == null) {
+        GlobalState state = GlobalState.getInstance();
+        if (state.myCal == null) {
             Log.i(TAG, "mycal null");
             return;
         }
 
-        List<VEvent> events = CalenderUtils.getNextEvents(Globals.myCal);
+        int minutesBefore = Integer.parseInt(state.settings.getString("notfiyTime", "15"));
+        List<VEvent> events = CalenderUtils.getNextEvents(state.myCal, minutesBefore);
         String[] eventUids = new String[events.size()];
         for (int i = 0; i < events.size(); i++) {
             VEvent event = events.get(i);
@@ -59,11 +61,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTimeInMillis(CalenderUtils.getNextRecuringStartDate(events.get(0)).getTime()); //all should have the same start time
-        int minutesBefore = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
         cal.add(Calendar.MINUTE, -minutesBefore);
 
         //DEBUG DEBUG REMOVE IT
-        if (Globals.settings.getBoolean("notifyDebug", false)) {
+        if (state.settings.getBoolean("notifyDebug", false)) {
             cal.setTimeInMillis(new DateTime().getTime() + 30 * 1000);
             Log.w(TAG, "ScheduleNextEventNot: notifyDebug is on!!");
         }
@@ -125,8 +126,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
 
             //Process could be killed in the meantime, setup our calender, but NOT init the notifications to prevent duplicates loops etc
-            if (!Globals.initialized)
-                Globals.InitCalender(context, false);
+            GlobalState state = GlobalState.getInstance();
+            if (!state.initialized)
+                state.InitCalender(context, false);
 
             enforceInit(context);
 
@@ -164,7 +166,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     private VEvent getEventForUid(String uid) {
-        for (Object c : Globals.myCal.getComponents(Component.VEVENT)) {
+        for (Object c : GlobalState.getInstance().myCal.getComponents(Component.VEVENT)) {
             if (c instanceof VEvent) {
                 VEvent tmpEvent = (VEvent) c;
                 if (tmpEvent.getUid().getValue().equals(uid)) {

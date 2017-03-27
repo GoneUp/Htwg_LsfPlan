@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.MainActivity;
 import com.hstrobel.lsfplan.model.calender.CalenderUtils;
@@ -63,7 +63,7 @@ public class NotificationUtils {
 
 
     public static int showNotification(VEvent event, Context context) {
-        String mode = Globals.settings.getString("soundMode", "");
+        String mode = GlobalState.getInstance().settings.getString("soundMode", "");
         int soundMode = NotificationCompat.DEFAULT_LIGHTS;
 
         switch (mode) {

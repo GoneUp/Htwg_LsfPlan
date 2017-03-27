@@ -2,6 +2,7 @@ package com.hstrobel.lsfplan.model;
 
 import android.content.Context;
 
+import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.R;
 
 import java.io.ByteArrayInputStream;
@@ -15,8 +16,6 @@ import java.nio.charset.Charset;
  */
 
 public class Utils {
-    public static final int MODE_HTWG = 0;
-    public static final int MODE_UNI_KN = 1;
 
     public static String streamToString(InputStream inputStream, String encoding) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -33,9 +32,9 @@ public class Utils {
     }
 
     private static String getBaseUrl(Context c, int mode) {
-        if (mode == MODE_HTWG) {
+        if (mode == Constants.MODE_HTWG) {
             return c.getString(R.string.misc_baseUrl_HTWG);
-        } else if (mode == MODE_UNI_KN) {
+        } else if (mode == Constants.MODE_UNI_KN) {
             return c.getString(R.string.misc_baseUrl_UNI_KN);
         }
         return "";

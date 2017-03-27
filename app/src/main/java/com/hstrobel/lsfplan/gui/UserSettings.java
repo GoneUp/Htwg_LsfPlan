@@ -14,9 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.BuildConfig;
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.Constants;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.model.Utils;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 public class UserSettings extends AppCompatActivity {
+    private GlobalState state = GlobalState.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,18 +51,18 @@ public class UserSettings extends AppCompatActivity {
             addPreferencesFromResource(R.xml.settings);
 
             //general info update
-            onSharedPreferenceChanged(Globals.settings, "");
+            onSharedPreferenceChanged(state.settings, "");
             //update dep state
-            onSharedPreferenceChanged(Globals.settings, "skipWeekend");
+            onSharedPreferenceChanged(state.settings, "skipWeekend");
 
             Preference myPref = findPreference("reset");
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    SharedPreferences.Editor editor = Globals.settings.edit();
+                    SharedPreferences.Editor editor = state.settings.edit();
                     editor.clear();
                     editor.commit();
                     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, true);
-                    Globals.initialized = false;
+                    state.initialized = false;
                     NavUtils.navigateUpFromSameTask(getActivity());
                     return true;
                 }
@@ -87,13 +88,13 @@ public class UserSettings extends AppCompatActivity {
             newpref.setTitle(R.string.pref_set_college);
             newpref.setSummary("");
             newpref.setEntries(new String[]{"HTWG", "UNI"});
-            newpref.setEntryValues(new String[]{String.valueOf(Utils.MODE_HTWG), String.valueOf(Utils.MODE_UNI_KN)});
+            newpref.setEntryValues(new String[]{String.valueOf(Constants.MODE_HTWG), String.valueOf(Constants.MODE_UNI_KN)});
             newpref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
                     if (o != null) {
-                        Globals.setCollege(Integer.parseInt((String) o));
-                        Globals.cachedPlans = null;
+                        state.setCollege(Integer.parseInt((String) o));
+                        state.cachedPlans = null;
                     }
                     return true;
                 }
@@ -113,7 +114,7 @@ public class UserSettings extends AppCompatActivity {
             switch (key) {
                 case "notfiyTime":
                 case "enableNotifications":
-                    Globals.InitNotifications(getActivity());
+                    state.InitNotifications(getActivity());
 
                     notifyChanged = true;
                     break;
@@ -123,14 +124,14 @@ public class UserSettings extends AppCompatActivity {
             }
 
             Preference myPref = findPreference("notfiyTime");
-            int time = Integer.parseInt(Globals.settings.getString("notfiyTime", "15"));
+            int time = Integer.parseInt(state.settings.getString("notfiyTime", "15"));
             myPref.setSummary(String.format(getString(R.string.pref_description_timeSetter), time));
 
             ListPreference sPref = (ListPreference) findPreference("soundMode");
             if (sPref.getEntry() != null) sPref.setSummary(sPref.getEntry());
 
             DateFormat d = SimpleDateFormat.getDateTimeInstance();
-            long time_load = Globals.settings.getLong("ICS_DATE", Integer.MAX_VALUE);
+            long time_load = state.settings.getLong("ICS_DATE", Integer.MAX_VALUE);
             GregorianCalendar syncTime = new GregorianCalendar();
             syncTime.setTimeInMillis(time_load);
 
@@ -164,12 +165,12 @@ public class UserSettings extends AppCompatActivity {
             getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 
             if (notifyChanged) {
-                String info = String.valueOf(Globals.settings.getBoolean("enableNotifications", false)) + "_" + Globals.settings.getString("notfiyTime", "15");
+                String info = String.format("%s_%s", String.valueOf(state.settings.getBoolean("enableNotifications", false)), state.settings.getString("notfiyTime", "15"));
 
                 Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Globals.CONTENT_NOTIFY);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Constants.CONTENT_NOTIFY);
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, info);
-                Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                state.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             }
         }
     }

@@ -21,7 +21,8 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.BuildConfig;
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.Constants;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.gui.download.network.LoginProcess;
@@ -39,9 +40,7 @@ import java.util.List;
 
 public class NativeSelector extends AbstractWebSelector {
     public static final int TIMEOUT = 10 * 1000;
-    public static final int FIREBASE_MAX_LENGTH = 99;
 
-    private static final String MAGIC_WORD_LOGIN = "#LOGIN#";
     private static final String TAG = "LSF";
     PlanExportLoader exportLoader = null;
     PlanOverviewLoader overviewLoader = null;
@@ -52,6 +51,8 @@ public class NativeSelector extends AbstractWebSelector {
     private ProgressBar spinner;
     private CourseGroup selectedCourseGroup = null;
     private CourseGroup.Course selectedCourse = null;
+
+    private GlobalState state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class NativeSelector extends AbstractWebSelector {
 
         spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
 
+        state = GlobalState.getInstance();
         loadOverview();
 
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -131,7 +133,7 @@ public class NativeSelector extends AbstractWebSelector {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            Globals.cachedPlans = null;
+            GlobalState.getInstance().cachedPlans = null;
             loadOverview();
         }
 
@@ -144,7 +146,7 @@ public class NativeSelector extends AbstractWebSelector {
         if (selectedCourse == null)
             return;
 
-        if (selectedCourse.URL.equals(MAGIC_WORD_LOGIN)) {
+        if (selectedCourse.URL.equals(Constants.MAGIC_WORD_LOGIN)) {
             showLoginForm();
         } else {
             //Tracking
@@ -161,18 +163,20 @@ public class NativeSelector extends AbstractWebSelector {
     private void logDownload() {
         //limit size
         String content = (selectedCourseGroup.name + "_" + selectedCourse.name);
-        if (content.length() > FIREBASE_MAX_LENGTH) {
-            content = content.substring(0, FIREBASE_MAX_LENGTH);
+        if (content.length() > Constants.FIREBASE_MAX_LENGTH) {
+            content = content.substring(0, Constants.FIREBASE_MAX_LENGTH);
         }
 
 
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Globals.CONTENT_DL);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Constants.CONTENT_DL);
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, content);
-        Globals.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-        Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_CATEGORY, selectedCourseGroup.name);
-        Globals.firebaseAnalytics.setUserProperty(Globals.FB_PROP_SPECIFIC, selectedCourse.name);
+        GlobalState state = GlobalState.getInstance();
+        state.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        state.firebaseAnalytics.setUserProperty(Constants.FB_PROP_CATEGORY, selectedCourseGroup.name);
+        state.firebaseAnalytics.setUserProperty(Constants.FB_PROP_SPECIFIC, selectedCourse.name);
     }
 
     public void loginCallback(String loginCookie) {
@@ -183,7 +187,7 @@ public class NativeSelector extends AbstractWebSelector {
         }
 
         exportLoader = new PlanExportLoader();
-        exportLoader.execute(Utils.getPersonalPlanUrl(this, Globals.getCollege()), loginCookie);
+        exportLoader.execute(Utils.getPersonalPlanUrl(this, state.getCollege()), loginCookie);
     }
 
     private void exportCallback(String url) {
@@ -194,20 +198,20 @@ public class NativeSelector extends AbstractWebSelector {
         }
 
         Log.d(TAG, "exportCallback");
-        Globals.icsLoader = new ICSLoader(this, url);
-        new Thread(Globals.icsLoader).start();
+        state.icsLoader = new ICSLoader(this, url);
+        new Thread(state.icsLoader).start();
     }
 
     private void loadOverview() {
         Log.d(TAG, "loadOverview");
 
-        if (Globals.cachedPlans != null) {
+        if (state.cachedPlans != null) {
             // got a saved version
-            overviewCallback(Globals.cachedPlans);
+            overviewCallback(state.cachedPlans);
         } else {
             enableLoading();
 
-            String url = Utils.getCoursesOverviewUrl(this, Globals.getCollege());
+            String url = Utils.getCoursesOverviewUrl(this, state.getCollege());
             overviewLoader = new PlanOverviewLoader();
             overviewLoader.execute(url);
         }
@@ -219,11 +223,11 @@ public class NativeSelector extends AbstractWebSelector {
             return;
         }
         Log.d(TAG, "overviewCallback");
-        Globals.cachedPlans = results;
+        state.cachedPlans = results;
 
         listAdapter.clear();
         listAdapter.addPlanGroup(getString(R.string.html_login_head));
-        listAdapter.addPlanItem(getString(R.string.html_login_head), getString(R.string.html_login_sub), MAGIC_WORD_LOGIN);
+        listAdapter.addPlanItem(getString(R.string.html_login_head), getString(R.string.html_login_sub), Constants.MAGIC_WORD_LOGIN);
 
         for (CourseGroup group : results) {
             listAdapter.addPlanGroup(group.name);
@@ -251,11 +255,11 @@ public class NativeSelector extends AbstractWebSelector {
         final EditText txtUsername = (EditText) login.findViewById(R.id.txtUsername);
         final EditText txtPassword = (EditText) login.findViewById(R.id.txtPassword);
 
-        boolean autoSave = Globals.settings.getBoolean("loginAutoSave", true);
+        boolean autoSave = state.settings.getBoolean("loginAutoSave", true);
         box.setChecked(autoSave);
         if (autoSave) {
-            String user = Globals.settings.getString("loginUser", "");
-            String pw = Globals.settings.getString("loginPassword", "");
+            String user = state.settings.getString("loginUser", "");
+            String pw = state.settings.getString("loginPassword", "");
             if (!user.equals("")) {
                 user = new String(Base64.decode(user, Base64.DEFAULT));
                 pw = new String(Base64.decode(pw, Base64.DEFAULT));
@@ -282,7 +286,7 @@ public class NativeSelector extends AbstractWebSelector {
                     loginProcess.execute(user, pw);
                 }
 
-                SharedPreferences.Editor editor = Globals.settings.edit();
+                SharedPreferences.Editor editor = state.settings.edit();
                 editor.putBoolean("loginAutoSave", box.isChecked());
                 if (box.isChecked()) {
                     editor.putString("loginUser", Base64.encodeToString(user.getBytes(), Base64.DEFAULT));

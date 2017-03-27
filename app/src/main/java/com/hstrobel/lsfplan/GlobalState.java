@@ -14,7 +14,6 @@ import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
 import com.hstrobel.lsfplan.model.BootReceiver;
 import com.hstrobel.lsfplan.model.SyncService;
-import com.hstrobel.lsfplan.model.Utils;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -32,31 +31,25 @@ import java.util.List;
 /**
  * Created by Henry on 09.11.2015.
  */
-public class Globals {
+public class GlobalState {
     public static final String TAG = "LSF";
+    private static GlobalState instance;
+    public ICSLoader icsLoader = null;
+    public InputStream icsFileStream = null;
+    public String icsFile = null; //ICS Calender as text
+    public SharedPreferences settings;
+    public boolean initialized = false;
+    public boolean updated = false;
+    public boolean changed = false;
+    public Calendar myCal = null;
+    public List<CourseGroup> cachedPlans = null;
+    public FirebaseAnalytics firebaseAnalytics;
 
-    public static final String INTENT_UPDATE_LIST = "INTENT_UPDATE_LIST";
+    public static GlobalState getInstance() {
+        return instance;
+    }
 
-    public static final String CONTENT_NOTIFY = "notify";
-    public static final String CONTENT_DL = "download";
-
-    public static final String PREF_COLLEGE = "college";
-    public static final int PREF_COLLEGE_DEFAULT = Utils.MODE_HTWG;
-    public static final String FB_PROP_CATEGORY = "course_category";
-    public static final String FB_PROP_SPECIFIC = "course_specific";
-
-    public static ICSLoader icsLoader = null;
-    public static InputStream icsFileStream = null;
-    public static String icsFile = null; //ICS Calender as text
-    public static SharedPreferences settings;
-    public static boolean initialized = false;
-    public static boolean updated = false;
-    public static boolean changed = false;
-    public static Calendar myCal = null;
-    public static List<CourseGroup> cachedPlans = null;
-    public static FirebaseAnalytics firebaseAnalytics;
-
-    public static void InitCalender(Context c, boolean initNotification) throws IOException, ParserException {
+    public void InitCalender(Context c, boolean initNotification) throws IOException, ParserException {
         //App Startup, load everthing from our settings file
         if (!initialized) {
             //Try to load from file
@@ -89,11 +82,11 @@ public class Globals {
         SyncStart(c);
     }
 
-    public static void InitNotifications(final Context c) {
+    public void InitNotifications(final Context c) {
         ComponentName receiver = new ComponentName(c, BootReceiver.class);
         PackageManager pm = c.getPackageManager();
 
-        if (Globals.settings.getBoolean("enableNotifications", false)) {
+        if (settings.getBoolean("enableNotifications", false)) {
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
@@ -113,22 +106,22 @@ public class Globals {
     }
 
 
-    public static void SetNewCalendar(Context act) throws IOException, ParserException {
+    public void SetNewCalendar(Context act) throws IOException, ParserException {
         updated = true;
         InitCalender(act, false);
 
-        SharedPreferences.Editor editor = Globals.settings.edit();
+        SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("gotICS", true);
-        editor.putString("ICS_FILE", Globals.icsFile);
+        editor.putString("ICS_FILE", icsFile);
         editor.putLong("ICS_DATE", java.util.Calendar.getInstance().getTimeInMillis());
-        editor.putString("ICS_URL", Globals.icsLoader.url);
+        editor.putString("ICS_URL", icsLoader.url);
         editor.apply();
 
         //Set to null to show that noting is download --> used by SyncService
         icsLoader = null;
     }
 
-    public static void Save() throws IOException, ValidationException {
+    public void Save() throws IOException, ValidationException {
         if (changed) {
             Writer w = new StringWriter();
             CalendarOutputter output = new CalendarOutputter();
@@ -136,34 +129,34 @@ public class Globals {
             icsFile = w.toString();
 
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString("ICS_FILE", Globals.icsFile);
+            editor.putString("ICS_FILE", icsFile);
             editor.apply();
         }
 
     }
 
-    public static boolean isDownloadInvalid() {
-        return Globals.icsLoader.file == null || !Globals.icsLoader.file.startsWith("BEGIN:VCALENDAR");
+    public boolean isDownloadInvalid() {
+        return icsLoader.file == null || !icsLoader.file.startsWith("BEGIN:VCALENDAR");
     }
 
-    public static void SyncStart(Context c) {
+    public void SyncStart(Context c) {
         Intent mServiceIntent = new Intent(c, SyncService.class);
         mServiceIntent.setData(Uri.parse(""));
         c.startService(mServiceIntent);
     }
 
-    public static int getCollege() {
-        int mode = settings.getInt(PREF_COLLEGE, -1);
+    public int getCollege() {
+        int mode = settings.getInt(Constants.PREF_COLLEGE, -1);
         if (mode == -1) {
-            setCollege(PREF_COLLEGE_DEFAULT);
-            mode = PREF_COLLEGE_DEFAULT;
+            setCollege(Constants.PREF_COLLEGE_DEFAULT);
+            mode = Constants.PREF_COLLEGE_DEFAULT;
         }
         return mode;
     }
 
-    public static void setCollege(int mode) {
+    public void setCollege(int mode) {
         SharedPreferences.Editor edit = settings.edit();
-        edit.putInt(PREF_COLLEGE, mode);
+        edit.putInt(Constants.PREF_COLLEGE, mode);
         edit.apply();
     }
 

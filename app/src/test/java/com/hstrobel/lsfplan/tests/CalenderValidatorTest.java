@@ -1,8 +1,6 @@
 package com.hstrobel.lsfplan.tests;
 
 import com.hstrobel.lsfplan.BuildConfig;
-import com.hstrobel.lsfplan.Globals;
-import com.hstrobel.lsfplan.model.Utils;
 import com.hstrobel.lsfplan.model.calender.CalenderValidator;
 
 import junit.framework.TestCase;
@@ -305,7 +303,6 @@ public class CalenderValidatorTest extends TestCase {
 
     @Test
     public void testCorrectEvents() throws Exception {
-        Globals.icsFileStream = Utils.stringToInputstream(file);
-        CalenderValidator.CorrectEvents();
+        CalenderValidator.CorrectEvents(file);
     }
 }

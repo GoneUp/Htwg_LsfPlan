@@ -10,14 +10,14 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 24
-        versionName "2.2"
+        versionCode 25
+        versionName "2.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         jackOptions {
@@ -49,21 +49,20 @@ android {
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:${androidSupportLibraryVersion}"
     compile "com.android.support:support-v4:${androidSupportLibraryVersion}"
     compile "com.android.support:design:${androidSupportLibraryVersion}"
     compile "com.android.support:support-annotations:${androidSupportLibraryVersion}"
 
-    compile 'com.google.firebase:firebase-core:10.0.0'
-    compile 'com.google.firebase:firebase-ads:10.0.0'
+
+    compile 'com.google.firebase:firebase-core:10.2.1'
+    compile 'com.google.firebase:firebase-ads:10.2.1'
 
     compile 'org.mnode.ical4j:ical4j:1.0.6'
     compile 'org.jsoup:jsoup:1.7.3'
-    compile('com.mikepenz:aboutlibraries:5.9.1@aar') {
+    compile('com.mikepenz:aboutlibraries:5.9.4@aar') {
         transitive = true
     }
-
 
     androidTestCompile "org.robolectric:robolectric:3.1.1"
     androidTestCompile 'junit:junit:4.12'
@@ -76,8 +75,6 @@ dependencies {
     testCompile "org.robolectric:shadows-support-v4:$robolectricVersion"
 
     androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'org.testng:testng:6.9.6'
-    androidTestCompile 'org.testng:testng:6.9.6'
     androidTestCompile 'org.testng:testng:6.9.6'
 }
 

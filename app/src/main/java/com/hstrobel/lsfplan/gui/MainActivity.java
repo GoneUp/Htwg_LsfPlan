@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.NativeSelector;
 import com.hstrobel.lsfplan.gui.download.WebviewSelector;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
     public MainDefaultFragment defaultFragment;
     public MainListFragment listFragment;
     private SharedPreferences preferences;
-
+    private GlobalState state = GlobalState.getInstance();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
             openDownloader();
 
         } else if (id == R.id.action_testNotfication) {
-            if (Globals.myCal != null) {
-                List<VEvent> evs = CalenderUtils.getNextEvents(Globals.myCal);
+            if (state.myCal != null) {
+                List<VEvent> evs = CalenderUtils.getNextEvents(state.myCal, 0);
                 for (VEvent ev : evs) {
                     NotificationUtils.showNotification(ev, this);
                 }
@@ -103,9 +103,9 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
         //present --> show info
 
         try {
-            Globals.InitCalender(this, true);
+            state.InitCalender(this, true);
 
-            if (Globals.myCal == null) {
+            if (state.myCal == null) {
                 //show intro
                 getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, defaultFragment).commit();
                 //infoText.setText(R.string.main_noCalender);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        //Globals.Save(); //no changes yet
+        //GlobalState.Save(); //no changes yet
     }
 
 

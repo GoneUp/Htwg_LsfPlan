@@ -3,7 +3,7 @@ package com.hstrobel.lsfplan.model.calender;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -35,12 +35,13 @@ public class EventCache {
         localDay.setTime(day.getTime());
 
         Log.i(TAG, "getDay: Query for " + localDay.get(java.util.Calendar.DAY_OF_MONTH));
-        if (Globals.myCal == null)
+        Calendar myCal = GlobalState.getInstance().myCal;
+        if (myCal == null)
             throw new IllegalArgumentException("myCal is null!");
-        if (globalCal != Globals.myCal) {
+        if (globalCal != myCal) {
             Log.i(TAG, "getDay: Cleared Cache");
             cache.clear();
-            globalCal = Globals.myCal;
+            globalCal = myCal;
         }
 
         localDay.set(java.util.Calendar.HOUR_OF_DAY, 0);
@@ -72,7 +73,7 @@ public class EventCache {
     }
 
     private void generateDay(java.util.Calendar day) {
-        List<VEvent> evs = CalenderUtils.getEventsForDay(Globals.myCal, day);
+        List<VEvent> evs = CalenderUtils.getEventsForDay(GlobalState.getInstance().myCal, day);
         CalenderUtils.sortEvents(evs);
 
         cache.put(day, evs);

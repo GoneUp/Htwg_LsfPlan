@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
 
@@ -22,14 +22,16 @@ public abstract class AbstractWebSelector extends AppCompatActivity implements I
     public void FileLoaded() {
         try {
             Looper.prepare();
-            if (Globals.isDownloadInvalid()) {
+            GlobalState state = GlobalState.getInstance();
+
+            if (state.isDownloadInvalid()) {
                 //not a ics file
                 Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileNotValid, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 spinner.setVisibility(View.GONE);
                 return;
             }
 
-            Globals.SetNewCalendar(this);
+            state.SetNewCalendar(this);
 
             //navigate back to main
             Snackbar.make(findViewById(android.R.id.content), R.string.webView_fileLoaded, Snackbar.LENGTH_SHORT).show();

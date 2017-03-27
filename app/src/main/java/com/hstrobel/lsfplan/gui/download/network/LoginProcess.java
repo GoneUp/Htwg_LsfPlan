@@ -3,7 +3,7 @@ package com.hstrobel.lsfplan.gui.download.network;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.gui.download.NativeSelector;
 import com.hstrobel.lsfplan.model.Utils;
 
@@ -67,7 +67,7 @@ Connection: Keep-Alive
             String pw = params[1];
 
 
-            org.jsoup.Connection connection = Jsoup.connect(Utils.getLoginUrl(context, Globals.getCollege()))
+            org.jsoup.Connection connection = Jsoup.connect(Utils.getLoginUrl(context, GlobalState.getInstance().getCollege()))
                     .data("asdf", user)
                     .data("fdsa", pw)
                     .data("submit", "Anmelden")

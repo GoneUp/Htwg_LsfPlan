@@ -24,7 +24,8 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.Constants;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.model.NotificationUtils;
 import com.hstrobel.lsfplan.model.calender.EventCache;
@@ -49,6 +50,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private List<EventItem> mItems;        // ListView items list
     private EventListAdapter listAdapter;
 
+    private GlobalState state = GlobalState.getInstance();
     private Calendar selectedDay;
     private EventCache cache;
     private boolean skipWeekend = false;
@@ -60,7 +62,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Globals.INTENT_UPDATE_LIST)) {
+            if (intent.getAction().equals(Constants.INTENT_UPDATE_LIST)) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -103,7 +105,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     }
 
     private boolean areAdsEnabled() {
-        return Globals.settings.getBoolean("enableAds", false);
+        return state.settings.getBoolean("enableAds", false);
     }
 
     private void initAd(View view) {
@@ -138,11 +140,11 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Globals.INTENT_UPDATE_LIST));
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver(broadcastReceiver, new IntentFilter(Constants.INTENT_UPDATE_LIST));
         updateContent();
 
-        skipWeekend = Globals.settings.getBoolean("skipWeekend", false);
-        skipOnlyEmptyDays = Globals.settings.getBoolean("skipWeekendDaysWithoutEvents", false);
+        skipWeekend = state.settings.getBoolean("skipWeekend", false);
+        skipOnlyEmptyDays = state.settings.getBoolean("skipWeekendDaysWithoutEvents", false);
 
         //Ads meh
         if (areAdsEnabled()) {
@@ -230,7 +232,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private void updateContent() {
         //setup
         try {
-            if (Globals.myCal != null) {
+            if (state.myCal != null) {
                 List<VEvent> evs = cache.getDay(selectedDay);
 
                 DateFormat d = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);

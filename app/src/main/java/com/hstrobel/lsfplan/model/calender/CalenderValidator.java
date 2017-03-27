@@ -2,8 +2,6 @@ package com.hstrobel.lsfplan.model.calender;
 
 import android.util.Log;
 
-import com.hstrobel.lsfplan.Globals;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -12,7 +10,7 @@ import java.io.StringReader;
  * Created by Henry on 16.11.2015.
  */
 public class CalenderValidator {
-    public static boolean CorrectEvents() throws IOException {
+    public static String CorrectEvents(String file) throws IOException {
         /*
         TO IGNORE
         BEGIN:VEVENT
@@ -28,14 +26,12 @@ public class CalenderValidator {
         CATEGORIES:Vorlesung/Übung
         END:VEVENT
          */
-        //Globals.icsFileStream.reset();
         Log.d("LSF", "CorrectEvents");
 
-        BufferedReader reader = new BufferedReader(new StringReader(Globals.icsLoader.file));
+        BufferedReader reader = new BufferedReader(new StringReader(file));
         StringBuilder builder = new StringBuilder();
         StringBuilder eventBuilder = null;
         boolean vaildEvent = true;
-        boolean ignoredEvent = false;
 
         String line;
         while ((line = reader.readLine()) != null ) {
@@ -46,7 +42,6 @@ public class CalenderValidator {
                     if (vaildEvent){
                         builder.append(eventBuilder.toString());
                     } else {
-                        ignoredEvent = true;
                         Log.d("LSF", "Ignored event");
                     }
                     eventBuilder = null;
@@ -64,7 +59,6 @@ public class CalenderValidator {
             }
         }
 
-        Globals.icsFile = builder.toString();
-        return ignoredEvent;
+        return builder.toString();
     }
 }

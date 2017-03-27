@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "LSF";
@@ -16,7 +16,7 @@ public class BootReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             Log.i(TAG, "Setting Bootup");
             try {
-                Globals.InitCalender(context, true);
+                GlobalState.getInstance().InitCalender(context, true);
             } catch (Exception ex) {
                 Log.e(TAG, "Bootup: ", ex);
             }

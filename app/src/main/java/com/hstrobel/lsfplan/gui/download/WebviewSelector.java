@@ -12,7 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.hstrobel.lsfplan.Globals;
+import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.ICSLoader;
 import com.hstrobel.lsfplan.model.Utils;
@@ -30,6 +30,7 @@ public class WebviewSelector extends AbstractWebSelector {
 
         local = this;
         mHandler = new Handler();
+        final GlobalState state = GlobalState.getInstance();
 
         if (getActionBar() != null) getActionBar().setDisplayHomeAsUpEnabled(true);
         spinner = (ProgressBar) findViewById(R.id.progressBar);
@@ -52,14 +53,14 @@ public class WebviewSelector extends AbstractWebSelector {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
                 Log.d("LSF", "setDownloadListener");
-                Globals.icsLoader = new ICSLoader(local, url);
-                new Thread(Globals.icsLoader).start();
+                state.icsLoader = new ICSLoader(local, url);
+                new Thread(state.icsLoader).start();
             }
         });
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
 
-        String url = Utils.getCoursesOverviewUrl(this, Globals.getCollege());
+        String url = Utils.getCoursesOverviewUrl(this, state.getCollege());
         webView.loadUrl(url);
 
     }

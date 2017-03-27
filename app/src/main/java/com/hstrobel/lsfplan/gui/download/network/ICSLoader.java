@@ -30,10 +30,7 @@ public class ICSLoader implements Runnable {
             Log.i(TAG, "run: " + url);
             InputStream fileStream = new URL(url).openStream();
             file = Utils.streamToString(fileStream, "UTF-8");
-
-            boolean ignoring = CalenderValidator.CorrectEvents();
-            if (ignoring)
-                Log.i(TAG, "doInBackground: ignored lectures");
+            file = CalenderValidator.CorrectEvents(file);
 
             downloadCallback.FileLoaded();
 
