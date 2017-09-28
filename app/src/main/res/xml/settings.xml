@@ -74,8 +74,12 @@
 
             <CheckBoxPreference
                 android:defaultValue="false"
-                android:key="notifyDebug"
-                android:title="notifyDebug" />
+                android:key="debugNotify"
+                android:title="debugNotify" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="debugSync"
+                android:title="debugSync" />
             <ListPreference android:key="college_pref" />
         </PreferenceScreen>
         <Preference

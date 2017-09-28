@@ -15,6 +15,7 @@ import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.NativeSelector;
 import com.hstrobel.lsfplan.gui.download.WebviewSelector;
 import com.hstrobel.lsfplan.gui.eventlist.MainListFragment;
+import com.hstrobel.lsfplan.gui.settings.UserSettings;
 import com.hstrobel.lsfplan.model.NotificationUtils;
 import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 

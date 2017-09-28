@@ -13,6 +13,8 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(TAG, "boot " + intent);
+
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             Log.i(TAG, "Setting Bootup");
             try {
@@ -20,6 +22,7 @@ public class BootReceiver extends BroadcastReceiver {
             } catch (Exception ex) {
                 Log.e(TAG, "Bootup: ", ex);
             }
+            Log.i(TAG, "Bootup init completed");
 
         }
     }

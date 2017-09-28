@@ -159,13 +159,13 @@ public class NativeSelector extends AbstractWebSelector {
     private void logDownload() {
         //limit size
         String content = (selectedCourseGroup.name + "_" + selectedCourse.name);
-        if (content.length() > Constants.FIREBASE_MAX_LENGTH) {
-            content = content.substring(0, Constants.FIREBASE_MAX_LENGTH);
+        if (content.length() > Constants.FB_MAX_LENGTH) {
+            content = content.substring(0, Constants.FB_MAX_LENGTH);
         }
 
 
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Constants.CONTENT_DL);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Constants.FB_CONTENT_DL);
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, content);
 
         GlobalState state = GlobalState.getInstance();

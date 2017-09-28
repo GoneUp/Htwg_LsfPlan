@@ -1,7 +1,8 @@
 package com.hstrobel.lsfplan.model;
 
-import android.app.IntentService;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -16,17 +17,14 @@ import java.util.GregorianCalendar;
 /**
  * Created by Henry on 06.04.2016.
  */
-public class SyncService extends IntentService implements IDownloadCallback {
+public class SyncService extends JobIntentService implements IDownloadCallback {
     private static String TAG = "LSF";
 
-    public SyncService() {
-        super("Background Calender Sync Service");
-    }
-
     @Override
-    protected void onHandleIntent(Intent workIntent) {
+    protected void onHandleWork(@NonNull Intent intent) {
+
         try {
-            Log.i(TAG, "onHandleIntent: SyncS started");
+            Log.i(TAG, "onHandleWork: SyncS started");
 
             //if the user is already downloading something new we don't interfere
             GlobalState state = GlobalState.getInstance();
@@ -48,7 +46,10 @@ public class SyncService extends IntentService implements IDownloadCallback {
             syncExpire.setTimeInMillis(time_load);
             syncExpire.add(Calendar.WEEK_OF_YEAR, 1); //weekly syncs
 
-            if (now.getTimeInMillis() < syncExpire.getTimeInMillis()) {
+
+            boolean debugOverride = state.settings.getBoolean(Constants.PREF_DEV_SYNC, false);
+
+            if (now.getTimeInMillis() < syncExpire.getTimeInMillis() && !debugOverride) {
                 Log.i(TAG, "onHandleIntent: SyncS is already updated");
 
             } else {

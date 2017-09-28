@@ -12,6 +12,7 @@
         android:name=".LsfApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -32,7 +33,7 @@
                 android:value="com.hstrobel.lsfplan.gui.MainActivity" />
         </activity>
         <activity
-            android:name=".gui.UserSettings"
+            android:name=".gui.settings.UserSettings"
             android:label="@string/action_settings"
             android:parentActivityName=".gui.MainActivity"
             android:theme="@style/AppTheme">
@@ -61,7 +62,9 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.hstrobel.lsfplan.model.SyncService" />
+        <service
+            android:name="com.hstrobel.lsfplan.model.SyncService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
 
         <meta-data

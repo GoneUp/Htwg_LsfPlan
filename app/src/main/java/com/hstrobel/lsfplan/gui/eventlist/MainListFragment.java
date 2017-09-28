@@ -155,6 +155,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
                     .addTestDevice("E624D76F3DFE84D3E8E20B6C33C4A7C5")
+                    .addTestDevice("355FC8B9280C4AD8481AB322B403A089") //6x stock
                     .build();
             adView.loadAd(adRequest);
             adView.setVisibility(View.VISIBLE);

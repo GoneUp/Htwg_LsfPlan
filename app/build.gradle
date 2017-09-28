@@ -9,13 +9,13 @@ android {
             keyPassword System.getenv("LSFKEYPWD")
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 25
         versionName "2.3"
 
@@ -60,7 +60,9 @@ dependencies {
 
     compile 'org.mnode.ical4j:ical4j:1.0.6'
     compile 'org.jsoup:jsoup:1.7.3'
-    compile('com.mikepenz:aboutlibraries:5.9.4@aar') {
+    compile('com.mikepenz:aboutlibraries:5.9.7@aar') {
+        //support libarys are excluded due to the outdated versions used
+        exclude group: 'com.android.support'
         transitive = true
     }
 

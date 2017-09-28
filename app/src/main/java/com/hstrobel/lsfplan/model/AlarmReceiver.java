@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 
@@ -63,8 +64,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         cal.setTimeInMillis(CalenderUtils.getNextRecuringStartDate(events.get(0)).getTime()); //all should have the same start time
         cal.add(Calendar.MINUTE, -minutesBefore);
 
-        //DEBUG DEBUG REMOVE IT
-        if (state.settings.getBoolean("notifyDebug", false)) {
+        //notifyDebug is dev options
+        //sets the newxt alarm to trigger in 30 secs
+        if (state.settings.getBoolean(Constants.PREF_DEV_NOTIFY, false)) {
             cal.setTimeInMillis(new DateTime().getTime() + 30 * 1000);
             Log.w(TAG, "ScheduleNextEventNot: notifyDebug is on!!");
         }
@@ -163,6 +165,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         } catch (Exception ex) {
             Log.e(TAG, "onReceive: ", ex);
         }
+
     }
 
     private VEvent getEventForUid(String uid) {

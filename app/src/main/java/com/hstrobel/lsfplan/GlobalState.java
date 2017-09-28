@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v4.app.JobIntentService;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
@@ -80,6 +80,7 @@ public class GlobalState {
         }
 
         //Start the background service that downloads a new caleander from time to time
+        //TODO: move to jobscheduler, no timecritical background work
         SyncStart(c);
     }
 
@@ -108,6 +109,7 @@ public class GlobalState {
 
 
     public void SetNewCalendar(Context act) throws IOException, ParserException {
+        icsFile = icsLoader.getFile();
         updated = true;
         InitCalender(act, false);
 
@@ -140,9 +142,11 @@ public class GlobalState {
     }
 
     public void SyncStart(Context c) {
-        Intent mServiceIntent = new Intent(c, SyncService.class);
-        mServiceIntent.setData(Uri.parse(""));
-        c.startService(mServiceIntent);
+        Intent intent = new Intent();
+
+        //Rejecting re-init on previously-failed class java.lang.Class<android.support.v4.app.JobIntentService$JobServiceEngineImpl>: java.lang.NoClassDefFoundError: Failed resolution of: Landroid/app/job/JobServiceEngine;
+        //normal on pre oreo
+        JobIntentService.enqueueWork(c, SyncService.class, Constants.SYNC_SERVICE_ID, intent);
     }
 
     public int getCollege() {

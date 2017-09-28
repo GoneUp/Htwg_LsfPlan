@@ -32,7 +32,6 @@ import java.util.NoSuchElementException;
 public class CalenderUtils {
 
 
-    private static final int NOTIFICATION_ID = 59556488;
     private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
         public int compare(VEvent c1, VEvent c2) {
             return (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
