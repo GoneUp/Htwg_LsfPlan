@@ -74,7 +74,7 @@ Connection: Keep-Alive
                     .data("submit", "Anmelden");
             connection.post();
             Connection.Response response = connection.response();
-            Log.d("LSF", String.valueOf(response.method()));
+            Log.d(TAG, String.valueOf(response.method()));
 
             //get is successfull because it will redirect. if it fails we get a modified post response.
             if (response.method() == Connection.Method.GET) {

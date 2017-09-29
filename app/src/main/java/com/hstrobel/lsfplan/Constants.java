@@ -30,6 +30,8 @@ public class Constants {
     public static final String MAGIC_WORD_LOGIN = "#LOGIN#";
     public static final int NETWORK_TIMEOUT = 10 * 1000;
     public static final String NETWORK_USERAGENT = "Android_lsfapp";
+    public static final String CRYPTO_KEY_NAME = "KEY_DEFAULT";
+    public static final int CRYPTO_KEY_SIZE = 2048;
 
 
     public static final String CONTENT_TESTMODE_PLAN = "BEGIN:VCALENDAR\n" +
@@ -68,4 +70,5 @@ public class Constants {
             "CATEGORIES:Vorlesung/Übung\n" +
             "END:VEVENT\n" +
             "END:VCALENDAR\n";
+
 }
