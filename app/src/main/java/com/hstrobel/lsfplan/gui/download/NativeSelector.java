@@ -26,6 +26,7 @@ import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.gui.download.network.LoginProcess;
+import com.hstrobel.lsfplan.model.CryptoUtils;
 import com.hstrobel.lsfplan.model.Utils;
 
 import org.jsoup.Connection;
@@ -251,14 +252,24 @@ public class NativeSelector extends AbstractWebSelector {
         final EditText txtUsername = (EditText) login.findViewById(R.id.txtUsername);
         final EditText txtPassword = (EditText) login.findViewById(R.id.txtPassword);
 
-        boolean autoSave = state.settings.getBoolean("loginAutoSave", true);
+        boolean autoSave = state.settings.getBoolean(Constants.PREF_LOGIN_AUTOSAVE, true);
+        boolean useKeystore = state.settings.getBoolean(Constants.PREF_FLAG_KEYSTORE, true);
+
         box.setChecked(autoSave);
         if (autoSave) {
-            String user = state.settings.getString("loginUser", "");
-            String pw = state.settings.getString("loginPassword", "");
-            if (!user.equals("")) {
-                user = new String(Base64.decode(user, Base64.DEFAULT));
-                pw = new String(Base64.decode(pw, Base64.DEFAULT));
+            String user = "", pw = "";
+
+            if (useKeystore) {
+                user = CryptoUtils.getStoreField(this, Constants.PREF_LOGIN_USER);
+                pw = CryptoUtils.getStoreField(this, Constants.PREF_LOGIN_PASSWORD);
+
+            } else {
+                user = state.settings.getString(Constants.PREF_LOGIN_USER, "");
+                pw = state.settings.getString(Constants.PREF_LOGIN_PASSWORD, "");
+                if (!user.equals("")) {
+                    user = new String(Base64.decode(user, Base64.DEFAULT));
+                    pw = new String(Base64.decode(pw, Base64.DEFAULT));
+                }
             }
 
             txtUsername.setText(user);
@@ -284,11 +295,17 @@ public class NativeSelector extends AbstractWebSelector {
 
 
                 SharedPreferences.Editor editor = state.settings.edit();
-                editor.putBoolean("loginAutoSave", box.isChecked());
+                editor.putBoolean(Constants.PREF_LOGIN_AUTOSAVE, box.isChecked());
                 if (box.isChecked()) {
                     //Well, at least it's no cleartext ;)
-                    editor.putString("loginUser", Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
-                    editor.putString("loginPassword", Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
+                    if (useKeystore) {
+                        CryptoUtils.setStoreField(NativeSelector.this, Constants.PREF_LOGIN_USER, user);
+                        CryptoUtils.setStoreField(NativeSelector.this, Constants.PREF_LOGIN_PASSWORD, pw);
+                    } else {
+                        editor.putString(Constants.PREF_LOGIN_USER, Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
+                        editor.putString(Constants.PREF_LOGIN_PASSWORD, Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
+                    }
+
                 }
                 editor.apply();
             }

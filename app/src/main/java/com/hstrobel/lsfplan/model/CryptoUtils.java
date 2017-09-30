@@ -37,7 +37,7 @@ public class CryptoUtils {
 
             String encryptedData = state.settings.getString(getPrefFieldName(name), null);
 
-            if (encryptedData == null || key == null) return null;
+            if (encryptedData == null || key == null) return "";
             String decryptedData = crypto.decrypt(encryptedData, key.getPrivate(), false);
 
             Log.d(TAG, "getStoreField: decrypt " + decryptedData);

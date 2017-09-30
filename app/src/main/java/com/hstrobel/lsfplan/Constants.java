@@ -23,8 +23,13 @@ public class Constants {
     public static final int MODE_HTWG = 0;
     public static final int MODE_UNI_KN = 1;
     public static final int PREF_COLLEGE_DEFAULT = MODE_HTWG;
+    public static final String PREF_FLAG_KEYSTORE = "flagUseKeystore";
     public static final String PREF_DEV_NOTIFY = "debugNotify";
     public static final String PREF_DEV_SYNC = "debugSync";
+
+    public static final String PREF_LOGIN_AUTOSAVE = "loginAutoSave";
+    public static final String PREF_LOGIN_USER = "loginUser";
+    public static final String PREF_LOGIN_PASSWORD = "loginPassword";
 
     //Model stuff, misc
     public static final String MAGIC_WORD_LOGIN = "#LOGIN#";
