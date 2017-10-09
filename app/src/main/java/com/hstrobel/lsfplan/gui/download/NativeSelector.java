@@ -66,6 +66,7 @@ public class NativeSelector extends AbstractWebSelector {
                 loadExportUrl();
             }
         });
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -83,6 +84,7 @@ public class NativeSelector extends AbstractWebSelector {
             private View lastHighlight = null;
 
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                //mark active entry
                 TypedValue typedValue = new TypedValue();
                 getTheme().resolveAttribute(R.attr.background, typedValue, true);
 
@@ -92,6 +94,7 @@ public class NativeSelector extends AbstractWebSelector {
                 lastHighlight = v;
 
 
+                //get details
                 int group_index = parent.getFlatListPosition(ExpandableListView
                         .getPackedPositionForGroup(groupPosition));
                 int child_index = parent.getFlatListPosition(ExpandableListView
@@ -100,10 +103,14 @@ public class NativeSelector extends AbstractWebSelector {
 
                 selectedCourseGroup = (CourseGroup) parent.getItemAtPosition(group_index);
                 selectedCourse = (CourseGroup.Course) parent.getItemAtPosition(child_index);
+
+                //enable download button
+                fab.setVisibility(View.VISIBLE);
                 return true;
             }
 
         });
+
     }
 
 
