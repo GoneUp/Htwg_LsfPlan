@@ -55,27 +55,22 @@ public class NativeSelector extends AbstractWebSelector {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_html_web_selector);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadExportUrl();
-            }
-        });
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> loadExportUrl());
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         local = this;
-        listView = (ExpandableListView) findViewById(R.id.listView);
+        listView = findViewById(R.id.listView);
         listAdapter = new CourseListAdapter(this);
         listView.setAdapter(listAdapter);
 
-        spinner = (ProgressBar) findViewById(R.id.progressBarHtml);
+        spinner = findViewById(R.id.progressBarHtml);
 
         state = GlobalState.getInstance();
         loadOverview();
@@ -253,11 +248,11 @@ public class NativeSelector extends AbstractWebSelector {
         login.setTitle("Enter HTWG Login Data");
 
         // Init button of login GUI
-        final CheckBox box = (CheckBox) login.findViewById(R.id.checkSave);
-        final Button btnLogin = (Button) login.findViewById(R.id.btnLogin);
-        final Button btnCancel = (Button) login.findViewById(R.id.btnCancel);
-        final EditText txtUsername = (EditText) login.findViewById(R.id.txtUsername);
-        final EditText txtPassword = (EditText) login.findViewById(R.id.txtPassword);
+        final CheckBox box = login.findViewById(R.id.checkSave);
+        final Button btnLogin = login.findViewById(R.id.btnLogin);
+        final Button btnCancel = login.findViewById(R.id.btnCancel);
+        final EditText txtUsername = login.findViewById(R.id.txtUsername);
+        final EditText txtPassword = login.findViewById(R.id.txtPassword);
 
         boolean autoSave = state.settings.getBoolean(Constants.PREF_LOGIN_AUTOSAVE, true);
         boolean useKeystore = state.settings.getBoolean(Constants.PREF_FLAG_KEYSTORE, true);
@@ -285,44 +280,36 @@ public class NativeSelector extends AbstractWebSelector {
 
 
         // Attached listener for login GUI button
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String user = txtUsername.getText().toString().trim();
-                String pw = txtPassword.getText().toString().trim();
+        btnLogin.setOnClickListener(v -> {
+            String user = txtUsername.getText().toString().trim();
+            String pw = txtPassword.getText().toString().trim();
 
-                if (!user.isEmpty() && !pw.isEmpty()) {
-                    login.dismiss();
-                    //login
-                    enableLoading();
-
-                    loginProcess = new LoginProcess(local);
-                    loginProcess.execute(user, pw);
-                }
-
-
-                SharedPreferences.Editor editor = state.settings.edit();
-                editor.putBoolean(Constants.PREF_LOGIN_AUTOSAVE, box.isChecked());
-                if (box.isChecked()) {
-                    //Well, at least it's no cleartext ;)
-                    if (useKeystore) {
-                        CryptoUtils.setStoreField(NativeSelector.this, Constants.PREF_LOGIN_USER, user);
-                        CryptoUtils.setStoreField(NativeSelector.this, Constants.PREF_LOGIN_PASSWORD, pw);
-                    } else {
-                        editor.putString(Constants.PREF_LOGIN_USER, Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
-                        editor.putString(Constants.PREF_LOGIN_PASSWORD, Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
-                    }
-
-                }
-                editor.apply();
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            if (!user.isEmpty() && !pw.isEmpty()) {
                 login.dismiss();
+                //login
+                enableLoading();
+
+                loginProcess = new LoginProcess(local);
+                loginProcess.execute(user, pw);
             }
+
+
+            SharedPreferences.Editor editor = state.settings.edit();
+            editor.putBoolean(Constants.PREF_LOGIN_AUTOSAVE, box.isChecked());
+            if (box.isChecked()) {
+                //Well, at least it's no cleartext ;)
+                if (useKeystore) {
+                    CryptoUtils.setStoreField(NativeSelector.this, Constants.PREF_LOGIN_USER, user);
+                    CryptoUtils.setStoreField(NativeSelector.this, Constants.PREF_LOGIN_PASSWORD, pw);
+                } else {
+                    editor.putString(Constants.PREF_LOGIN_USER, Base64.encodeToString(user.getBytes(), Base64.DEFAULT));
+                    editor.putString(Constants.PREF_LOGIN_PASSWORD, Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
+                }
+
+            }
+            editor.apply();
         });
+        btnCancel.setOnClickListener(v -> login.dismiss());
 
         // Make dialog box visible.
         login.show();

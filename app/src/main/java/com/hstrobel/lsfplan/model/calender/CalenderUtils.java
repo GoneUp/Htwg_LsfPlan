@@ -32,11 +32,7 @@ import java.util.NoSuchElementException;
 public class CalenderUtils {
 
 
-    private static Comparator<VEvent> comparator = new Comparator<VEvent>() {
-        public int compare(VEvent c1, VEvent c2) {
-            return (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
-        }
-    };
+    private static Comparator<VEvent> comparator = (c1, c2) -> (timeWithoutDate(c1).compareTo(timeWithoutDate(c2)));
 
     public static List<VEvent> getEventsNextWeek(Calendar myCal) {
         java.util.Calendar today = java.util.Calendar.getInstance();
@@ -94,7 +90,7 @@ public class CalenderUtils {
 
     public static List<VEvent> getNextEvents(Calendar myCal, int minutesBefore) {
         DateTime startR = null;
-        List<VEvent> toReturn = new ArrayList<VEvent>();
+        List<VEvent> toReturn = new ArrayList<>();
         java.util.Date fewestTime = new java.util.Date(System.currentTimeMillis() + ((minutesBefore + 5) * 60 * 1000)); //07.45 + 15 min notify time + 5 min puffer, past cherck
 
         List events = getEventsNextWeek(myCal);

@@ -62,12 +62,7 @@
     <PreferenceCategory
         android:key="credits"
         android:title="@string/pref_cat_credits">
-        <!--
-        <Preference
-            android:key="info"
-            android:summary="@string/pref_description_info"
-            android:title="@string/pref_title_info" />
-            -->
+
         <PreferenceScreen
             android:key="dev_options"
             android:title="@string/dev_options">
@@ -98,6 +93,7 @@
 
         <Preference
             android:key="about"
-            android:title="About/Used Library's" />
+            android:title="@string/pref_title_about" />
+
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,7 +1,6 @@
 package com.hstrobel.lsfplan.gui.settings;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -17,6 +16,7 @@ import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.mikepenz.aboutlibraries.ui.LibsFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +26,7 @@ import java.util.GregorianCalendar;
  * Created by Henry on 28.09.2017.
  */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private UserSettings userSettings;
+    private static final String TAG = "LSF";
     private boolean notifyChanged = false;
     private GlobalState state = GlobalState.getInstance();
 
@@ -44,48 +44,48 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         onSharedPreferenceChanged(state.settings, "skipWeekend");
 
         Preference myPref = findPreference("reset");
-        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                SharedPreferences.Editor editor = state.settings.edit();
-                editor.clear();
-                editor.commit();
-                PreferenceManager.setDefaultValues(userSettings.getApplicationContext(), R.xml.settings, true);
-                state.initialized = false;
+        myPref.setOnPreferenceClickListener(preference -> {
+            SharedPreferences.Editor editor = state.settings.edit();
+            editor.clear();
+            editor.commit();
+            state.initialized = false;
+
+            if (getActivity() != null) {
+                PreferenceManager.setDefaultValues(getActivity().getApplicationContext(), R.xml.settings, true);
                 NavUtils.navigateUpFromSameTask(getActivity());
-                return true;
             }
+            return true;
         });
 
 
         myPref = findPreference("about");
-        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                new LibsBuilder()
-                        .withActivityStyle(Libs.ActivityStyle.LIGHT)
-                        .withAboutIconShown(true)
-                        .withAboutVersionShown(true)
-                        .withFields(R.string.class.getFields())
-                        .withAboutDescription("Created by Henry Strobel <hstrobel.dev@gmail.com> " + (BuildConfig.DEBUG ? "DEBUG" : ""))
-                        .start(getActivity());
-                return true;
-            }
-        });
+        myPref.setOnPreferenceClickListener(preference -> {
+            LibsFragment frag = new LibsBuilder()
+                    .withActivityStyle(Libs.ActivityStyle.LIGHT)
+                    .withAboutIconShown(true)
+                    .withAboutVersionShown(true)
+                    .withFields(R.string.class.getFields())
+                    .withAboutDescription("Created by Henry Strobel (hstrobel.dev@gmail.com)\n " + (BuildConfig.DEBUG ? "DEBUG" : ""))
+                    .fragment();
 
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, frag)
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+        });
 
         ListPreference newpref = (ListPreference) findPreference("college_pref");
         newpref.setTitle(R.string.pref_set_college);
         newpref.setSummary("");
         newpref.setEntries(new String[]{"HTWG", "UNI"});
         newpref.setEntryValues(new String[]{String.valueOf(Constants.MODE_HTWG), String.valueOf(Constants.MODE_UNI_KN)});
-        newpref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                if (o != null) {
-                    state.setCollege(Integer.parseInt((String) o));
-                    state.cachedPlans = null;
-                }
-                return true;
+        newpref.setOnPreferenceChangeListener((preference, o) -> {
+            if (o != null) {
+                state.setCollege(Integer.parseInt((String) o));
+                state.cachedPlans = null;
             }
+            return true;
         });
 
         newpref.setEnabled(BuildConfig.DEBUG);
@@ -125,16 +125,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         myPref = findPreference("enableRefresh");
         myPref.setSummary(String.format(getString(R.string.pref_description_refresh), d.format(syncTime.getTime())));
-
-
-        myPref = findPreference("info");
-        PackageInfo pInfo;
-        try {
-            pInfo = userSettings.getPackageManager().getPackageInfo(userSettings.getPackageName(), 0);
-            myPref.setSummary(getString(R.string.pref_description_info) + pInfo.versionName);
-        } catch (Exception e) {
-        }
-
     }
 
     @Override

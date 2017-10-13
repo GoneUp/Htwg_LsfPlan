@@ -6,7 +6,6 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -49,13 +48,10 @@ public class WebviewSelector extends AbstractWebSelector {
                 return false;
             }
         });
-        webView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                Log.d("LSF", "setDownloadListener");
-                state.icsLoader = new IcsFileDownloader(local, url);
-                new Thread(state.icsLoader).start();
-            }
+        webView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) -> {
+            Log.d("LSF", "setDownloadListener");
+            state.icsLoader = new IcsFileDownloader(local, url);
+            new Thread(state.icsLoader).start();
         });
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
@@ -93,11 +89,6 @@ public class WebviewSelector extends AbstractWebSelector {
     }
 
     protected void DisplayTost(final String text) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-            }
-        });
+        mHandler.post(() -> Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show());
     }
 }

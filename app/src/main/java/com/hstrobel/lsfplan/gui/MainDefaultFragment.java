@@ -26,12 +26,7 @@ public class MainDefaultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_def, container, false);
 
         Button downloadButton = (Button) view.findViewById(R.id.buttonIntro);
-        downloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((IOpenDownloader) getActivity()).openDownloader();
-            }
-        });
+        downloadButton.setOnClickListener(v -> ((IOpenDownloader) getActivity()).openDownloader());
 
         return view;
     }

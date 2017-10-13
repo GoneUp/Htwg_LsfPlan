@@ -8,6 +8,7 @@ public class Constants {
 
     //IDs
     public static final String INTENT_UPDATE_LIST = "INTENT_UPDATE_LIST";
+    public static final String INTENT_EXTRA_REFRESH = "INTENT_EXTRA_REFRESH";
     public static final int SYNC_SERVICE_ID = 133742;
     public static final String NOTIFICATION_CHANNEL_ALARMS_ID = "lsf_alarms";
 

@@ -81,7 +81,7 @@ public class GlobalState {
 
         //Start the background service that downloads a new caleander from time to time
         //TODO: move to jobscheduler, no timecritical background work
-        SyncStart(c);
+        SyncStart(c, false);
     }
 
     public void InitNotifications(final Context c) {
@@ -92,11 +92,7 @@ public class GlobalState {
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
-            new Thread(new Runnable() {
-                public void run() {
-                    AlarmReceiver.ScheduleNextEventNot(c, new Integer[0]);
-                }
-            }).start();
+            new Thread(() -> AlarmReceiver.ScheduleNextEventNot(c, new Integer[0])).start();
 
 
         } else {
@@ -141,8 +137,9 @@ public class GlobalState {
         return icsLoader.getFile() == null || !icsLoader.getFile().startsWith("BEGIN:VCALENDAR");
     }
 
-    public void SyncStart(Context c) {
+    public void SyncStart(Context c, boolean forceRefresh) {
         Intent intent = new Intent();
+        intent.putExtra(Constants.INTENT_EXTRA_REFRESH, forceRefresh);
 
         //Rejecting re-init on previously-failed class java.lang.Class<android.support.v4.app.JobIntentService$JobServiceEngineImpl>: java.lang.NoClassDefFoundError: Failed resolution of: Landroid/app/job/JobServiceEngine;
         //normal on pre oreo

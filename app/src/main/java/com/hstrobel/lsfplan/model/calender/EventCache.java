@@ -89,6 +89,4 @@ public class EventCache {
             return null;
         }
     }
-
-    ;
 }

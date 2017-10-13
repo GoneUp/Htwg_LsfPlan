@@ -13,6 +13,7 @@ import com.hstrobel.lsfplan.R;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Henry on 02.12.2015.
@@ -146,7 +147,7 @@ public class CourseListAdapter implements ExpandableListAdapter {
     public void addPlanItem(String groupName, String name, String url) {
         CourseGroup group = null;
         for (CourseGroup g : list) {
-            if (g.name == groupName) {
+            if (Objects.equals(g.name, groupName)) {
                 group = g;
                 break;
             }

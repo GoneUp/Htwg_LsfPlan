@@ -76,24 +76,16 @@ public class EventListAdapter extends ArrayAdapter<EventItem> {
 
         if (position == 0) {
             if (viewHolder.viewIconLeft != null) {
-                viewHolder.viewIconLeft.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainListFragment frag = (MainListFragment) v.getTag();
-                        frag.onDateDec();
-
-                    }
+                viewHolder.viewIconLeft.setOnClickListener(v -> {
+                    MainListFragment frag = (MainListFragment) v.getTag();
+                    frag.onDateDec();
 
                 });
             }
             if (viewHolder.viewIconRight != null) {
-                viewHolder.viewIconRight.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainListFragment frag = (MainListFragment) v.getTag();
-                        frag.onDateInc();
-                    }
-
+                viewHolder.viewIconRight.setOnClickListener(v -> {
+                    MainListFragment frag = (MainListFragment) v.getTag();
+                    frag.onDateInc();
                 });
             }
         }

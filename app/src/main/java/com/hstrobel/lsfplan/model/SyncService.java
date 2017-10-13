@@ -25,34 +25,30 @@ public class SyncService extends JobIntentService implements IDownloadCallback {
 
         try {
             Log.i(TAG, "onHandleWork: SyncS started");
+            GlobalState state = GlobalState.getInstance();
+
+            //force if dev flag is on or intent requested it
+            boolean forceRefresh = intent.getBooleanExtra(Constants.INTENT_EXTRA_REFRESH, false) || state.settings.getBoolean(Constants.PREF_DEV_SYNC, false);
 
             //if the user is already downloading something new we don't interfere
-            GlobalState state = GlobalState.getInstance();
             if (state.icsLoader != null)
                 return;
 
             if (!state.settings.getBoolean("gotICS", false))
                 return;
 
-            if (!state.settings.getBoolean("enableRefresh", false))
+            if (!state.settings.getBoolean("enableRefresh", false) && !forceRefresh)
                 return;
 
             long time_load = state.settings.getLong("ICS_DATE", Integer.MAX_VALUE);
             GregorianCalendar now = new GregorianCalendar();
-            //DEBUG REMOVE
-            //now.add(Calendar.YEAR, 5);
 
             GregorianCalendar syncExpire = new GregorianCalendar();
             syncExpire.setTimeInMillis(time_load);
             syncExpire.add(Calendar.WEEK_OF_YEAR, 1); //weekly syncs
 
 
-            boolean debugOverride = state.settings.getBoolean(Constants.PREF_DEV_SYNC, false);
-
-            if (now.getTimeInMillis() < syncExpire.getTimeInMillis() && !debugOverride) {
-                Log.i(TAG, "onHandleIntent: SyncS is already updated");
-
-            } else {
+            if (forceRefresh || now.getTimeInMillis() > syncExpire.getTimeInMillis()) {
                 String url = state.settings.getString("ICS_URL", "");
 
                 if (!url.isEmpty()) {
@@ -60,9 +56,13 @@ public class SyncService extends JobIntentService implements IDownloadCallback {
                     state.icsLoader = new IcsFileDownloader(this, url);
                     new Thread(state.icsLoader).start();
                 }
-            /*The new Thread is not really needed since we are already on background task,
-            but I wanted a single way to download the file from all classes.
-             */
+                /*The new Thread is not really needed since we are already on background task,
+                but I wanted a single way to download the file from all classes.
+                 */
+
+            } else {
+                Log.i(TAG, "onHandleIntent: SyncS is already updated");
+
             }
         } catch (Exception ex) {
             Log.e(TAG, "SyncS Intent: ", ex);

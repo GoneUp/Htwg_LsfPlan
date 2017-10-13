@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.hstrobel.lsfplan.GlobalState;
@@ -76,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
         } else if (id == R.id.action_setCalender) {
             openDownloader();
 
+        } else if (id == R.id.action_refreshCalendar) {
+            state.SyncStart(this, true);
+            Snackbar.make(findViewById(android.R.id.content), R.string.main_calendar_updating, Snackbar.LENGTH_SHORT).show();
+
         } else if (id == R.id.action_testNotfication) {
             if (state.myCal != null) {
                 List<VEvent> evs = CalenderUtils.getNextEvents(state.myCal, 0);
@@ -104,14 +110,16 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
         //present --> show info
 
         try {
+            View refreshMenuItem = findViewById(R.id.action_refreshCalendar);
             state.InitCalender(this, true);
 
             if (state.myCal == null) {
                 //show intro
                 getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, defaultFragment).commit();
-                //infoText.setText(R.string.main_noCalender);
+                refreshMenuItem.setVisibility(View.GONE);
             } else {
                 getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, listFragment).commit();
+                refreshMenuItem.setVisibility(View.VISIBLE);
             }
 
 

@@ -17,11 +17,11 @@
     <string name="webView_fileLoaded">Datei geladen!</string>
     <string name="webView_fileLoading">Download gestartet\nBitte warten.</string>
     <string name="webView_fileNotValid">Datei nicht valide!</string>
-    <string name="pref_soundMode_Silent">Still</string>
+    <string name="pref_soundMode_Silent">Lautlos</string>
     <string name="pref_soundMode_Sound">Ton</string>
     <string name="pref_soundMode_Vib">Vibration</string>
     <string name="pref_description_ads">Trinkgeld!</string>
-    <string name="pref_title_ads">Werbung aktivieren</string>
+    <string name="pref_title_ads">Werbung/Tracking aktivieren</string>
     <string name="title_activity_main">Vorlesungsplan</string>
     <string name="webView_HowToStep3">3. Der Download startet etwa nach ~10 secs</string>
     <string name="pref_title_refresh">Automatische Synchronisation</string>
@@ -45,5 +45,11 @@
     <string name="pref_skipweekend_days_desc">Nur Wochenendtage ohne Kurse überspringen</string>
     <string name="channel_name">Kursbenachrichtigungen</string>
     <string name="channel_description">Informiert den Nutzer über die nächsten Kurse</string>
+    <string name="pref_title_about">Über/Lizenzen</string>
+    <string name="action_setCalender" translatable="false">Plan herunterladen</string>
+    <string name="action_show_test_notification">Testbenachrichtigung</string>
+    <string name="action_synchronize_plan">"Plan aktualisieren "</string>
+    <string name="main_calendar_updated">"Plan erfolgreich aktualisiert! "</string>
+    <string name="main_calendar_updating">Aktualisiere...</string>
 
 </resources>

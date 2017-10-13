@@ -56,9 +56,8 @@ public class Utils {
     }
 
     public static Connection setupAppConnection(String url) {
-        Connection con = Jsoup.connect(url)
+        return Jsoup.connect(url)
                 .userAgent(Constants.NETWORK_USERAGENT)
                 .timeout(Constants.NETWORK_TIMEOUT);
-        return con;
     }
 }

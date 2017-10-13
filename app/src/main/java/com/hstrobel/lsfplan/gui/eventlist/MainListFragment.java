@@ -4,11 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.ListFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -62,13 +62,15 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent == null || intent.getAction() == null)
+                return;
+            ;
             if (intent.getAction().equals(Constants.INTENT_UPDATE_LIST)) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateContent();
-                    }
-                });
+                getActivity().runOnUiThread(() -> {
+                            updateContent();
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.main_calendar_updated, Snackbar.LENGTH_SHORT).show();
+                        }
+                );
             }
         }
     };
@@ -214,13 +216,11 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
             ad.setMessage(message);
             ad.setPositiveButton("Ok", null);
-            if (isMathe && eastereggCounter > 0)
-                ad.setNeutralButton("...", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getActivity(), "Mathe. Burn in hell. Slowly.", Toast.LENGTH_SHORT).show();
-                    }
+            if (isMathe) {
+                ad.setNeutralButton("\uD83D\uDE10", (dialogInterface, i) -> {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Mathe. Burn in hell. Slowly.", Snackbar.LENGTH_SHORT).show();
                 });
+            }
 
             ad.create().show();
 
