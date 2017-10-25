@@ -9,15 +9,15 @@ android {
             keyPassword System.getenv("LSFKEYPWD")
         }
     }
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
 
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 27
-        versionName "2.3"
+        targetSdkVersion 27
+        versionCode 28
+        versionName "2.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
