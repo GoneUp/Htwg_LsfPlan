@@ -57,13 +57,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
@@ -71,18 +64,20 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/proguard-rules" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 27 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -93,16 +88,17 @@
     <orderEntry type="library" scope="TEST" name="org.bouncycastle:bcprov-jdk16:1.46@jar" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-26.1.0" level="project" />
     <orderEntry type="library" name="com.yakivmospan:scytale-1.0.1" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-ads-11.4.2" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-analytics-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.codehaus.plexus:plexus-interpolation:1.11@jar" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:common:1.0.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.ow2.asm:asm-tree:5.0.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-repository-metadata:2.2.1@jar" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-base-15.0.0" level="project" />
     <orderEntry type="library" name="android.arch.lifecycle:runtime-1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven.wagon:wagon-http-shared:1.0-beta-6@jar" level="project" />
     <orderEntry type="library" name="com.android.support:appcompat-v7-26.1.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-basement-license-11.4.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-annotations:26.1.0@jar" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-stats-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:2.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.google.guava:guava:20.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.ant:ant-launcher:1.8.0@jar" level="project" />
@@ -113,34 +109,27 @@
     <orderEntry type="library" name="com.android.support:support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-project:2.2.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.ow2.asm:asm-analysis:5.0.1@jar" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-iid-11.4.2" level="project" />
     <orderEntry type="library" name="org.mnode.ical4j:ical4j:1.0.6@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.objenesis:objenesis:2.1@jar" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-basement-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.hamcrest:hamcrest-core:1.3@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-compat-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.ow2.asm:asm:5.0.1@jar" level="project" />
     <orderEntry type="library" name="com.mikepenz:fastadapter-2.6.2" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-common-11.4.2" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-ant-tasks:2.1.3@jar" level="project" />
     <orderEntry type="library" name="android.arch.core:common:1.0.0@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-11.4.2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-11.4.2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-license-11.4.2" level="project" />
+    <orderEntry type="library" name="com.android.support:customtabs-26.1.0" level="project" />
     <orderEntry type="library" name="commons-codec:commons-codec:1.8@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="nekohtml:nekohtml:1.9.6.2@jar" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-core-11.4.2" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-common-license-11.4.2" level="project" />
     <orderEntry type="library" scope="TEST" name="org.robolectric:robolectric:3.2.2@jar" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-gass-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.robolectric:robolectric-resources:3.2.2@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-11.4.2" level="project" />
     <orderEntry type="library" name="com.android.support:transition-26.1.0" level="project" />
     <orderEntry type="library" name="com.android.support:design-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-artifact:2.2.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.codehaus.plexus:plexus-container-default:1.0-alpha-9-stable-1@jar" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-11.4.2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-license-11.4.2" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-iid-license-11.4.2" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-model:2.2.1@jar" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-iid-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="junit:junit:4.12@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.robolectric:robolectric-utils:3.2.2@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-fragment-26.1.0" level="project" />
@@ -152,33 +141,35 @@
     <orderEntry type="library" scope="TEST" name="com.google.protobuf:protobuf-java:2.6.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.ant:ant:1.8.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.codehaus.plexus:plexus-utils:1.5.15@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-basement-11.4.2" level="project" />
     <orderEntry type="library" name="org.jsoup:jsoup:1.10.2@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.mockito:mockito-core:1.10.19@jar" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-11.4.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-error-diagnostics:2.2.1@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-license-11.4.2" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven.wagon:wagon-file:1.0-beta-6@jar" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-tasks-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="com.thoughtworks.xstream:xstream:1.4.8@jar" level="project" />
     <orderEntry type="library" name="com.mikepenz:iconics-core-2.9.0" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-measurement-base-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="com.almworks.sqlite4java:sqlite4java:0.282@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.robolectric:shadows-core:3.2.2@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven.wagon:wagon-provider-api:1.0-beta-6@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-artifact-manager:2.2.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.ibm.icu:icu4j:53.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.hamcrest:hamcrest-library:1.3@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-gass-license-11.4.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-lite-15.0.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="xmlpull:xmlpull:1.1.3.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="xpp3:xpp3_min:1.1.4c@jar" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-core-15.0.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-15.0.0" level="project" />
     <orderEntry type="library" name="com.android.support:animated-vector-drawable-26.1.0" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-identifier-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="classworlds:classworlds:1.1-alpha-2@jar" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-impl-license-11.4.2" level="project" />
+    <orderEntry type="library" name="com.google.android.gms:play-services-ads-15.0.0" level="project" />
     <orderEntry type="library" name="com.android.support:cardview-v7-26.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-plugin-registry:2.2.1@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-gass-11.4.2" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-ads-15.0.0" level="project" />
+    <orderEntry type="library" name="com.google.firebase:firebase-common-15.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="org.apache.maven:maven-settings:2.2.1@jar" level="project" />
-    <orderEntry type="library" name="com.google.firebase:firebase-analytics-license-11.4.2" level="project" />
   </component>
 </module>

@@ -1,16 +1,21 @@
 apply plugin: 'com.android.application'
 
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         config {
-            keyAlias 'LsfPlanKey'
-            storeFile file('I:/Henry/Dokumente/Persönlich/android_keys.jks')
-            storePassword System.getenv("KSTOREPWD")
-            keyPassword System.getenv("LSFKEYPWD")
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
@@ -55,8 +60,8 @@ dependencies {
     implementation "com.android.support:design:${androidSupportLibraryVersion}"
     implementation "com.android.support:support-annotations:${androidSupportLibraryVersion}"
 
-    implementation 'com.google.firebase:firebase-core:11.4.2'
-    implementation 'com.google.firebase:firebase-ads:11.4.2'
+    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-ads:15.0.0'
 
     implementation ('org.mnode.ical4j:ical4j:1.0.6'){
         exclude group: 'commons-logging'
