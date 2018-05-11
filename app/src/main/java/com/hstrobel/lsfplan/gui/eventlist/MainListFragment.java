@@ -20,10 +20,6 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
@@ -45,7 +41,6 @@ import java.util.List;
 public class MainListFragment extends ListFragment implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = "LSF";
 
-    private AdView adView;
 
     private List<EventItem> mItems;        // ListView items list
     private EventListAdapter listAdapter;
@@ -74,14 +69,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
             }
         }
     };
-    private AdListener adListener = new AdListener() {
-        @Override
-        public void onAdFailedToLoad(int i) {
-            super.onAdFailedToLoad(i);
-            //hide ad
-            adView.setVisibility(View.GONE);
-        }
-    };
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,20 +90,9 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_listview, container, false);
 
-        initAd(view);
         return view;
     }
 
-    private boolean areAdsEnabled() {
-        return state.settings.getBoolean("enableAds", false);
-    }
-
-    private void initAd(View view) {
-        //Ads
-        adView = (AdView) view.findViewById(R.id.adView);
-        adView.setAdListener(adListener);
-        adView.setVisibility(View.GONE);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -148,43 +125,17 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
         skipWeekend = state.settings.getBoolean("skipWeekend", false);
         skipOnlyEmptyDays = state.settings.getBoolean("skipWeekendDaysWithoutEvents", false);
 
-        //Ads meh
-        if (areAdsEnabled()) {
-            MobileAds.initialize(getActivity().getApplicationContext(), getString(R.string.firebase_id));
-            MobileAds.setAppMuted(true);
-
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("2FF92E008889C6976B3F697DE3CB318A") //find 7
-                    .addTestDevice("E624D76F3DFE84D3E8E20B6C33C4A7C5")
-                    .addTestDevice("355FC8B9280C4AD8481AB322B403A089") //6x stock
-                    .build();
-            adView.loadAd(adRequest);
-            adView.setVisibility(View.VISIBLE);
-        } else {
-            adView.setVisibility(View.GONE);
-        }
-
-        if (adView != null) {
-            adView.resume();
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(broadcastReceiver);
-        if (adView != null) {
-            adView.pause();
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (adView != null) {
-            adView.destroy();
-        }
     }
 
     @Override

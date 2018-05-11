@@ -10,11 +10,6 @@
             android:summary="@string/pref_description_refresh"
             android:title="@string/pref_title_refresh" />
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="enableAds"
-            android:summary="@string/pref_description_ads"
-            android:title="@string/pref_title_ads" />
-        <CheckBoxPreference
             android:defaultValue="false"
             android:key="enableOldDL"
             android:summary="@string/pref_description_dl"

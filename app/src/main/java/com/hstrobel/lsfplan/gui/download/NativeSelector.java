@@ -19,7 +19,6 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
@@ -166,16 +165,6 @@ public class NativeSelector extends AbstractWebSelector {
             content = content.substring(0, Constants.FB_MAX_LENGTH);
         }
 
-
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Constants.FB_CONTENT_DL);
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, content);
-
-        GlobalState state = GlobalState.getInstance();
-        state.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-        state.firebaseAnalytics.setUserProperty(Constants.FB_PROP_CATEGORY, selectedCourseGroup.name);
-        state.firebaseAnalytics.setUserProperty(Constants.FB_PROP_SPECIFIC, selectedCourse.name);
     }
 
     public void loginCallback(String loginCookie) {

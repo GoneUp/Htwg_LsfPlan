@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.JobIntentService;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
 import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
@@ -41,7 +40,6 @@ public class GlobalState {
     public boolean updated = false;
     public Calendar myCal = null;
     public List<CourseGroup> cachedPlans = null;
-    public FirebaseAnalytics firebaseAnalytics;
 
     public static GlobalState getInstance() {
         if (instance == null) {
@@ -62,8 +60,6 @@ public class GlobalState {
                 icsFile = settings.getString("ICS_FILE", "");
                 updated = true;
             }
-            firebaseAnalytics = FirebaseAnalytics.getInstance(c);
-            firebaseAnalytics.setAnalyticsCollectionEnabled(settings.getBoolean("enableAds", false));
             initialized = true;
         }
 

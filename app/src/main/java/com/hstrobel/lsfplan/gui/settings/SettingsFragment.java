@@ -9,7 +9,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
@@ -144,11 +143,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         if (notifyChanged) {
             String info = String.format("%s_%s", String.valueOf(state.settings.getBoolean("enableNotifications", false)), state.settings.getString("notfiyTime", "15"));
-
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Constants.FB_CONTENT_NOTIFY);
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, info);
-            state.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         }
     }
 }
