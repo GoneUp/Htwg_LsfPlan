@@ -8,6 +8,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.BuildConfig;
@@ -101,6 +102,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case "notfiyTime":
+                if (TextUtils.isEmpty(state.settings.getString("notfiyTime", "15"))) {
+                    //prevent empty field
+                    state.settings.edit().putString("notfiyTime", "0").apply();
+                }
             case "enableNotifications":
                 state.InitNotifications(getActivity());
 

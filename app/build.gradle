@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
@@ -55,8 +55,9 @@ dependencies {
     implementation "com.android.support:design:${androidSupportLibraryVersion}"
     implementation "com.android.support:support-annotations:${androidSupportLibraryVersion}"
 
-    implementation 'com.google.firebase:firebase-core:11.4.2'
-    implementation 'com.google.firebase:firebase-ads:11.4.2'
+    implementation "com.google.firebase:firebase-core:${firebaseVersion}"
+    implementation "com.google.firebase:firebase-ads:${firebaseVersion}"
+    implementation "com.google.firebase:firebase-messaging:${firebaseVersion}"
 
     implementation ('org.mnode.ical4j:ical4j:1.0.6'){
         exclude group: 'commons-logging'
@@ -80,7 +81,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     // testImplementation "org.robolectric:shadows-play-services:$robolectricVersion"
     testImplementation "org.robolectric:shadows-support-v4:$robolectricVersion"
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.mockito:mockito-core:2.7.19'
 
 
 }

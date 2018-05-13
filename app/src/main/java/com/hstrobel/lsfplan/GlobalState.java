@@ -7,8 +7,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.JobIntentService;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
 import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
@@ -55,6 +58,8 @@ public class GlobalState {
         if (!initialized) {
             //Try to load from file
             settings = PreferenceManager.getDefaultSharedPreferences(c);
+            fixInvalidSettingEntries();
+
             cachedPlans = null;
             myCal = null;
             if (settings.getBoolean("gotICS", false)) {
@@ -62,8 +67,14 @@ public class GlobalState {
                 icsFile = settings.getString("ICS_FILE", "");
                 updated = true;
             }
+
+            boolean tracking = settings.getBoolean("enableAds", false);
             firebaseAnalytics = FirebaseAnalytics.getInstance(c);
-            firebaseAnalytics.setAnalyticsCollectionEnabled(settings.getBoolean("enableAds", false));
+            firebaseAnalytics.setAnalyticsCollectionEnabled(tracking);
+            if (tracking) {
+                String token = FirebaseInstanceId.getInstance().getToken();
+                Log.i(TAG, "FB token: " + token);
+            }
             initialized = true;
         }
 
@@ -160,5 +171,13 @@ public class GlobalState {
         edit.putInt(Constants.PREF_COLLEGE, mode);
         edit.apply();
     }
+
+    private void fixInvalidSettingEntries() {
+        if (TextUtils.isEmpty(settings.getString("notfiyTime", "15"))) {
+            //prevent empty field
+            settings.edit().putString("notfiyTime", "0").apply();
+        }
+    }
+
 
 }

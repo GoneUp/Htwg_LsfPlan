@@ -11,6 +11,7 @@ public class Constants {
     public static final String INTENT_EXTRA_REFRESH = "INTENT_EXTRA_REFRESH";
     public static final int SYNC_SERVICE_ID = 133742;
     public static final String NOTIFICATION_CHANNEL_ALARMS_ID = "lsf_alarms";
+    public static final String NOTIFICATION_CHANNEL_REMOTE_ID = "lsf_remote";
 
     //Firebase
     public static final String FB_PROP_CATEGORY = "course_category";
