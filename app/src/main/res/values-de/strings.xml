@@ -51,5 +51,7 @@
     <string name="action_synchronize_plan">"Plan aktualisieren "</string>
     <string name="main_calendar_updated">"Plan erfolgreich aktualisiert! "</string>
     <string name="main_calendar_updating">Aktualisiere...</string>
+    <string name="channel_remote_name">Generelle Benachrichtigungen</string>
+    <string name="channel_remote_description">Hauptsächlich Infos und News vom Entwickler</string>
 
 </resources>

@@ -84,13 +84,18 @@ public class NotificationUtils {
         return 0;
     }
 
-    public static String formatEventLong(VEvent event, Context c) {
+
+    public static String formatEveningBriefing(VEvent event[], Context c) {
+
+    }
+
+    public static String formatEventReminderLong(VEvent event, Context c) {
         String topic = getTopic(event);
-        String room_time = formatEventShort(event, c);
+        String room_time = formatEventReminderShort(event, c);
         return String.format(c.getString(R.string.notification_long), topic) + room_time;
     }
 
-    public static String formatEventShort(VEvent event, Context c) {
+    public static String formatEventReminderShort(VEvent event, Context c) {
         Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
         Date time_start = CalenderUtils.getNextRecuringStartDate(event, CalenderUtils.dateWithOutTime(event));
         Date time_end = d.getTime(time_start);
@@ -134,9 +139,9 @@ public class NotificationUtils {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ALARMS_ID)
                 .setContentTitle(context.getString(R.string.notification_title)) // title for notification
-                .setContentText(formatEventShort(event, context)) // message for notification
+                .setContentText(formatEventReminderShort(event, context)) // message for notification
                 .setAutoCancel(true) // clear notification after click
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventLong(event, context)))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventReminderLong(event, context)))
                 .setDefaults(soundMode)
                 .setCategory(NotificationCompat.CATEGORY_EVENT);
 

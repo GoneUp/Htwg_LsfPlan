@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.JobIntentService;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
 import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
@@ -53,6 +55,8 @@ public class GlobalState {
         if (!initialized) {
             //Try to load from file
             settings = PreferenceManager.getDefaultSharedPreferences(c);
+            fixInvalidSettingEntries();
+
             cachedPlans = null;
             myCal = null;
             if (settings.getBoolean("gotICS", false)) {
@@ -156,5 +160,13 @@ public class GlobalState {
         edit.putInt(Constants.PREF_COLLEGE, mode);
         edit.apply();
     }
+
+    private void fixInvalidSettingEntries() {
+        if (TextUtils.isEmpty(settings.getString("notfiyTime", "15"))) {
+            //prevent empty field
+            settings.edit().putString("notfiyTime", "0").apply();
+        }
+    }
+
 
 }

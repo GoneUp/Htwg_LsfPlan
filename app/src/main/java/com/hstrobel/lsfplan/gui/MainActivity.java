@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.hstrobel.lsfplan.GlobalState;
@@ -32,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
     public MainListFragment listFragment;
     private SharedPreferences preferences;
     private GlobalState state = GlobalState.getInstance();
+    private Menu optionsMenu;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        optionsMenu = menu;
         return true;
     }
 
@@ -79,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
             openDownloader();
 
         } else if (id == R.id.action_refreshCalendar) {
+            //no sync if we dont have a calendar
+            if (state.myCal == null)
+                return true;
+
             state.SyncStart(this, true);
             Snackbar.make(findViewById(android.R.id.content), R.string.main_calendar_updating, Snackbar.LENGTH_SHORT).show();
 
@@ -106,20 +111,17 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
         super.onResume();
 
         //check for calender
-        //not present --> info text
-        //present --> show info
+        //not present --> intro text
+        //present --> load info view
 
         try {
-            View refreshMenuItem = findViewById(R.id.action_refreshCalendar);
             state.InitCalender(this, true);
 
             if (state.myCal == null) {
                 //show intro
                 getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, defaultFragment).commit();
-                refreshMenuItem.setVisibility(View.GONE);
             } else {
                 getFragmentManager().beginTransaction().replace(R.id.mainFragmentContainer, listFragment).commit();
-                refreshMenuItem.setVisibility(View.VISIBLE);
             }
 
 

@@ -1,7 +1,6 @@
 package com.hstrobel.lsfplan.model;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -21,14 +20,18 @@ public class SyncService extends JobIntentService implements IDownloadCallback {
     private static String TAG = "LSF";
 
     @Override
-    protected void onHandleWork(@NonNull Intent intent) {
+    protected void onHandleWork(Intent intent) {
 
         try {
             Log.i(TAG, "onHandleWork: SyncS started");
             GlobalState state = GlobalState.getInstance();
 
             //force if dev flag is on or intent requested it
-            boolean forceRefresh = intent.getBooleanExtra(Constants.INTENT_EXTRA_REFRESH, false) || state.settings.getBoolean(Constants.PREF_DEV_SYNC, false);
+            boolean forceRefresh = state.settings.getBoolean(Constants.PREF_DEV_SYNC, false);
+            if (intent != null) {
+                forceRefresh = forceRefresh || intent.getBooleanExtra(Constants.INTENT_EXTRA_REFRESH, false);
+            }
+
 
             //if the user is already downloading something new we don't interfere
             if (state.icsLoader != null)

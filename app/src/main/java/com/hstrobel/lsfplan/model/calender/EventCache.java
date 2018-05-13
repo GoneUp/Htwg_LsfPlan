@@ -1,8 +1,10 @@
 package com.hstrobel.lsfplan.model.calender;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.GlobalState;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -73,10 +75,18 @@ public class EventCache {
     }
 
     private void generateDay(java.util.Calendar day) {
-        List<VEvent> evs = CalenderUtils.getEventsForDay(GlobalState.getInstance().myCal, day);
-        CalenderUtils.sortEvents(evs);
+        try {
+            List<VEvent> evs = CalenderUtils.getEventsForDay(GlobalState.getInstance().myCal, day);
+            CalenderUtils.sortEvents(evs);
 
-        cache.put(day, evs);
+            cache.put(day, evs);
+        } catch (Exception ex) {
+            Log.e(TAG, "generateDay failed", ex);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, ex.toString());
+            GlobalState.getInstance().firebaseAnalytics.logEvent("LOG", bundle);
+        }
     }
 
 

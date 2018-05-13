@@ -199,7 +199,7 @@ public class MainListFragment extends ListFragment implements DatePickerDialog.O
                 for (VEvent ev : evs) {
                     listAdapter.add(new EventItem(icon_book, null,
                             NotificationUtils.getTopic(ev),
-                            NotificationUtils.formatEventShort(ev, getActivity()), this, ev));
+                            NotificationUtils.formatEventReminderShort(ev, getActivity()), this, ev));
                 }
             }
         } catch (Exception ex) {
