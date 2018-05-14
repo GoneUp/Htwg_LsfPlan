@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements IOpenDownloader {
             if (state.myCal != null) {
                 List<VEvent> evs = CalenderUtils.getNextEvents(state.myCal, 0);
                 for (VEvent ev : evs) {
-                    NotificationUtils.showNotification(ev, this);
+                    NotificationUtils.showEventNotification(ev, this);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "No plan, no notifications ;)", Toast.LENGTH_SHORT).show();

@@ -24,6 +24,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
@@ -85,11 +86,18 @@ public class NotificationUtils {
     }
 
 
-    public static String formatEveningBriefing(VEvent event[], Context c) {
+    public static String formatEveningBriefing(List<VEvent> eventList, Context c) {
+        StringBuilder sb = new StringBuilder();
 
+        for (int i = 0; i < Constants.NOTIFY_BRIEFING_COUNT; i++) {
+            sb.append(formatEventReminderLong(eventList.get(i), c));
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 
-    public static String formatEventReminderLong(VEvent event, Context c) {
+    private static String formatEventReminderLong(VEvent event, Context c) {
         String topic = getTopic(event);
         String room_time = formatEventReminderShort(event, c);
         return String.format(c.getString(R.string.notification_long), topic) + room_time;
@@ -117,7 +125,27 @@ public class NotificationUtils {
     }
 
 
-    public static int showNotification(VEvent event, Context context) {
+    public static int showEventNotification(VEvent event, Context context) {
+        String title = context.getString(R.string.notification_title);
+        String textShort = formatEventReminderShort(event, context);
+        String textLong = formatEventReminderLong(event, context);
+
+        return showNotification(title, textShort, textLong, context);
+    }
+
+    public static int showBriefingNotification(List<VEvent> event, Context context) {
+        String title = context.getString(R.string.notification_briefing_title);
+        String textLong = formatEveningBriefing(event, context);
+
+        return showNotification(title, textLong, textLong, context);
+    }
+
+
+    private static int showNotification(String title, String textShort, String textLong, Context context) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (mNotificationManager == null) return 0;
+
         String mode = GlobalState.getInstance().settings.getString("soundMode", "");
         int soundMode = NotificationCompat.DEFAULT_LIGHTS;
 
@@ -137,11 +165,12 @@ public class NotificationUtils {
             createNotificationChannel(context, mode.equals("Vibrate") || mode.equals("Sound"));
         }
 
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ALARMS_ID)
-                .setContentTitle(context.getString(R.string.notification_title)) // title for notification
-                .setContentText(formatEventReminderShort(event, context)) // message for notification
+                .setContentTitle(title) // title for notification
+                .setContentText(textShort) // message for notification
                 .setAutoCancel(true) // clear notification after click
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(formatEventReminderLong(event, context)))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(textLong))
                 .setDefaults(soundMode)
                 .setCategory(NotificationCompat.CATEGORY_EVENT);
 
@@ -157,8 +186,6 @@ public class NotificationUtils {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pi);
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(notificationId, builder.build());
 
         return notificationId;
@@ -168,6 +195,7 @@ public class NotificationUtils {
     private static void createNotificationChannel(Context context, boolean vibrate) {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (mNotificationManager == null) return;
 
         //User visible
         CharSequence name = context.getString(R.string.channel_name);
@@ -187,6 +215,11 @@ public class NotificationUtils {
 
     static void killNotification(int id, Context context) {
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (mNotificationManager == null) return;
+
         mNotificationManager.cancel(id);
+
     }
+
+
 }

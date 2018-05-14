@@ -75,7 +75,13 @@
                 android:key="flagUseKeystore"
                 android:title="flagUseKeystore" />
             <ListPreference android:key="college_pref" />
+
+            <Preference
+                android:key="btnShowBriefing"
+                android:title="Show next briefing" />
         </PreferenceScreen>
+
+
         <Preference
             android:key="github"
             android:title="@string/pref_github_info">

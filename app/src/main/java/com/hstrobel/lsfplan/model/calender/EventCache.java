@@ -1,10 +1,8 @@
 package com.hstrobel.lsfplan.model.calender;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hstrobel.lsfplan.GlobalState;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -82,10 +80,6 @@ public class EventCache {
             cache.put(day, evs);
         } catch (Exception ex) {
             Log.e(TAG, "generateDay failed", ex);
-
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, ex.toString());
-            GlobalState.getInstance().firebaseAnalytics.logEvent("LOG", bundle);
         }
     }
 

@@ -53,5 +53,7 @@
     <string name="main_calendar_updating">Aktualisiere...</string>
     <string name="channel_remote_name">Generelle Benachrichtigungen</string>
     <string name="channel_remote_description">Hauptsächlich Infos und News vom Entwickler</string>
+    <string name="html_login_explainer">Bitte geben sie hier ihre HTWG Logindaten ein, diese sind nötig um den persönlichen Plan herunterzuladen. Wenn die Daten gespeichert werden sollen passiert das verschlüsselt auf dem lokalen Gerät.</string>
+    <string name="notification_briefing_title">Briefing</string>
 
 </resources>

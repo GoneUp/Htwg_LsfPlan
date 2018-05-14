@@ -13,13 +13,6 @@ public class Constants {
     public static final String NOTIFICATION_CHANNEL_ALARMS_ID = "lsf_alarms";
     public static final String NOTIFICATION_CHANNEL_REMOTE_ID = "lsf_remote";
 
-    //Firebase
-    public static final String FB_PROP_CATEGORY = "course_category";
-    public static final String FB_PROP_SPECIFIC = "course_specific";
-    public static final int FB_MAX_LENGTH = 99;
-    public static final String FB_CONTENT_NOTIFY = "notify";
-    public static final String FB_CONTENT_DL = "download";
-
     //Settings
     public static final String PREF_COLLEGE = "college";
     public static final int MODE_HTWG = 0;
@@ -39,6 +32,9 @@ public class Constants {
     public static final String NETWORK_USERAGENT = "Android_lsfapp";
     public static final String CRYPTO_KEY_NAME = "KEY_DEFAULT";
     public static final int CRYPTO_KEY_SIZE = 2048;
+    public static final int NOTIFY_BRIEFING_COUNT = 2;
+
+
 
 
     public static final String CONTENT_TESTMODE_PLAN = "BEGIN:VCALENDAR\n" +

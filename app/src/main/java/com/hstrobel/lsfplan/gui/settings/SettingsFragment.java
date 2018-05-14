@@ -14,13 +14,19 @@ import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.model.NotificationUtils;
+import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.aboutlibraries.ui.LibsFragment;
 
+import net.fortuna.ical4j.model.component.VEvent;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Created by Henry on 28.09.2017.
@@ -78,6 +84,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         ListPreference newpref = (ListPreference) findPreference("college_pref");
         newpref.setTitle(R.string.pref_set_college);
         newpref.setSummary("");
+        newpref.setEnabled(true);
         newpref.setEntries(new String[]{"HTWG", "UNI"});
         newpref.setEntryValues(new String[]{String.valueOf(Constants.MODE_HTWG), String.valueOf(Constants.MODE_UNI_KN)});
         newpref.setOnPreferenceChangeListener((preference, o) -> {
@@ -88,7 +95,22 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             return true;
         });
 
-        newpref.setEnabled(BuildConfig.DEBUG);
+
+        myPref = findPreference("btnShowBriefing");
+        myPref.setOnPreferenceClickListener(preference -> {
+            Calendar cal = new GregorianCalendar();
+            cal.add(Calendar.DAY_OF_WEEK, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+
+            List<VEvent> list = CalenderUtils.getEventsForDay(GlobalState.getInstance().myCal, cal);
+            CalenderUtils.sortEvents(list);
+
+            NotificationUtils.showBriefingNotification(list, getActivity());
+
+            return true;
+        });
+
 
         PreferenceCategory credits = (PreferenceCategory) findPreference("credits");
         if (!BuildConfig.DEBUG) {

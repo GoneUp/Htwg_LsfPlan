@@ -154,7 +154,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         continue;
                     }
 
-                    int id = NotificationUtils.showNotification(event, context);
+                    int id = NotificationUtils.showEventNotification(event, context);
                     notifyIDs.add(id);
                 }
             } else {

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.JobIntentService;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hstrobel.lsfplan.gui.download.CourseGroup;
 import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;

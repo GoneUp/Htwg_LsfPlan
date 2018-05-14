@@ -69,6 +69,7 @@
 
     <!-- Misc -->
     <string name="notification_title">Next lecture</string>
+    <string name="notification_briefing_title">Evening briefing</string>
     <string name="notification_long" formatted="false">Topic: %s - </string>
     <string name="notification_short" formatted="false"> Time: %s to %s - Room: %s</string>
     <string name="icon_content_description" translatable="false">Desc</string>
@@ -116,6 +117,7 @@
     <string name="action_synchronize_plan">Synchronize Plan</string>
     <string name="main_calendar_updated">Successfully synchronized the schedule!</string>
     <string name="main_calendar_updating">Synchronizing schedule..</string>
+    <string name="html_login_explainer">Please enter your HTWG login data. We need it to login at the server and download your personal plan. If you choose to save it it will stored encrypted on your local device.</string>
 
 
 </resources>

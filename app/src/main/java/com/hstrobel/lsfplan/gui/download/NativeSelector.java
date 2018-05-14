@@ -147,9 +147,6 @@ public class NativeSelector extends AbstractWebSelector {
         if (selectedCourse.URL.equals(Constants.MAGIC_WORD_LOGIN)) {
             showLoginForm();
         } else {
-            //Tracking
-            logDownload();
-
             //UI
             enableLoading();
 
@@ -158,14 +155,6 @@ public class NativeSelector extends AbstractWebSelector {
         }
     }
 
-    private void logDownload() {
-        //limit size
-        String content = (selectedCourseGroup.name + "_" + selectedCourse.name);
-        if (content.length() > Constants.FB_MAX_LENGTH) {
-            content = content.substring(0, Constants.FB_MAX_LENGTH);
-        }
-
-    }
 
     public void loginCallback(String loginCookie) {
         if (loginCookie == null) {
