@@ -21,6 +21,9 @@ public class Constants {
     public static final String PREF_FLAG_KEYSTORE = "flagUseKeystore";
     public static final String PREF_DEV_NOTIFY = "debugNotify";
     public static final String PREF_DEV_SYNC = "debugSync";
+    public static final String PREF_BRIEFING_ENABLED = "enableBriefing";
+    public static final String PREF_BRIEFING_TIME = "briefingTime";
+
 
     public static final String PREF_LOGIN_AUTOSAVE = "loginAutoSave";
     public static final String PREF_LOGIN_USER = "loginUser";

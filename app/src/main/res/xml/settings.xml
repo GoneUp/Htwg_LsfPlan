@@ -45,6 +45,18 @@
             android:numeric="integer"
             android:summary="@string/pref_description_timeSetter"
             android:title="@string/pref_title_timeSetter" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enableBriefing"
+            android:summary="@string/pref_description_enableBriefing"
+            android:title="@string/pref_title_enableBriefing" />
+
+        <Preference
+            android:key="briefingTime"
+            android:summary="@string/pref_description_briefingTime"
+            android:title="@string/pref_title_briefingTime" />
+
         <ListPreference
             android:defaultValue="@string/pref_soundMode_default"
             android:dialogTitle="@string/pref_soundMode"

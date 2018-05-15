@@ -46,7 +46,6 @@
     <string name="channel_name">Kursbenachrichtigungen</string>
     <string name="channel_description">Informiert den Nutzer über die nächsten Kurse</string>
     <string name="pref_title_about">Über/Lizenzen</string>
-    <string name="action_setCalender" translatable="false">Plan herunterladen</string>
     <string name="action_show_test_notification">Testbenachrichtigung</string>
     <string name="action_synchronize_plan">"Plan aktualisieren "</string>
     <string name="main_calendar_updated">"Plan erfolgreich aktualisiert! "</string>
@@ -55,5 +54,9 @@
     <string name="channel_remote_description">Hauptsächlich Infos und News vom Entwickler</string>
     <string name="html_login_explainer">Bitte geben sie hier ihre HTWG Logindaten ein, diese sind nötig um den persönlichen Plan herunterzuladen. Wenn die Daten gespeichert werden sollen passiert das verschlüsselt auf dem lokalen Gerät.</string>
     <string name="notification_briefing_title">Briefing</string>
+    <string name="pref_title_enableBriefing">Briefing aktivieren</string>
+    <string name="pref_description_enableBriefing">Du bekommst eine Benachrichtigung mit den ersten morgendlichen Kursen, um dir dabei zu helfen deinen Wecker zu stellen</string>
+    <string name="pref_title_briefingTime">Zeit des Briefings: %s</string>
+    <string name="pref_description_briefingTime">Wähle die Zeit für die Benachrichtigung aus</string>
 
 </resources>

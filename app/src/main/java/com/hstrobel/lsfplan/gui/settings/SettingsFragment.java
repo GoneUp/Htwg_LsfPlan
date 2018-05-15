@@ -1,5 +1,6 @@
 package com.hstrobel.lsfplan.gui.settings;
 
+import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -9,29 +10,27 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
+import android.widget.TimePicker;
 
+import com.evernote.android.job.DailyJob;
+import com.evernote.android.job.JobRequest;
 import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
-import com.hstrobel.lsfplan.model.NotificationUtils;
-import com.hstrobel.lsfplan.model.calender.CalenderUtils;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.aboutlibraries.ui.LibsFragment;
 
-import net.fortuna.ical4j.model.component.VEvent;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Henry on 28.09.2017.
  */
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "LSF";
     private boolean notifyChanged = false;
     private GlobalState state = GlobalState.getInstance();
@@ -81,6 +80,15 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             return true;
         });
 
+        myPref = findPreference(Constants.PREF_BRIEFING_TIME);
+        myPref.setOnPreferenceClickListener(preference -> {
+            //just default to 22:00
+            int briefingTime = state.settings.getInt(Constants.PREF_BRIEFING_TIME, 22 * 60);
+            TimePickerDialog dialog = new TimePickerDialog(getActivity(), this, briefingTime / 60, briefingTime % 60, true);
+            dialog.show();
+            return true;
+        });
+
         ListPreference newpref = (ListPreference) findPreference("college_pref");
         newpref.setTitle(R.string.pref_set_college);
         newpref.setSummary("");
@@ -98,16 +106,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         myPref = findPreference("btnShowBriefing");
         myPref.setOnPreferenceClickListener(preference -> {
-            Calendar cal = new GregorianCalendar();
-            cal.add(Calendar.DAY_OF_WEEK, 1);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-
-            List<VEvent> list = CalenderUtils.getEventsForDay(GlobalState.getInstance().myCal, cal);
-            CalenderUtils.sortEvents(list);
-
-            NotificationUtils.showBriefingNotification(list, getActivity());
-
+            DailyJob.startNowOnce(new JobRequest.Builder(TAG));
             return true;
         });
 
@@ -132,6 +131,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
                 notifyChanged = true;
                 break;
+
+            case Constants.PREF_BRIEFING_ENABLED:
+                state.InitBriefing(getActivity());
+
+                notifyChanged = true;
+                break;
             case "skipWeekend":
                 findPreference("skipWeekendDaysWithoutEvents").setEnabled(sharedPreferences.getBoolean(key, false));
                 break;
@@ -143,6 +148,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         ListPreference sPref = (ListPreference) findPreference("soundMode");
         if (sPref.getEntry() != null) sPref.setSummary(sPref.getEntry());
+
+        myPref = findPreference(Constants.PREF_BRIEFING_TIME);
+        int briefingTime = state.settings.getInt(Constants.PREF_BRIEFING_TIME, 22 * 60);
+        String formattedTime = String.format(Locale.GERMANY, "%02d:%02d", briefingTime / 60, briefingTime % 60);
+        myPref.setTitle(String.format(getString(R.string.pref_title_briefingTime), formattedTime));
 
         DateFormat d = SimpleDateFormat.getDateTimeInstance();
         long time_load = state.settings.getLong("ICS_DATE", Integer.MAX_VALUE);
@@ -171,5 +181,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (notifyChanged) {
             String info = String.format("%s_%s", String.valueOf(state.settings.getBoolean("enableNotifications", false)), state.settings.getString("notfiyTime", "15"));
         }
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        SharedPreferences.Editor editor = state.settings.edit();
+        editor.putInt(Constants.PREF_BRIEFING_TIME, hourOfDay * 60 + minute); //simple encoding
+        editor.apply();
+
+
     }
 }

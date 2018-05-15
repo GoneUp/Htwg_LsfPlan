@@ -14,6 +14,7 @@ import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
 import com.hstrobel.lsfplan.model.AlarmReceiver;
 import com.hstrobel.lsfplan.model.BootReceiver;
 import com.hstrobel.lsfplan.model.SyncService;
+import com.hstrobel.lsfplan.model.job.BriefingJob;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -75,11 +76,11 @@ public class GlobalState {
             updated = false;
             if (initNotification) {
                 InitNotifications(c);
+                InitBriefing(c);
             }
         }
 
         //Start the background service that downloads a new caleander from time to time
-        //TODO: move to jobscheduler, no timecritical background work
         SyncStart(c, false);
     }
 
@@ -102,6 +103,14 @@ public class GlobalState {
         }
     }
 
+
+    public void InitBriefing(Context c) {
+        if (settings.getBoolean(Constants.PREF_BRIEFING_ENABLED, false)) {
+            BriefingJob.schedule();
+        } else {
+            BriefingJob.cancelJob();
+        }
+    }
 
     public void SetNewCalendar(Context act) throws IOException, ParserException {
         icsFile = icsLoader.getFile();

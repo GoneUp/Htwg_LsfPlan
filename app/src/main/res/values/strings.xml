@@ -9,7 +9,7 @@
     <string name="firebase_id" translatable="false">ca-app-pub-3135430559590190~9476787262</string>
 
     <!-- Main -->
-    <string name="action_setCalender">Download Plan</string>
+    <string name="action_setCalender" translatable="false">Download Plan</string>
     <string name="action_settings">Settings</string>
     <string name="main_noCalender">Calender is missing.\nPlease download a Lecture Plan via Menu -> Download Calender</string>
 
@@ -117,7 +117,11 @@
     <string name="action_synchronize_plan">Synchronize Plan</string>
     <string name="main_calendar_updated">Successfully synchronized the schedule!</string>
     <string name="main_calendar_updating">Synchronizing schedule..</string>
-    <string name="html_login_explainer">Please enter your HTWG login data. We need it to login at the server and download your personal plan. If you choose to save it it will stored encrypted on your local device.</string>
+    <string name="html_login_explainer">Please enter your HTWG login data. We need it to login at the server and download your personal plan. If you choose to save it, the data will stored encrypted on your local device.</string>
+    <string name="pref_description_enableBriefing">Shows the first lectures in the morning to help you setting your alarm clock right</string>
+    <string name="pref_title_enableBriefing">Enable Evening Briefing</string>
+    <string name="pref_title_briefingTime" formatted="false">Briefing Time: %s</string>
+    <string name="pref_description_briefingTime">Set the time you want to be remained</string>
 
 
 </resources>
