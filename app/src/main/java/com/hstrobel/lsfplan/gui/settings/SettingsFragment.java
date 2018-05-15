@@ -18,6 +18,7 @@ import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.model.job.BriefingJob;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.aboutlibraries.ui.LibsFragment;
@@ -106,7 +107,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         myPref = findPreference("btnShowBriefing");
         myPref.setOnPreferenceClickListener(preference -> {
-            DailyJob.startNowOnce(new JobRequest.Builder(TAG));
+            DailyJob.startNowOnce(new JobRequest.Builder(BriefingJob.TAG));
             return true;
         });
 
@@ -189,6 +190,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         editor.putInt(Constants.PREF_BRIEFING_TIME, hourOfDay * 60 + minute); //simple encoding
         editor.apply();
 
-
+        state.InitBriefing(getActivity());
     }
 }

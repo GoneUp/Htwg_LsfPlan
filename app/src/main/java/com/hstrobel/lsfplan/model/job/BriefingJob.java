@@ -23,18 +23,15 @@ public class BriefingJob extends DailyJob {
     public static int lastJobID = -1;
 
     public static void schedule() {
-        if (!JobManager.instance().getAllJobRequestsForTag(TAG).isEmpty()) {
-            // job already scheduled, nothing to do
-            return;
-        }
+        //in case we have a leftover
+        cancelJob();
 
-
-        // schedule based on user setting with +/- 10 mins margin for doze
+        // schedule based on user setting with +/- a few mins margin for doze
         int briefingTime = GlobalState.getInstance().settings.getInt(Constants.PREF_BRIEFING_TIME, 22 * 60);
-        Log.d(TAG, String.format("schedule briefing %d:%d", briefingTime / 60, briefingTime % 60));
+        Log.i(TAG, String.format("schedule briefing %d:%d", briefingTime / 60, briefingTime % 60));
 
         long baseTime = TimeUnit.HOURS.toMillis(briefingTime / 60) + TimeUnit.MINUTES.toMillis(briefingTime % 60);
-        long range = TimeUnit.MINUTES.toMillis(0);
+        long range = TimeUnit.MINUTES.toMillis(2);
 
         //
         //DailyJob.startNowOnce(new JobRequest.Builder(TAG));
@@ -49,7 +46,7 @@ public class BriefingJob extends DailyJob {
     @NonNull
     @Override
     protected DailyJobResult onRunDailyJob(Params params) {
-        Log.d(TAG, "onRunDailyJob: briefing fired");
+        Log.i(TAG, "onRunDailyJob: briefing fired");
         Calendar cal = new GregorianCalendar();
         cal.add(Calendar.DAY_OF_WEEK, 1);
         cal.set(Calendar.HOUR_OF_DAY, 0);
