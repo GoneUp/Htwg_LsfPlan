@@ -80,7 +80,7 @@ public class CourseListAdapter implements ExpandableListAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
 
-        TextView text = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView text = convertView.findViewById(android.R.id.text1);
         text.setTypeface(null, Typeface.BOLD);
         CourseGroup group = list.get(groupPosition);
         text.setText(group.name);
@@ -93,7 +93,7 @@ public class CourseListAdapter implements ExpandableListAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(R.layout.planview_item, parent, false);
 
-        TextView text = (TextView) convertView.findViewById(R.id.planText);
+        TextView text = convertView.findViewById(R.id.planText);
         CourseGroup group = list.get(groupPosition);
         text.setText(" -- " + group.items.get(childPosition).name);
 

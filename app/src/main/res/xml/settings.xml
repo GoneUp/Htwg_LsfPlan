@@ -86,6 +86,11 @@
                 android:defaultValue="true"
                 android:key="flagUseKeystore"
                 android:title="flagUseKeystore" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="flagKeystoreVerbosePrint"
+                android:title="flagKeystoreVerbosePrint" />
+
             <ListPreference android:key="college_pref" />
 
             <Preference

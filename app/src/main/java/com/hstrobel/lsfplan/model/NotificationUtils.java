@@ -86,24 +86,27 @@ public class NotificationUtils {
     }
 
 
-    public static String formatEveningBriefing(List<VEvent> eventList, Context c) {
+    private static String formatEveningBriefing(List<VEvent> eventList, Context c) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < Constants.NOTIFY_BRIEFING_COUNT; i++) {
             sb.append(formatEventReminderLong(eventList.get(i), c));
-            sb.append("\n");
+            if (i != Constants.NOTIFY_BRIEFING_COUNT - 1)
+                sb.append("\n");
         }
 
         return sb.toString();
     }
 
     private static String formatEventReminderLong(VEvent event, Context c) {
-        String topic = getTopic(event);
-        String room_time = formatEventReminderShort(event, c);
-        return String.format(c.getString(R.string.notification_long), topic) + room_time;
+        return String.format(c.getString(R.string.notification_long), formatTopic(event, c), formatTime(event, c), formatRoom(event, c));
     }
 
     public static String formatEventReminderShort(VEvent event, Context c) {
+        return String.format(c.getString(R.string.notification_short), formatTime(event, c), formatRoom(event, c));
+    }
+
+    private static String formatTime(VEvent event, Context c) {
         Dur d = new Dur(event.getStartDate().getDate(), event.getEndDate().getDate());
         Date time_start = CalenderUtils.getNextRecuringStartDate(event, CalenderUtils.dateWithOutTime(event));
         Date time_end = d.getTime(time_start);
@@ -111,9 +114,20 @@ public class NotificationUtils {
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.GERMANY);
         SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+
+        return String.format(c.getString(R.string.notification_time), sdf.format(time_start), sdf.format(time_end));
+    }
+
+    private static String formatRoom(VEvent event, Context c) {
         String room = event.getLocation().getValue();
 
-        return String.format(c.getString(R.string.notification_short), sdf.format(time_start), sdf.format(time_end), room);
+        return String.format(c.getString(R.string.notification_room), room);
+    }
+
+    private static String formatTopic(VEvent event, Context c) {
+        String room = getTopic(event);
+
+        return String.format(c.getString(R.string.notification_topic), room);
     }
 
     public static String formatDate(VEvent event) {
@@ -140,6 +154,12 @@ public class NotificationUtils {
         return showNotification(title, textLong, textLong, context);
     }
 
+    public static int praiseTheUser(Context context) {
+        String title = context.getString(R.string.notification_final_title);
+        String text = context.getString(R.string.notification_final_text);
+
+        return showNotification(title, text, text, context);
+    }
 
     private static int showNotification(String title, String textShort, String textLong, Context context) {
         NotificationManager mNotificationManager =

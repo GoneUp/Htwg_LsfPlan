@@ -5,11 +5,13 @@ package com.hstrobel.lsfplan;
  */
 
 public class Constants {
+    public static final String TAG = "LSF";
 
     //IDs
     public static final String INTENT_UPDATE_LIST = "INTENT_UPDATE_LIST";
     public static final String INTENT_EXTRA_REFRESH = "INTENT_EXTRA_REFRESH";
     public static final int SYNC_SERVICE_ID = 133742;
+    public static final int TIMEDEVENT_SERVICE_ID = 133723;
     public static final String NOTIFICATION_CHANNEL_ALARMS_ID = "lsf_alarms";
     public static final String NOTIFICATION_CHANNEL_REMOTE_ID = "lsf_remote";
 
@@ -19,6 +21,7 @@ public class Constants {
     public static final int MODE_UNI_KN = 1;
     public static final int PREF_COLLEGE_DEFAULT = MODE_HTWG;
     public static final String PREF_FLAG_KEYSTORE = "flagUseKeystore";
+    public static final String PREF_FLAG_KEYSTORE_DEBUG = "flagKeystoreVerbosePrint";
     public static final String PREF_DEV_NOTIFY = "debugNotify";
     public static final String PREF_DEV_SYNC = "debugSync";
     public static final String PREF_BRIEFING_ENABLED = "enableBriefing";
@@ -76,5 +79,6 @@ public class Constants {
             "CATEGORIES:Vorlesung/Übung\n" +
             "END:VEVENT\n" +
             "END:VCALENDAR\n";
+
 
 }

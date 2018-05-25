@@ -66,6 +66,9 @@
         <service
             android:name="com.hstrobel.lsfplan.model.SyncService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".model.timed_event.TimedEventService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 

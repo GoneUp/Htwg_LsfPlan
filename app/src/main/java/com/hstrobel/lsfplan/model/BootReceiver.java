@@ -15,7 +15,7 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "boot " + intent);
 
-        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             Log.i(TAG, "Setting Bootup");
             try {
                 GlobalState.getInstance().InitCalender(context, true);

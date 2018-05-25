@@ -36,6 +36,9 @@ public class BriefingJob extends DailyJob {
         //
         //DailyJob.startNowOnce(new JobRequest.Builder(TAG));
         lastJobID = DailyJob.schedule(new JobRequest.Builder(TAG), baseTime - range, baseTime + range);
+        Log.i(TAG, "schedule id is" + lastJobID);
+        Log.i(TAG, "all sched jobs " + JobManager.instance().getAllJobRequests());
+        Log.i(TAG, "all done jobs " + JobManager.instance().getAllJobResults());
     }
 
     public static void cancelJob() {
@@ -48,15 +51,20 @@ public class BriefingJob extends DailyJob {
     protected DailyJobResult onRunDailyJob(Params params) {
         Log.i(TAG, "onRunDailyJob: briefing fired");
         Calendar cal = new GregorianCalendar();
-        cal.add(Calendar.DAY_OF_WEEK, 1);
+        //goto next day if we are in afternoon/evening
+        if (cal.get(Calendar.HOUR_OF_DAY) > 8) {
+            cal.add(Calendar.DAY_OF_WEEK, 1);
+        }
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
 
         List<VEvent> list = CalenderUtils.getEventsForDay(GlobalState.getInstance().myCal, cal);
         CalenderUtils.sortEvents(list);
 
-        NotificationUtils.showBriefingNotification(list, getContext());
+        if (!list.isEmpty()) {
+            NotificationUtils.showBriefingNotification(list, getContext());
 
+        }
         return DailyJobResult.SUCCESS;
     }
 }

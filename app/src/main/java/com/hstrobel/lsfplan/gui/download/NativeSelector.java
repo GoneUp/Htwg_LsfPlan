@@ -53,7 +53,7 @@ public class NativeSelector extends AbstractWebSelector {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_html_web_selector);
+        setContentView(R.layout.activity_native_selector);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -170,7 +170,12 @@ public class NativeSelector extends AbstractWebSelector {
     private void exportCallback(String url) {
         if (url == null) {
             disableLoading();
-            Toast.makeText(this, "Download failed! Check your Connection", Toast.LENGTH_LONG).show();
+            if (selectedCourse.URL.equals(Constants.MAGIC_WORD_LOGIN)) {
+                //handle no courses corbercase
+                Toast.makeText(this, "Download failed! Check your connection and make sure that you subscribed to some courses.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Download failed! Check your connection", Toast.LENGTH_LONG).show();
+            }
             return;
         }
 
@@ -382,6 +387,7 @@ public class NativeSelector extends AbstractWebSelector {
                         }
                     }
                 }
+                Log.e(TAG, "Export URL not found! " + doc.text());
 
             } catch (Exception ex) {
                 Log.e(TAG, "FAIL DL: ", ex);

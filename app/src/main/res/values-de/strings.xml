@@ -3,8 +3,6 @@
     <string name="action_settings">Einstellungen</string>
     <string name="main_lecture_day" formatted="false">%s</string>
     <string name="main_noCalender">Kein Plan vorhanden..\nBitte lade einen Vorlesungsplan via Menu -> Download Plan.</string>
-    <string name="notification_long" formatted="false">Thema: %s - </string>
-    <string name="notification_short" formatted="false">Zeit: %s bis %s - Raum: %s</string>
     <string name="notification_title">Nächste Vorlesung</string>
     <string name="pref_cat_general">Allgemein</string>
     <string name="pref_description_enableNotifications">Zeige Benachrichtigung bevor die Vorlesung beginnt</string>
@@ -58,5 +56,14 @@
     <string name="pref_description_enableBriefing">Du bekommst eine Benachrichtigung mit den ersten morgendlichen Kursen, um dir dabei zu helfen deinen Wecker zu stellen</string>
     <string name="pref_title_briefingTime">Zeit des Briefings: %s</string>
     <string name="pref_description_briefingTime">Wähle die Zeit für die Benachrichtigung aus</string>
+    <string name="notification_topic">Thema: %s</string>
+    <string name="notification_time">Zeit: %s bis %s</string>
+    <string name="notification_room">Raum: %s</string>
+    <string name="notification_final_title">Wichtige Nachricht! Wirklich!</string>
+    <string name="notification_final_text">Wow, es ist schon wieder diese Zeit des Jahres. Ich hoffe du bist gut auf die Klausuren vorbereiet und wünsche dir viel Glück 😃\n
+        \n
+        —Der Typ, der die App entwickelt hat\n
+        P.S. Mach mal eine Review im Playstore</string>
+
 
 </resources>

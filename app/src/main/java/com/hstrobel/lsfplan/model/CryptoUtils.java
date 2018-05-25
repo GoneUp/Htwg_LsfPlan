@@ -40,7 +40,10 @@ public class CryptoUtils {
             if (encryptedData == null || key == null) return "";
             String decryptedData = crypto.decrypt(encryptedData, key.getPrivate(), false);
 
-            Log.d(TAG, "getStoreField: decrypt " + decryptedData);
+            //hide sensitve infomation by default
+            if (GlobalState.getInstance().settings.getBoolean(Constants.PREF_FLAG_KEYSTORE_DEBUG, false)) {
+                Log.d(TAG, "getStoreField: decrypt " + decryptedData);
+            }
             return decryptedData;
         } catch (Exception ex) {
             Log.e(TAG, "getStoreField: ", ex);

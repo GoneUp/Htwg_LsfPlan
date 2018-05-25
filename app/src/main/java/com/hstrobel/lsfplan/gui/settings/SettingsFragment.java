@@ -10,14 +10,17 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.TimePicker;
 
 import com.evernote.android.job.DailyJob;
+import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.hstrobel.lsfplan.BuildConfig;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
+import com.hstrobel.lsfplan.model.NotificationUtils;
 import com.hstrobel.lsfplan.model.job.BriefingJob;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
@@ -71,7 +74,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     .withAboutIconShown(true)
                     .withAboutVersionShown(true)
                     .withFields(R.string.class.getFields())
-                    .withAboutDescription("Created by Henry Strobel (hstrobel.dev@gmail.com)\n " + (BuildConfig.DEBUG ? "DEBUG" : ""))
+                    .withAboutDescription("Created by Henry Strobel \nhstrobel.dev@gmail.com\nTwitter:@chillicheese_ " + (BuildConfig.DEBUG ? "DEBUG" : ""))
                     .fragment();
 
             getFragmentManager().beginTransaction()
@@ -108,6 +111,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         myPref = findPreference("btnShowBriefing");
         myPref.setOnPreferenceClickListener(preference -> {
             DailyJob.startNowOnce(new JobRequest.Builder(BriefingJob.TAG));
+            NotificationUtils.praiseTheUser(getActivity());
+
+            Log.i(TAG, String.valueOf(JobManager.instance().getAllJobs()));
+            Log.i(TAG, String.valueOf(JobManager.instance().getAllJobRequests()));
+
             return true;
         });
 

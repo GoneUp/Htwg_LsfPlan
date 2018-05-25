@@ -9,9 +9,11 @@ import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.gui.download.network.IDownloadCallback;
 import com.hstrobel.lsfplan.gui.download.network.IcsFileDownloader;
+import com.hstrobel.lsfplan.model.timed_event.TimedEventService;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 
 /**
  * Created by Henry on 06.04.2016.
@@ -21,17 +23,18 @@ public class SyncService extends JobIntentService implements IDownloadCallback {
 
     @Override
     protected void onHandleWork(Intent intent) {
-
         try {
             Log.i(TAG, "onHandleWork: SyncS started");
             GlobalState state = GlobalState.getInstance();
+
+            //trigger timedevents
+            JobIntentService.enqueueWork(this, TimedEventService.class, Constants.TIMEDEVENT_SERVICE_ID, new Intent());
 
             //force if dev flag is on or intent requested it
             boolean forceRefresh = state.settings.getBoolean(Constants.PREF_DEV_SYNC, false);
             if (intent != null) {
                 forceRefresh = forceRefresh || intent.getBooleanExtra(Constants.INTENT_EXTRA_REFRESH, false);
             }
-
 
             //if the user is already downloading something new we don't interfere
             if (state.icsLoader != null)
