@@ -24,22 +24,28 @@ public class TimedEventService extends JobIntentService {
     protected void onHandleWork(@NonNull Intent intent) {
         Log.i(Constants.TAG, "TimedEventService: try schedule");
 
-        for (TimedEvent event : eventList) {
-            long notBefore = event.notBefore * 1000;
-            long notAfter = event.notAfter * 1000;
+        try {
+            for (TimedEvent event : eventList) {
+                long notBefore = event.notBefore * 1000;
+                long notAfter = event.notAfter * 1000;
 
-            if (notBefore < System.currentTimeMillis() && notAfter > System.currentTimeMillis()) {
-                //fire action,detect event
-                switch (event.name) {
-                    case "SS18_final_greeting":
-                    case "debugEvent":
-                        OneTimeSettingExecutor.checkAndOneTimeExecute(GlobalState.getInstance().settings, "OneTimeSetting_" + event.name, () -> {
-                            Log.i(Constants.TAG, "event fired");
-                            NotificationUtils.praiseTheUser(this);
-                        });
+                if (notBefore < System.currentTimeMillis() && notAfter > System.currentTimeMillis()) {
+                    //fire action,detect event
+                    switch (event.name) {
+                        case "SS18_final_greeting":
+                        case "debugEvent":
+                            OneTimeSettingExecutor.checkAndOneTimeExecute(GlobalState.getInstance().settings, "OneTimeSetting_" + event.name, () -> {
+                                Log.i(Constants.TAG, "event fired");
+                                NotificationUtils.praiseTheUser(this);
+                            });
+                    }
                 }
             }
+
+        } catch (Exception ex) {
+            Log.e(Constants.TAG, "TimedEventService: ex ", ex);
         }
+
 
 
     }

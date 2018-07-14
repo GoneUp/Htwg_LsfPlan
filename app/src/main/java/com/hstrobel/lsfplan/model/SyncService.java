@@ -1,6 +1,7 @@
 package com.hstrobel.lsfplan.model;
 
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -26,6 +27,10 @@ public class SyncService extends JobIntentService implements IDownloadCallback {
         try {
             Log.i(TAG, "onHandleWork: SyncS started");
             GlobalState state = GlobalState.getInstance();
+
+            //assert
+            if (state.settings == null)
+                state.settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
             //trigger timedevents
             JobIntentService.enqueueWork(this, TimedEventService.class, Constants.TIMEDEVENT_SERVICE_ID, new Intent());
