@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.hstrobel.lsfplan.App;
 import com.hstrobel.lsfplan.Constants;
 import com.hstrobel.lsfplan.GlobalState;
 import com.hstrobel.lsfplan.R;
@@ -154,12 +156,36 @@ public class NotificationUtils {
         return showNotification(title, textLong, textLong, context);
     }
 
+    //One TIme Notifications
     public static int praiseTheUser(Context context) {
         String title = context.getString(R.string.notification_final_title);
         String text = context.getString(R.string.notification_final_text);
 
         return showNotification(title, text, text, context);
     }
+
+    public static int blameHTWG(Context context) {
+        String title = "Gute Nachricht: Die App geht wieder!";
+        String text = context.getString(R.string.notification_event_htwg);
+
+        if (!isInstallFromUpdate(context))
+            return 0;
+
+        return showNotification(title, text, text, context);
+    }
+
+    public static boolean isInstallFromUpdate(Context context) {
+        try {
+            long firstInstallTime = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).firstInstallTime;
+            long lastUpdateTime = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).lastUpdateTime;
+            return firstInstallTime != lastUpdateTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
     private static int showNotification(String title, String textShort, String textLong, Context context) {
         NotificationManager mNotificationManager =

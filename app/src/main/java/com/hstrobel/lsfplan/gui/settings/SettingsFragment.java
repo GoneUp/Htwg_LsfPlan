@@ -111,7 +111,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         myPref = findPreference("btnShowBriefing");
         myPref.setOnPreferenceClickListener(preference -> {
             DailyJob.startNowOnce(new JobRequest.Builder(BriefingJob.TAG));
-            NotificationUtils.praiseTheUser(getActivity());
+
 
             Log.i(TAG, String.valueOf(JobManager.instance().getAllJobs()));
             Log.i(TAG, String.valueOf(JobManager.instance().getAllJobRequests()));
@@ -119,6 +119,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             return true;
         });
 
+        myPref = findPreference("btnTriggerEvents");
+        myPref.setOnPreferenceClickListener(preference -> {
+            //NotificationUtils.praiseTheUser(getActivity());
+            NotificationUtils.blameHTWG(getActivity());
+
+            return true;
+        });
 
         PreferenceCategory credits = (PreferenceCategory) findPreference("credits");
         if (!BuildConfig.DEBUG) {

@@ -96,6 +96,9 @@
             <Preference
                 android:key="btnShowBriefing"
                 android:title="Show next briefing" />
+            <Preference
+                android:key="btnTriggerEvents"
+                android:title="Show event messages" />
         </PreferenceScreen>
 
 

@@ -16,7 +16,8 @@ public class TimedEventService extends JobIntentService {
     //TODO: dynmaic action callbacks would be nice
 
     //27.06 - 15.07
-    public static TimedEvent[] eventList = {new TimedEvent("SS18_final_greeting", 1530100800, 1531648800)
+    public static TimedEvent[] eventList = {new TimedEvent("SS18_final_greeting", 1530100800, 1531648800),
+            new TimedEvent("blameHTWGEvent", 0, 3376684800L)
             //, new TimedEvent("debugEvent", 0, 1531648800)
     };
 
@@ -37,6 +38,11 @@ public class TimedEventService extends JobIntentService {
                             OneTimeSettingExecutor.checkAndOneTimeExecute(GlobalState.getInstance().settings, "OneTimeSetting_" + event.name, () -> {
                                 Log.i(Constants.TAG, "event fired");
                                 NotificationUtils.praiseTheUser(this);
+                            });
+                        case "blameHTWGEvent":
+                            OneTimeSettingExecutor.checkAndOneTimeExecute(GlobalState.getInstance().settings, "OneTimeSetting_" + event.name, () -> {
+                                Log.i(Constants.TAG, "event blameHTWGEvent fired");
+                                NotificationUtils.blameHTWG(this);
                             });
                     }
                 }
