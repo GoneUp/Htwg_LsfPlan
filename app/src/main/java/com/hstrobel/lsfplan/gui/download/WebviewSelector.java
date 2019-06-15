@@ -59,7 +59,7 @@ public class WebviewSelector extends AbstractWebSelector {
         });
         webView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) -> {
             Log.d("LSF", "setDownloadListener");
-            state.icsLoader = new IcsFileDownloader(local, url);
+            state.icsLoader = new IcsFileDownloader(local, url, getApplicationContext());
             new Thread(state.icsLoader).start();
         });
         webView.getSettings().setBuiltInZoomControls(true);

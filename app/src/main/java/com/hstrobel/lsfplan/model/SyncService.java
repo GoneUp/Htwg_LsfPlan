@@ -64,7 +64,7 @@ public class SyncService extends JobIntentService implements IDownloadCallback {
 
                 if (!url.isEmpty()) {
                     Log.i(TAG, "onHandleIntent: starting download");
-                    state.icsLoader = new IcsFileDownloader(this, url);
+                    state.icsLoader = new IcsFileDownloader(this, url, getApplicationContext());
                     new Thread(state.icsLoader).start();
                 }
                 /*The new Thread is not really needed since we are already on background task,

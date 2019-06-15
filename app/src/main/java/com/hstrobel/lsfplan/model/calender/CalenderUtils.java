@@ -135,7 +135,8 @@ public class CalenderUtils {
         PeriodList r = event.calculateRecurrenceSet(period);
 
         Period closest = null;
-        for (Period p : (Iterable<Period>) r) {
+        for (Object objectP : r) {
+            Period p = (Period) objectP;
             //System.out.println(" - " + p.toString());
             if (closest == null) {
                 closest = p;

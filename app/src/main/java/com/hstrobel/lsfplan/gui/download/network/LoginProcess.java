@@ -68,7 +68,7 @@ Connection: Keep-Alive
 
 
             String url = Utils.getLoginUrl(context, GlobalState.getInstance().getCollege());
-            Connection connection = Utils.setupAppConnection(url)
+            Connection connection = Utils.setupAppConnection(url, context)
                     .data("asdf", user)
                     .data("fdsa", pw)
                     .data("submit", "Anmelden");

@@ -180,7 +180,7 @@ public class NativeSelector extends AbstractWebSelector {
         }
 
         Log.d(TAG, "exportCallback");
-        state.icsLoader = new IcsFileDownloader(this, url);
+        state.icsLoader = new IcsFileDownloader(this, url, getApplicationContext());
         new Thread(state.icsLoader).start();
     }
 
@@ -317,7 +317,7 @@ public class NativeSelector extends AbstractWebSelector {
             CourseGroup.Course item;
 
             try {
-                Connection connection = Utils.setupAppConnection(params[0]);
+                Connection connection = Utils.setupAppConnection(params[0], getApplicationContext());
                 Document doc = connection.get();
 
                 Elements tableRows = doc.select("tr");
@@ -363,13 +363,14 @@ public class NativeSelector extends AbstractWebSelector {
         }
     }
 
+    //exctract the export ics url
     public class PlanExportLoader extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
             // Making HTTP request
             String url = null;
             try {
-                Connection con = Utils.setupAppConnection(params[0]);
+                Connection con = Utils.setupAppConnection(params[0], getApplicationContext());
                 if (params.length > 1) {
                     con.cookie("JSESSIONID", params[1]);
                 }
@@ -387,7 +388,10 @@ public class NativeSelector extends AbstractWebSelector {
                         }
                     }
                 }
-                Log.e(TAG, "Export URL not found! " + doc.text());
+                if (url == null) {
+                    Log.e(TAG, "Export URL not found! " + doc.text());
+                }
+
 
             } catch (Exception ex) {
                 Log.e(TAG, "FAIL DL: ", ex);
