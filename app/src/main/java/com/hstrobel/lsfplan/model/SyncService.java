@@ -2,8 +2,8 @@ package com.hstrobel.lsfplan.model;
 
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.support.v4.app.JobIntentService;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.app.JobIntentService;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.Constants;

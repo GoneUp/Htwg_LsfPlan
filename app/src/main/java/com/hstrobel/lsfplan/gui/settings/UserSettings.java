@@ -1,7 +1,7 @@
 package com.hstrobel.lsfplan.gui.settings;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.hstrobel.lsfplan.GlobalState;
 

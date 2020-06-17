@@ -1,8 +1,8 @@
 package com.hstrobel.lsfplan.model.timed_event;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 import android.util.Log;
 
 import com.hstrobel.lsfplan.Constants;
@@ -16,8 +16,8 @@ public class TimedEventService extends JobIntentService {
     //TODO: dynmaic action callbacks would be nice
 
     //27.06 - 15.07
-    public static TimedEvent[] eventList = {new TimedEvent("SS18_final_greeting", 1530100800, 1531648800),
-            new TimedEvent("blameHTWGEvent", 0, 3376684800L)
+    public static TimedEvent[] eventList = {//new TimedEvent("SS18_final_greeting", 1530100800, 1531648800),
+           // new TimedEvent("blameHTWGEvent", 0, 3376684800L)
             //, new TimedEvent("debugEvent", 0, 1531648800)
     };
 

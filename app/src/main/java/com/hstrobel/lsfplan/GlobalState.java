@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
-import android.support.v4.app.JobIntentService;
+import androidx.core.app.JobIntentService;
 import android.text.TextUtils;
 
 import com.hstrobel.lsfplan.gui.download.CourseGroup;

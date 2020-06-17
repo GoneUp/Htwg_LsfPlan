@@ -1,6 +1,6 @@
 package com.hstrobel.lsfplan.model.job;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.evernote.android.job.DailyJob;
