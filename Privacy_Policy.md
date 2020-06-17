@@ -1,4 +1,4 @@
-=== Privacy Policy
+## Privacy Policy
 
 We don’t store your data, period. There is no server backend, no logging, no tracking, no ads.
 The app only connects to the HTWG servers to gather the current course schedule.

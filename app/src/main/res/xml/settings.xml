@@ -113,6 +113,15 @@
 
 
         <Preference
+            android:key="privacy_policy"
+            android:title="@string/pref_privacynotice_title">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/about_privacynotice_url" />
+        </Preference>
+
+        <Preference
             android:key="about"
             android:title="@string/pref_title_about" />
 

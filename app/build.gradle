@@ -14,14 +14,15 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.0'
+
 
     defaultConfig {
         applicationId "com.hstrobel.lsfplan"
         minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 33
+        targetSdkVersion 30
+        versionCode 34
         versionName "2.7"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -89,7 +90,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
     // testImplementation "org.robolectric:shadows-play-services:$robolectricVersion"
     testImplementation "org.robolectric:shadows-support-v4:$robolectricVersion"
-    testImplementation 'org.mockito:mockito-core:2.18.0'
+    testImplementation 'org.mockito:mockito-core:2.21.0'
 
 
 }

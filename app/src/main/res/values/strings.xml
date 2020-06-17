@@ -130,6 +130,8 @@
     <string name="notification_final_text">Wow, it\'s this time of the year again. I hope you are prepared for the exams and wish you good grades 😃 \nThanks for using the app!</string>
     <string name="notification_event_htwg" translatable="false">Sorry, dass es so lange gedauert hat, ich habe mein Studium an der HTWG abgeschlossen und nutze die App nicht mehr.\nJedenfalls ist jetzt der, von der HTWG zu verantwortende, Fehler behoben. Die HTWG liefert eine invalide Zertifikatskette für den LSF Server aus, was der App/Android nicht gefallen hat, jetzt wird es ignoriert.\nViel Spaß weiterhin,\n Henry (Ex-AINler 😁)
     </string>
+    <string name="pref_privacynotice_title">Privacy Notice</string>
+    <string name="about_privacynotice_url" translatable="false">https://raw.githubusercontent.com/GoneUp/Htwg_LsfPlan/master/Privacy_Policy.md</string>
 
 
 </resources>

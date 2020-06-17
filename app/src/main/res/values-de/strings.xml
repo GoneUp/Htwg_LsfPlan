@@ -64,6 +64,7 @@
         \n
         —Der Typ, der die App entwickelt hat\n
         P.S. Mach mal eine Review im Playstore</string>
+    <string name="pref_privacynotice_title">Datenschutzhinweis</string>
 
 
 </resources>
