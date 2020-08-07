@@ -1,13 +1,21 @@
 apply plugin: 'com.android.application'
 
+/*
+keystore.properties example
+keyAlias=lsfplankey
+keyPassword=keypass
+storeFile=path
+storePassword=storepass
+ */
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     signingConfigs {
-        config {
+        release {
+            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
@@ -15,7 +23,7 @@ android {
         }
     }
     compileSdkVersion 30
-    buildToolsVersion '30.0.0'
+    buildToolsVersion '30.0.1'
     testOptions.unitTests.includeAndroidResources = true
 
 
@@ -32,10 +40,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-        }
-        debug {
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.release
         }
     }
     dexOptions {
@@ -58,28 +63,35 @@ android {
         abortOnError false
     }
 
+    // Gradle automatically adds 'android.test.runner' as a dependency.
+    useLibrary 'android.test.runner'
+
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+
 }
 
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.0'
     implementation 'androidx.annotation:annotation:1.1.0'
 
     implementation ('org.mnode.ical4j:ical4j:1.0.6'){
         //exclude group: 'commons-logging'
     }
-    implementation 'org.jsoup:jsoup:1.12.1'
-    implementation('com.mikepenz:aboutlibraries:5.9.7@aar') {
-        //support libarys are excluded due to the outdated versions used
-        exclude group: 'com.android.support'
-        transitive = true
-    }
+
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation('com.mikepenz:aboutlibraries:6.2.3')
+
     //Keystore support lib
     implementation 'com.yakivmospan:scytale:1.0.1'
-    implementation 'com.evernote:android-job:1.2.6' //evening briefing
+    implementation 'com.evernote:android-job:1.4.2' //evening briefing
+
+    /*
+    Tests break AndroidX, commented out
 
     androidTestImplementation "org.robolectric:robolectric:$robolectricVersion"
     androidTestImplementation 'junit:junit:4.12'
@@ -93,6 +105,8 @@ dependencies {
     testImplementation "org.robolectric:shadows-support-v4:3.3.2"
     testImplementation 'org.mockito:mockito-core:2.21.0'
 
+
+*/
 
 }
 
